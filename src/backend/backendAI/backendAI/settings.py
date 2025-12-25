@@ -32,8 +32,11 @@ SECRET_KEY = (
     or "django-insecure-(x2q%0-9oh7r=0klrzt0#f4^kh2rhy_ajje#uow5racu$ju^3k"
 )
 
-DEBUG = env_bool('DJANGO_DEBUG', env_bool('DEBUG', True))
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '*').split(',')
+DEBUG = env_bool('DJANGO_DEBUG', True)
+
+# Default allowed hosts include production domains
+_default_hosts = 'localhost,127.0.0.1,0.0.0.0,nmcnpm-api-ai.lethanhcong.site,nmcnpm.lethanhcong.site'
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', _default_hosts).split(',')
 
 # URL Configuration
 APPEND_SLASH = True  # Auto-redirect URLs without trailing slash to with trailing slash
@@ -129,8 +132,12 @@ AUTH_PASSWORD_VALIDATORS = [
 # INTERNATIONALIZATION
 # ============================================================================
 
-LANGUAGE_CODE = os.environ.get('LANGUAGE_CODE', 'en-us')
-TIME_ZONE = os.environ.get('TIME_ZONE', 'UTC')
+LANGUAGE_CODE = os.environ.get('LANGUAGE_CODE', 'en-us') or 'en-us'
+
+# TIME_ZONE must be a valid timezone string, fallback to UTC if empty/invalid
+_time_zone_env = os.environ.get('TIME_ZONE', '').strip()
+TIME_ZONE = _time_zone_env if _time_zone_env else 'UTC'
+
 USE_I18N = env_bool('USE_I18N', True)
 USE_TZ = env_bool('USE_TZ', True)
 
