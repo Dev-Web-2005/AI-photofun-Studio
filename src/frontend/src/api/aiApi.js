@@ -1,7 +1,10 @@
 import axios from "axios";
 
-// Base URL for AI backend
-const AI_BASE_URL = "http://localhost:9999";
+// Base URL for AI backend - use environment variable for production
+const AI_BASE_URL = import.meta.env.VITE_AI_API_URL || "http://localhost:9999";
+
+// File upload URL: production uses VITE_FILE_UPLOAD_URL, dev uses Vite proxy
+const FILE_UPLOAD_BASE_URL = import.meta.env.VITE_FILE_UPLOAD_URL || "";
 
 // Create a dedicated axios instance for AI API
 const aiClient = axios.create({
@@ -15,7 +18,8 @@ const aiClient = axios.create({
 const getSessionId = () => {
     let sessionId = localStorage.getItem("ai_session_id");
     if (!sessionId) {
-        sessionId = "web_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9);
+        sessionId =
+            "web_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9);
         localStorage.setItem("ai_session_id", sessionId);
     }
     return sessionId;
@@ -85,7 +89,11 @@ export const pollTaskStatus = async (
  * @param {string} params.aspectRatio - Aspect ratio (e.g., "16:9", "1:1")
  * @returns {Promise<object>} - Task ID and initial response
  */
-export const generateImage = async ({ prompt, model = "realism", aspectRatio = "1:1" }) => {
+export const generateImage = async ({
+    prompt,
+    model = "realism",
+    aspectRatio = "1:1",
+}) => {
     const sessionId = getSessionId();
 
     try {
@@ -175,60 +183,30 @@ export const removeBackground = async (imageUrl) => {
  */
 export const uploadImageForAI = async (file) => {
     const formData = new FormData();
-    formData.append("id", `ai_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
-    formData.append("image", file);
+    formData.append("file", file);
+
+    // Production: VITE_FILE_UPLOAD_URL/api/v1/file/uploads
+    // Dev: /api/file-upload (Vite proxy rewrites to file-service-cdal.onrender.com/api/v1/file/uploads)
+    const uploadUrl = FILE_UPLOAD_BASE_URL
+        ? `${FILE_UPLOAD_BASE_URL}/api/v1/file/uploads`
+        : "/api/file-upload";
 
     try {
-        const response = await fetch("/api/file-upload", {
-            method: "POST",
-            body: formData,
+        const response = await axios.post(uploadUrl, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
         });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error("Upload failed:", response.status, errorText);
-            throw new Error(`Upload failed: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log("Upload response:", data);
-        console.log("Upload result:", data?.result);
-
-        // File service returns { code: 1000, message: '...', result: { url: '...' } }
-        // or result might directly be the URL string
-        // Cloudinary may return secure_url
-        let imageUrl = null;
-        if (data?.result) {
-            if (typeof data.result === 'string') {
-                imageUrl = data.result;
-            } else {
-                imageUrl = data.result.url || data.result.secure_url || data.result.file_url || data.result.image_url;
-            }
-        }
-        // Fallback to other common patterns
-        if (!imageUrl) {
-            imageUrl = data?.url || data?.secure_url || data?.file_url || data?.data?.url;
-        }
-
-        console.log("Extracted URL:", imageUrl);
-
-        if (imageUrl) {
-            return {
-                success: true,
-                url: imageUrl,
-            };
-        } else {
-            console.error("No URL in response:", data);
-            return {
-                success: false,
-                error: "No URL returned from server",
-            };
-        }
+        // Adjust based on your file service response structure
+        return {
+            success: true,
+            url: response.data?.url || response.data?.file_url || response.data?.data?.url,
+        };
     } catch (err) {
-        console.error("Upload error:", err);
         return {
             success: false,
-            error: err.message,
+            error: err.response?.data?.message || err.message,
         };
     }
 };
@@ -287,7 +265,7 @@ export const reimagineImage = async ({
     imageUrl,
     prompt = "",
     imagination = "subtle",
-    aspectRatio = "1:1"
+    aspectRatio = "1:1",
 }) => {
     const sessionId = getSessionId();
 
@@ -349,7 +327,7 @@ export const relightImage = async ({
     prompt,
     style = "standard",
     referenceImageUrl = null,
-    lightTransferStrength = 0.8
+    lightTransferStrength = 0.8,
 }) => {
     const sessionId = getSessionId();
 
@@ -410,7 +388,7 @@ export const expandImage = async ({
     left = 100,
     right = 100,
     top = 50,
-    bottom = 50
+    bottom = 50,
 }) => {
     const sessionId = getSessionId();
 
@@ -526,6 +504,4 @@ export default {
     pollTaskStatus,
     uploadImageForAI,
     getSessionId,
-    suggestPrompts,
-    recordPromptChoice,
 };

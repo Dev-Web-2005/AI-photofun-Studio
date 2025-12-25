@@ -130,6 +130,7 @@ jobs:
             cat > .env << EOF
             DJANGO_SECRET_KEY=$SECRET_KEY
             DJANGO_DEBUG=$DEBUG
+            DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0,nmcnpm-api-ai.lethanhcong.site
             SUPABASE_DB_HOST=$SUPABASE_DB_HOST
             SUPABASE_DB_PORT=$SUPABASE_DB_PORT
             SUPABASE_DB_NAME=$SUPABASE_DB_NAME
@@ -151,6 +152,14 @@ jobs:
             sudo docker-compose down || true
             sudo docker-compose up -d --build --force-recreate
 
+            echo "⏳ Waiting for backendAI services to be healthy..."
+            sleep 20
+
+            echo "📥 Importing prompts data into MongoDB..."
+            sudo docker exec backendai_api python import_prompts.py --file prompts.txt || echo "⚠️ Prompts import failed or already imported"
+
+            sudo docker-compose ps
+            sudo docker-compose logs --tail=30 backendAI
 
             cd $WORKSPACE/src/frontend
             rm -rf dist node_modules/.vite
