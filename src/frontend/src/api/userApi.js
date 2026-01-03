@@ -3,6 +3,7 @@ import axiosClient from "./axiosClient";
 const CURRENT_USER_ENDPOINT = "/api/v1/identity/users/me";
 const USER_BY_ID_ENDPOINT = "/api/v1/identity/users/get";
 const UPLOAD_AVATAR_ENDPOINT = "/api/v1/identity/users/upload-avatar";
+const CHANGE_PASSWORD_ENDPOINT = "/api/v1/identity/users/change-password";
 const PROFILE_ENDPOINT = "/api/v1/profiles/my-profile";
 const UPDATE_PROFILE_ENDPOINT = "/api/v1/profiles/update";
 const VERIFY_PROFILE_ENDPOINT = "/api/v1/profiles/verify-profile";
@@ -55,5 +56,13 @@ export const userApi = {
   getMyGroups: (page = 1, size = 20) =>
     axiosClient.get("/api/v1/identity/users/get-group-joined", {
       params: { page, size },
+    }),
+
+  // Change password
+  changePassword: ({ oldPassword, newPassword, confirmNewPassword }) =>
+    axiosClient.post(CHANGE_PASSWORD_ENDPOINT, {
+      oldPassword,
+      newPassword,
+      confirmNewPassword,
     }),
 };
