@@ -23,26 +23,56 @@ jobs:
     name: "Detect Changes"
     runs-on: ubuntu-latest
     outputs:
-      frontend: ${{ steps.filter.outputs.frontend }}
-      backendAI: ${{ steps.filter.outputs.backendAI }}
-      backendSocial: ${{ steps.filter.outputs.backendSocial }}
+      frontend: ${{ steps.changes.outputs.frontend }}
+      backendAI: ${{ steps.changes.outputs.backendAI }}
+      backendSocial: ${{ steps.changes.outputs.backendSocial }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Check changed files
-        id: filter
-        uses: dorny/paths-filter@v2
-        with:
-          filters: |
-            frontend:
-              - 'src/frontend/**'
-            backendAI:
-              - 'src/backend/backendAI/**'
-            backendSocial:
-              - 'src/backend/backendSocial/**'
+      - name: Get changed files
+        id: changes
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          elif [ "${{ github.event_name }}" == "push" ]; then
+            BASE_SHA="${{ github.event.before }}"
+            if [ "$BASE_SHA" == "0000000000000000000000000000000000000000" ]; then
+              BASE_SHA=$(git hash-object -t tree /dev/null)
+            fi
+          else
+            BASE_SHA="HEAD~1"
+          fi
+          HEAD_SHA="${{ github.sha }}"
+          CHANGED_FILES=$(git diff --name-only $BASE_SHA $HEAD_SHA 2>/dev/null || git diff --name-only HEAD~1 HEAD 2>/dev/null || echo "")
+
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+          if echo "$CHANGED_FILES" | grep -q "^src/frontend/"; then
+            echo "frontend=true" >> $GITHUB_OUTPUT
+            echo "Frontend changes detected"
+          else
+            echo "frontend=false" >> $GITHUB_OUTPUT
+            echo "No frontend changes"
+          fi
+
+          if echo "$CHANGED_FILES" | grep -q "^src/backend/backendAI/"; then
+            echo "backendAI=true" >> $GITHUB_OUTPUT
+            echo "BackendAI changes detected"
+          else
+            echo "backendAI=false" >> $GITHUB_OUTPUT
+            echo "No backendAI changes"
+          fi
+
+          if echo "$CHANGED_FILES" | grep -q "^src/backend/backendSocial/"; then
+            echo "backendSocial=true" >> $GITHUB_OUTPUT
+            echo "BackendSocial changes detected"
+          else
+            echo "backendSocial=false" >> $GITHUB_OUTPUT
+            echo "No backendSocial changes"
+          fi
 
   deploy-backend-social:
     name: "Deploy Backend Social"
