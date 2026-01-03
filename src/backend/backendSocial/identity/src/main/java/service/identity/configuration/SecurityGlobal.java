@@ -22,6 +22,7 @@ public class SecurityGlobal {
   final String[] PUBLIC_URLS = {"/users/register",
                                 "/introspect/**",
                                 "/auth/login",
+                                "/auth/logout",
                                 "/auth/introspect/**",
                                 "/auth/refresh/**",
                                 "/auth/introspect/ignore/**",

@@ -25,7 +25,8 @@ class WebGlobalFilter implements GlobalFilter, Ordered {
   HttpClientIdentity httpClientIdentity;
 
   static final String[] PUBLIC_URLS = {
-      "/identity/auth/login", "/identity/users/register",
+      "/identity/auth/login", "/identity/auth/logout",
+      "/identity/users/register",
       //"/posts/download/**",
       "/identity/auth/authentication", "/check", "/identity/users/tokens/**",
       "/identity/users/modify-tokens", "/identity/authorities/create",
