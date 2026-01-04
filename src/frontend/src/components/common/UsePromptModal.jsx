@@ -1,10 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Sparkles, X, Image, Video, Wand2 } from "lucide-react";
+import { Sparkles, X, Image, Video, Wand2, ArrowRight } from "lucide-react";
 
 /**
- * UsePromptModal - A minimalist, elegant modal for confirming prompt reuse
- * Displays prompt preview and navigates to appropriate AI tool
+ * UsePromptModal - Luxury minimalist modal for prompt confirmation
+ * Clean monochromatic design with refined typography
  */
 export default function UsePromptModal({ isOpen, onClose, prompt, toolType }) {
   const navigate = useNavigate();
@@ -19,7 +19,6 @@ export default function UsePromptModal({ isOpen, onClose, prompt, toolType }) {
           route: "/text-to-image",
           icon: Image,
           title: "Text to Image",
-          color: "from-blue-500 to-purple-600",
           description: "Generate stunning images from text",
         };
       case "prompt-to-video":
@@ -27,7 +26,6 @@ export default function UsePromptModal({ isOpen, onClose, prompt, toolType }) {
           route: "/prompt-to-video",
           icon: Video,
           title: "Prompt to Video",
-          color: "from-purple-500 to-pink-600",
           description: "Create amazing videos from prompts",
         };
       case "image-to-video":
@@ -35,7 +33,6 @@ export default function UsePromptModal({ isOpen, onClose, prompt, toolType }) {
           route: "/image-to-video",
           icon: Video,
           title: "Image to Video",
-          color: "from-pink-500 to-red-600",
           description: "Animate images into videos",
         };
       default:
@@ -43,7 +40,6 @@ export default function UsePromptModal({ isOpen, onClose, prompt, toolType }) {
           route: "/ai-tools",
           icon: Wand2,
           title: "AI Tools",
-          color: "from-indigo-500 to-purple-600",
           description: "Explore AI creative tools",
         };
     }
@@ -53,7 +49,6 @@ export default function UsePromptModal({ isOpen, onClose, prompt, toolType }) {
   const IconComponent = toolInfo.icon;
 
   const handleUsePrompt = () => {
-    // Navigate with state containing the prompt
     navigate(toolInfo.route, { state: { prompt } });
     onClose();
   };
@@ -66,37 +61,33 @@ export default function UsePromptModal({ isOpen, onClose, prompt, toolType }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity animate-fadeIn"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md transition-opacity animate-fadeIn"
       onClick={handleBackdropClick}
     >
-      <div className="relative w-full max-w-lg mx-4 bg-white rounded-2xl shadow-2xl animate-scaleIn overflow-hidden">
-        {/* Header with gradient */}
-        <div
-          className={`bg-gradient-to-r ${toolInfo.color} p-6 relative overflow-hidden`}
-        >
-          {/* Decorative background pattern */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full -translate-y-1/2 translate-x-1/2" />
-            <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full translate-y-1/2 -translate-x-1/2" />
-          </div>
-
-          <div className="relative flex items-start justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
-                <Sparkles className="w-6 h-6 text-white" />
+      <div className="relative w-full max-w-md mx-4 bg-white rounded-2xl shadow-2xl animate-scaleIn overflow-hidden border border-gray-200">
+        
+        {/* Subtle top accent */}
+        <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-60" />
+        
+        {/* Header */}
+        <div className="p-6 pb-4 border-b border-gray-100">
+          <div className="flex items-start justify-between">
+            <div className="flex items-start gap-3">
+              <div className="p-2.5 bg-gray-50 rounded-xl border border-gray-200">
+                <Sparkles className="w-5 h-5 text-gray-700" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-white">
+                <h3 className="text-lg font-semibold text-gray-900 tracking-tight">
                   Use This Prompt?
                 </h3>
-                <p className="text-sm text-white/90 mt-0.5">
+                <p className="text-sm text-gray-500 mt-0.5">
                   {toolInfo.description}
                 </p>
               </div>
             </div>
             <button
               onClick={onClose}
-              className="p-2 rounded-full hover:bg-white/20 transition-colors text-white"
+              className="p-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-400 hover:text-gray-600"
               aria-label="Close modal"
             >
               <X className="w-5 h-5" />
@@ -105,57 +96,52 @@ export default function UsePromptModal({ isOpen, onClose, prompt, toolType }) {
         </div>
 
         {/* Content */}
-        <div className="p-6">
-          {/* Tool destination info */}
-          <div className="flex items-center gap-3 mb-4 p-3 bg-gray-50 rounded-xl">
-            <div
-              className={`p-2 bg-gradient-to-r ${toolInfo.color} rounded-lg`}
-            >
-              <IconComponent className="w-5 h-5 text-white" />
+        <div className="p-6 space-y-5">
+          {/* Tool destination */}
+          <div className="flex items-center gap-3 p-3.5 bg-gray-50 rounded-xl border border-gray-100">
+            <div className="p-2 bg-gray-900 rounded-lg">
+              <IconComponent className="w-4 h-4 text-white" />
             </div>
-            <div>
-              <p className="text-xs text-gray-500 font-medium">Navigate to</p>
-              <p className="text-sm font-semibold text-gray-900">
+            <div className="flex-1">
+              <p className="text-[11px] text-gray-500 font-medium uppercase tracking-wider">
+                Navigate to
+              </p>
+              <p className="text-sm font-semibold text-gray-900 mt-0.5">
                 {toolInfo.title}
               </p>
             </div>
+            <ArrowRight className="w-4 h-4 text-gray-400" />
           </div>
 
           {/* Prompt preview */}
-          <div className="mb-6">
-            <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2 block">
+          <div>
+            <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-2.5 block">
               Prompt Preview
             </label>
-            <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-200 rounded-xl p-4 max-h-40 overflow-y-auto">
-              <div className="absolute top-2 right-2">
-                <Sparkles className="w-4 h-4 text-purple-400" />
-              </div>
-              <p className="text-sm text-gray-700 leading-relaxed font-mono pr-6">
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 max-h-40 overflow-y-auto">
+              <p className="text-sm text-gray-700 leading-relaxed font-mono tracking-tight">
                 {prompt}
               </p>
             </div>
           </div>
 
           {/* Action buttons */}
-          <div className="flex gap-3">
+          <div className="flex gap-3 pt-2">
             <button
               onClick={onClose}
-              className="flex-1 px-4 py-3 rounded-xl border-2 border-gray-200 text-gray-700 font-semibold hover:bg-gray-50 hover:border-gray-300 transition-all duration-200"
+              className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-medium hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 text-sm"
             >
               Cancel
             </button>
             <button
               onClick={handleUsePrompt}
-              className={`flex-1 px-4 py-3 rounded-xl bg-gradient-to-r ${toolInfo.color} text-white font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2`}
+              className="flex-1 px-4 py-2.5 rounded-xl bg-gray-900 text-white font-medium hover:bg-black hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 text-sm"
             >
               <Sparkles className="w-4 h-4" />
               Use Prompt
             </button>
           </div>
         </div>
-
-        {/* Bottom accent line */}
-        <div className={`h-1 bg-gradient-to-r ${toolInfo.color}`} />
       </div>
 
       <style jsx>{`

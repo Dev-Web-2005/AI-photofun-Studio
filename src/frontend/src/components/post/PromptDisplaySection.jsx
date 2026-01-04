@@ -1,24 +1,23 @@
 import React, { useState } from "react";
-import { Sparkles, Copy, Wand2, ChevronRight } from "lucide-react";
+import { Sparkles, Copy, ArrowRight } from "lucide-react";
 import UsePromptModal from "../common/UsePromptModal";
 import { toast } from "../../hooks/use-toast";
 
 /**
- * PromptDisplaySection - An elegant, interactive prompt display
- * Features hover effects, copy functionality, and click-to-use
+ * PromptDisplaySection - A luxury minimalist prompt display
+ * Elegant monochromatic design with subtle gold accents
  */
 export default function PromptDisplaySection({
   prompt,
   toolType = "text-to-image",
 }) {
-  const [isHovered, setIsHovered] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [copied, setCopied] = useState(false);
 
   if (!prompt) return null;
 
   const handleCopyPrompt = (e) => {
-    e.stopPropagation(); // Prevent triggering the parent click
+    e.stopPropagation();
     navigator.clipboard.writeText(prompt);
     setCopied(true);
     toast.success("Prompt copied to clipboard!");
@@ -32,26 +31,22 @@ export default function PromptDisplaySection({
   return (
     <>
       <div
-        className="mt-4 relative group cursor-pointer overflow-hidden rounded-2xl transition-all duration-300"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        className="mt-4 group cursor-pointer transition-all duration-300 ease-out"
         onClick={handleUsePrompt}
       >
-        {/* Gradient border effect on hover */}
-        <div
-          className={`absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm`}
-          style={{ padding: "2px" }}
-        />
-
-        {/* Main content container */}
-        <div className="relative bg-gradient-to-br from-gray-50 to-purple-50/30 border-2 border-gray-200 rounded-2xl p-4 group-hover:border-transparent transition-all duration-300">
+        {/* Main container with subtle elevation */}
+        <div className="relative bg-white border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-300">
+          
+          {/* Subtle top accent line */}
+          <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          
           {/* Header */}
           <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg group-hover:scale-110 transition-transform duration-300">
-                <Sparkles className="w-4 h-4 text-white" />
+            <div className="flex items-center gap-2.5">
+              <div className="p-1.5 bg-gray-50 rounded-lg border border-gray-200 group-hover:border-amber-400/50 group-hover:bg-amber-50/50 transition-all duration-300">
+                <Sparkles className="w-3.5 h-3.5 text-gray-600 group-hover:text-amber-600 transition-colors duration-300" />
               </div>
-              <span className="text-xs font-bold text-gray-700 uppercase tracking-wide">
+              <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
                 AI Prompt
               </span>
             </div>
@@ -61,61 +56,35 @@ export default function PromptDisplaySection({
               {/* Copy button */}
               <button
                 onClick={handleCopyPrompt}
-                className={`p-2 rounded-lg transition-all duration-200 ${
+                className={`p-2 rounded-lg border transition-all duration-200 ${
                   copied
-                    ? "bg-green-100 text-green-600"
-                    : "bg-white/80 hover:bg-white text-gray-600 hover:text-purple-600"
+                    ? "bg-emerald-50 border-emerald-200 text-emerald-700"
+                    : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:border-gray-300"
                 }`}
                 title="Copy prompt"
                 aria-label="Copy prompt to clipboard"
               >
-                <Copy className="w-4 h-4" />
+                <Copy className="w-3.5 h-3.5" />
               </button>
 
-              {/* Use prompt indicator */}
-              <div className="flex items-center gap-1 px-3 py-1.5 bg-white/80 rounded-lg group-hover:bg-gradient-to-r group-hover:from-purple-500 group-hover:to-pink-500 transition-all duration-300">
-                <Wand2 className="w-3.5 h-3.5 text-purple-600 group-hover:text-white transition-colors duration-300" />
-                <span className="text-xs font-semibold text-purple-600 group-hover:text-white transition-colors duration-300">
-                  Use
-                </span>
-                <ChevronRight className="w-3.5 h-3.5 text-purple-600 group-hover:text-white group-hover:translate-x-0.5 transition-all duration-300" />
+              {/* Use prompt button */}
+              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-900 text-white rounded-lg text-xs font-medium group-hover:bg-black group-hover:shadow-lg transition-all duration-300">
+                <span>Use Prompt</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-300" />
               </div>
             </div>
           </div>
 
-          {/* Prompt text */}
+          {/* Prompt text with refined typography */}
           <div className="relative">
-            <p className="text-sm text-gray-700 leading-relaxed font-mono break-words">
+            <p className="text-sm text-gray-700 leading-relaxed font-mono tracking-tight">
               {prompt}
             </p>
-
-            {/* Hover overlay hint */}
-            <div
-              className={`absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-lg flex items-center justify-center transition-opacity duration-300 ${
-                isHovered ? "opacity-100" : "opacity-0"
-              }`}
-            >
-              <div className="bg-white/95 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-purple-600" />
-                <span className="text-sm font-semibold text-gray-800">
-                  Click to use this prompt
-                </span>
-              </div>
-            </div>
           </div>
 
-          {/* Decorative elements */}
-          <div className="absolute top-2 right-2 w-20 h-20 bg-gradient-to-br from-purple-200/20 to-pink-200/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500" />
-          <div className="absolute bottom-2 left-2 w-16 h-16 bg-gradient-to-tr from-blue-200/20 to-purple-200/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500" />
+          {/* Subtle bottom gradient */}
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         </div>
-
-        {/* Shine effect on hover */}
-        <div
-          className={`absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none`}
-          style={{
-            transform: isHovered ? "translateX(100%)" : "translateX(-100%)",
-          }}
-        />
       </div>
 
       {/* Confirmation Modal */}
