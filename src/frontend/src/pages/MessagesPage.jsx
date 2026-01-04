@@ -35,7 +35,8 @@ import { stopCall } from "../api/call-video";
 // For ngrok: use backend ngrok URL directly
 // For localhost: use window.location.origin with Vite proxy
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || window.location.origin;
-const DEFAULT_GROUP_AVATAR = "https://res.cloudinary.com/derwtva4p/image/upload/v1765458810/file-service/fffsss.png";
+const DEFAULT_GROUP_AVATAR =
+  "https://res.cloudinary.com/derwtva4p/image/upload/v1765458810/file-service/fffsss.png";
 
 const MessagesPage = () => {
   const { user } = useAuth();
@@ -50,7 +51,9 @@ const MessagesPage = () => {
   const [conversations, setConversations] = useState([]);
   const [groups, setGroups] = useState([]); // My groups (joined)
   const [exploreGroups, setExploreGroups] = useState([]); // All groups (for explore)
-  const [activeTab, setActiveTab] = useState(shareToGroup ? "groups" : "direct"); // Auto switch to groups if sharing
+  const [activeTab, setActiveTab] = useState(
+    shareToGroup ? "groups" : "direct"
+  ); // Auto switch to groups if sharing
   const [activeChat, setActiveChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
@@ -58,7 +61,9 @@ const MessagesPage = () => {
   const [newGroupName, setNewGroupName] = useState("");
   const [loading, setLoading] = useState(true);
   const [socketConnected, setSocketConnected] = useState(false);
-  const [pendingShareMedia, setPendingShareMedia] = useState(shareToGroup || null); // Media waiting to be sent
+  const [pendingShareMedia, setPendingShareMedia] = useState(
+    shareToGroup || null
+  ); // Media waiting to be sent
 
   // Group Management State
   const [showGroupInfo, setShowGroupInfo] = useState(false);
@@ -128,27 +133,30 @@ const MessagesPage = () => {
       const response = await communicationApi.getAllGroups(1, 50);
       const data = response?.data?.result?.items || [];
 
-      const formattedGroups = data.map((group) => {
-        const memberIds = group.memberIds || [];
-        const isMember = memberIds.includes(user.id) || group.adminId === user.id;
+      const formattedGroups = data
+        .map((group) => {
+          const memberIds = group.memberIds || [];
+          const isMember =
+            memberIds.includes(user.id) || group.adminId === user.id;
 
-        return {
-          id: group.groupId,
-          groupId: group.groupId,
-          name: group.name || "Group",
-          description: group.description || "",
-          avatar: group.image || DEFAULT_GROUP_AVATAR,
-          lastMessage: "",
-          time: "",
-          unread: 0,
-          memberCount: memberIds.length || 0,
-          isGroup: true,
-          adminId: group.adminId,
-          memberIds: memberIds,
-          isMember: isMember,
-          isAdmin: group.adminId === user.id,
-        };
-      }).filter(group => !group.isMember); // Filter out groups user has joined
+          return {
+            id: group.groupId,
+            groupId: group.groupId,
+            name: group.name || "Group",
+            description: group.description || "",
+            avatar: group.image || DEFAULT_GROUP_AVATAR,
+            lastMessage: "",
+            time: "",
+            unread: 0,
+            memberCount: memberIds.length || 0,
+            isGroup: true,
+            adminId: group.adminId,
+            memberIds: memberIds,
+            isMember: isMember,
+            isAdmin: group.adminId === user.id,
+          };
+        })
+        .filter((group) => !group.isMember); // Filter out groups user has joined
 
       setExploreGroups(formattedGroups);
       console.log("✅ Fetched explore groups:", formattedGroups);
@@ -171,10 +179,14 @@ const MessagesPage = () => {
 
       if (Array.isArray(result?.items)) {
         // Format: { result: { items: [{groupId: "..."}, ...] } }
-        groupIds = result.items.map(item => typeof item === 'string' ? item : item.groupId);
+        groupIds = result.items.map((item) =>
+          typeof item === "string" ? item : item.groupId
+        );
       } else if (Array.isArray(result)) {
         // Format: { result: ["groupId1", "groupId2", ...] } or [{groupId: "..."}, ...]
-        groupIds = result.map(item => typeof item === 'string' ? item : item.groupId);
+        groupIds = result.map((item) =>
+          typeof item === "string" ? item : item.groupId
+        );
       }
 
       console.log("📋 Group IDs to fetch:", groupIds);
@@ -199,7 +211,7 @@ const MessagesPage = () => {
       console.log("📋 Group details:", groupDetails);
 
       const formattedGroups = groupDetails
-        .filter(group => group !== null)
+        .filter((group) => group !== null)
         .map((group, index) => {
           const memberIds = group.memberIds || [];
 
@@ -241,63 +253,72 @@ const MessagesPage = () => {
   }, []);
 
   // Fetch pending join requests (for admin only)
-  const fetchPendingRequests = useCallback(async (groupId) => {
-    try {
-      const response = await userApi.getMemberRequests(1, 50);
-      const allRequests = response?.data?.result?.items || [];
-      // Filter requests for this specific group
-      const groupRequests = allRequests.filter(
-        (req) => req.groupId === groupId
-      );
+  const fetchPendingRequests = useCallback(
+    async (groupId) => {
+      try {
+        const response = await userApi.getMemberRequests(1, 50);
+        const allRequests = response?.data?.result?.items || [];
+        // Filter requests for this specific group
+        const groupRequests = allRequests.filter(
+          (req) => req.groupId === groupId
+        );
 
-      // Fetch user info for each request
-      const requestsWithUserInfo = await Promise.all(
-        groupRequests.map(async (req) => {
-          // Check cache first
-          if (userCache[req.userId]) {
-            return {
-              ...req,
-              username: userCache[req.userId].username,
-              avatarUrl: userCache[req.userId].avatarUrl,
-            };
-          }
+        // Fetch user info for each request
+        const requestsWithUserInfo = await Promise.all(
+          groupRequests.map(async (req) => {
+            // Check cache first
+            if (userCache[req.userId]) {
+              return {
+                ...req,
+                username: userCache[req.userId].username,
+                avatarUrl: userCache[req.userId].avatarUrl,
+              };
+            }
 
-          // Fetch user info
-          try {
-            const userRes = await userApi.getUserById(req.userId);
-            const userData = userRes?.data?.result;
-            const username = userData?.username || userData?.fullName || "User";
-            const avatarUrl = userData?.avatarUrl || `https://i.pravatar.cc/150?u=${req.userId}`;
+            // Fetch user info
+            try {
+              const userRes = await userApi.getUserById(req.userId);
+              const userData = userRes?.data?.result;
+              const username =
+                userData?.username || userData?.fullName || "User";
+              const avatarUrl =
+                userData?.avatarUrl ||
+                `https://i.pravatar.cc/150?u=${req.userId}`;
 
-            // Update cache
-            setUserCache((prev) => ({
-              ...prev,
-              [req.userId]: { username, avatarUrl },
-            }));
+              // Update cache
+              setUserCache((prev) => ({
+                ...prev,
+                [req.userId]: { username, avatarUrl },
+              }));
 
-            return {
-              ...req,
-              username,
-              avatarUrl,
-            };
-          } catch (err) {
-            console.error(`Failed to fetch user ${req.userId}:`, err);
-            return {
-              ...req,
-              username: "User",
-              avatarUrl: `https://i.pravatar.cc/150?u=${req.userId}`,
-            };
-          }
-        })
-      );
+              return {
+                ...req,
+                username,
+                avatarUrl,
+              };
+            } catch (err) {
+              console.error(`Failed to fetch user ${req.userId}:`, err);
+              return {
+                ...req,
+                username: "User",
+                avatarUrl: `https://i.pravatar.cc/150?u=${req.userId}`,
+              };
+            }
+          })
+        );
 
-      setPendingRequests(requestsWithUserInfo);
-      console.log("✅ Fetched pending requests with user info:", requestsWithUserInfo);
-    } catch (error) {
-      console.error("Failed to fetch pending requests:", error);
-      setPendingRequests([]);
-    }
-  }, [userCache]);
+        setPendingRequests(requestsWithUserInfo);
+        console.log(
+          "✅ Fetched pending requests with user info:",
+          requestsWithUserInfo
+        );
+      } catch (error) {
+        console.error("Failed to fetch pending requests:", error);
+        setPendingRequests([]);
+      }
+    },
+    [userCache]
+  );
 
   // Fetch messages for active chat
   const fetchMessages = useCallback(async () => {
@@ -331,13 +352,15 @@ const MessagesPage = () => {
               const userData = userRes?.data?.result;
               const isPremium = Boolean(
                 userData?.isPremium ||
-                userData?.premiumOneMonth ||
-                userData?.premiumSixMonths
+                  userData?.premiumOneMonth ||
+                  userData?.premiumSixMonths
               );
               return {
                 id: senderId,
                 username: userData?.username || userData?.fullName || "User",
-                avatarUrl: userData?.avatarUrl || `https://i.pravatar.cc/150?u=${senderId}`,
+                avatarUrl:
+                  userData?.avatarUrl ||
+                  `https://i.pravatar.cc/150?u=${senderId}`,
                 isPremium: isPremium,
               };
             } catch (err) {
@@ -354,7 +377,11 @@ const MessagesPage = () => {
           const usersData = await Promise.all(userPromises);
           const newCache = { ...userCache };
           usersData.forEach((u) => {
-            newCache[u.id] = { username: u.username, avatarUrl: u.avatarUrl, isPremium: u.isPremium };
+            newCache[u.id] = {
+              username: u.username,
+              avatarUrl: u.avatarUrl,
+              isPremium: u.isPremium,
+            };
           });
           setUserCache(newCache);
         }
@@ -364,26 +391,32 @@ const MessagesPage = () => {
         if (!activeChat.userId) return;
         response = await communicationApi.getMessages(activeChat.userId, 1, 50);
         console.log("📨 1-1 messages response:", response?.data);
-        data = response?.data?.result?.items || response?.data?.result?.data || response?.data?.result || [];
+        data =
+          response?.data?.result?.items ||
+          response?.data?.result?.data ||
+          response?.data?.result ||
+          [];
       }
 
       // Helper function to detect if a message is an image URL
       const isImageUrl = (text) => {
-        if (!text || typeof text !== 'string') return false;
+        if (!text || typeof text !== "string") return false;
         // Check common image extensions
         const imageExtensions = /\.(jpg|jpeg|png|gif|webp|bmp|svg)(\?.*)?$/i;
         // Check common image hosting services
-        const imageHosts = /(cloudinary\.com|imgur\.com|i\.pravatar\.cc|res\.cloudinary\.com|images\.unsplash\.com)/i;
+        const imageHosts =
+          /(cloudinary\.com|imgur\.com|i\.pravatar\.cc|res\.cloudinary\.com|images\.unsplash\.com)/i;
         return imageExtensions.test(text) || imageHosts.test(text);
       };
 
       // Helper function to detect if a message is a video URL
       const isVideoUrl = (text) => {
-        if (!text || typeof text !== 'string') return false;
+        if (!text || typeof text !== "string") return false;
         // Check common video extensions
         const videoExtensions = /\.(mp4|webm|ogg|mov|avi|mkv)(\?.*)?$/i;
         // Check cloudinary video URLs
-        const isCloudinaryVideo = text.includes('cloudinary.com') && text.includes('/video/');
+        const isCloudinaryVideo =
+          text.includes("cloudinary.com") && text.includes("/video/");
         return videoExtensions.test(text) || isCloudinaryVideo;
       };
 
@@ -392,7 +425,8 @@ const MessagesPage = () => {
         // Check if it's a video: use msg.video flag OR detect from URL
         const msgIsVideo = msg.video === true || isVideoUrl(messageText);
         // Check if it's an image: use msg.image flag OR detect from URL (but not if it's a video)
-        const msgIsImage = !msgIsVideo && (msg.image === true || isImageUrl(messageText));
+        const msgIsImage =
+          !msgIsVideo && (msg.image === true || isImageUrl(messageText));
 
         // Support both senderId (group) and userId (1-1) fields
         const messageSenderId = msg.senderId || msg.userId;
@@ -401,17 +435,22 @@ const MessagesPage = () => {
           id: msg.id || Date.now() + Math.random(),
           sender: messageSenderId === user?.id ? "me" : "other",
           senderId: messageSenderId,
-          senderName: userCache[messageSenderId]?.username || msg.senderName || "User",
-          senderAvatar: userCache[messageSenderId]?.avatarUrl || `https://i.pravatar.cc/150?u=${messageSenderId}`,
+          senderName:
+            userCache[messageSenderId]?.username || msg.senderName || "User",
+          senderAvatar:
+            userCache[messageSenderId]?.avatarUrl ||
+            `https://i.pravatar.cc/150?u=${messageSenderId}`,
           senderIsPremium: userCache[messageSenderId]?.isPremium || false,
           text: messageText,
           // Use timestamp field if available (e.g., "16 hours ago"), otherwise format createdAt
-          time: msg.timestamp || (msg.createdAt
-            ? new Date(msg.createdAt).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            })
-            : ""),
+          time:
+            msg.timestamp ||
+            (msg.createdAt
+              ? new Date(msg.createdAt).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              : ""),
           isImage: msgIsImage,
           isVideo: msgIsVideo,
         };
@@ -452,11 +491,16 @@ const MessagesPage = () => {
     });
 
     newSocket.on("connect_error", (error) => {
-      console.warn("⚠️ Socket connection failed (backend may be offline):", error.message);
+      console.warn(
+        "⚠️ Socket connection failed (backend may be offline):",
+        error.message
+      );
       setSocketConnected(false);
       // Don't spam reconnection attempts if backend is down
       if (error.message.includes("ECONNREFUSED")) {
-        console.log("💡 Backend socket server not running. Chat features limited.");
+        console.log(
+          "💡 Backend socket server not running. Chat features limited."
+        );
       }
     });
 
@@ -471,22 +515,30 @@ const MessagesPage = () => {
 
       // Helper function to detect if a message is an image URL
       const isImageUrl = (text) => {
-        if (!text || typeof text !== 'string') return false;
+        if (!text || typeof text !== "string") return false;
         const imageExtensions = /\.(jpg|jpeg|png|gif|webp|bmp|svg)(\?.*)?$/i;
-        const imageHosts = /(cloudinary\.com|imgur\.com|i\.pravatar\.cc|res\.cloudinary\.com|images\.unsplash\.com)/i;
+        const imageHosts =
+          /(cloudinary\.com|imgur\.com|i\.pravatar\.cc|res\.cloudinary\.com|images\.unsplash\.com)/i;
         return imageExtensions.test(text) || imageHosts.test(text);
       };
 
       // Helper function to detect if a message is a video URL
       const isVideoUrl = (text) => {
-        if (!text || typeof text !== 'string') return false;
+        if (!text || typeof text !== "string") return false;
         const videoExtensions = /\.(mp4|webm|ogg|mov|avi|mkv)(\?.*)?$/i;
-        return videoExtensions.test(text) || (text.includes('cloudinary.com') && text.includes('/video/'));
+        return (
+          videoExtensions.test(text) ||
+          (text.includes("cloudinary.com") && text.includes("/video/"))
+        );
       };
 
       // Check if it's an image or video
       const msgIsVideo = data.isVideo === true || isVideoUrl(data.message);
-      const msgIsImage = !msgIsVideo && (data.isImage === true || data.image === true || isImageUrl(data.message));
+      const msgIsImage =
+        !msgIsVideo &&
+        (data.isImage === true ||
+          data.image === true ||
+          isImageUrl(data.message));
 
       // Add message to current chat if it matches
       if (activeChat?.userId === data.senderId) {
@@ -517,7 +569,9 @@ const MessagesPage = () => {
         setIncomingCallData({
           callerId: data.callerId,
           callerName: userData?.username || userData?.fullName || "User",
-          callerAvatar: userData?.avatarUrl || `https://i.pravatar.cc/150?u=${data.callerId}`,
+          callerAvatar:
+            userData?.avatarUrl ||
+            `https://i.pravatar.cc/150?u=${data.callerId}`,
           isVideoCall: data.isVideoCall,
           callId: data.callId,
         });
@@ -531,7 +585,7 @@ const MessagesPage = () => {
     newSocket.on("callAccepted", (data) => {
       console.log("✅ Call accepted:", data);
       // Change status from 'waiting' to 'connecting' to trigger WebRTC setup
-      setCallStatus('connecting');
+      setCallStatus("connecting");
     });
 
     // Call rejected by receiver
@@ -565,22 +619,30 @@ const MessagesPage = () => {
 
       // Helper function to detect if a message is an image URL
       const isImageUrl = (text) => {
-        if (!text || typeof text !== 'string') return false;
+        if (!text || typeof text !== "string") return false;
         const imageExtensions = /\.(jpg|jpeg|png|gif|webp|bmp|svg)(\?.*)?$/i;
-        const imageHosts = /(cloudinary\.com|imgur\.com|i\.pravatar\.cc|res\.cloudinary\.com|images\.unsplash\.com)/i;
+        const imageHosts =
+          /(cloudinary\.com|imgur\.com|i\.pravatar\.cc|res\.cloudinary\.com|images\.unsplash\.com)/i;
         return imageExtensions.test(text) || imageHosts.test(text);
       };
 
       // Helper function to detect if a message is a video URL
       const isVideoUrl = (text) => {
-        if (!text || typeof text !== 'string') return false;
+        if (!text || typeof text !== "string") return false;
         const videoExtensions = /\.(mp4|webm|ogg|mov|avi|mkv)(\?.*)?$/i;
-        return videoExtensions.test(text) || (text.includes('cloudinary.com') && text.includes('/video/'));
+        return (
+          videoExtensions.test(text) ||
+          (text.includes("cloudinary.com") && text.includes("/video/"))
+        );
       };
 
       // Check if it's an image or video
       const msgIsVideo = data.isVideo === true || isVideoUrl(data.message);
-      const msgIsImage = !msgIsVideo && (data.isImage === true || data.image === true || isImageUrl(data.message));
+      const msgIsImage =
+        !msgIsVideo &&
+        (data.isImage === true ||
+          data.image === true ||
+          isImageUrl(data.message));
 
       // Add message to current chat if it matches
       // Skip if sender is current user (already added locally when sending)
@@ -600,12 +662,14 @@ const MessagesPage = () => {
             const userData = userRes?.data?.result;
             const isPremium = Boolean(
               userData?.isPremium ||
-              userData?.premiumOneMonth ||
-              userData?.premiumSixMonths
+                userData?.premiumOneMonth ||
+                userData?.premiumSixMonths
             );
             senderInfo = {
               username: userData?.username || userData?.fullName || "User",
-              avatarUrl: userData?.avatarUrl || `https://i.pravatar.cc/150?u=${data.senderId}`,
+              avatarUrl:
+                userData?.avatarUrl ||
+                `https://i.pravatar.cc/150?u=${data.senderId}`,
               isPremium: isPremium,
             };
             // Update cache
@@ -667,7 +731,13 @@ const MessagesPage = () => {
         }
       }
     }
-  }, [activeChat, fetchMessages, fetchGroupMembers, fetchPendingRequests, user?.id]);
+  }, [
+    activeChat,
+    fetchMessages,
+    fetchGroupMembers,
+    fetchPendingRequests,
+    user?.id,
+  ]);
 
   // Fetch groups when switching to groups or explore tab
   useEffect(() => {
@@ -698,7 +768,9 @@ const MessagesPage = () => {
         // Try to add conversation and refetch
         const addAndFetch = async () => {
           try {
-            console.log("🔄 Conversation not found, trying to add and refetch...");
+            console.log(
+              "🔄 Conversation not found, trying to add and refetch..."
+            );
             await communicationApi.addConversation(userIdFromUrl);
             await fetchConversations();
           } catch (error) {
@@ -724,13 +796,21 @@ const MessagesPage = () => {
   const sentShareGroupIdRef = useRef(null);
 
   useEffect(() => {
-    if (!pendingShareMedia || !groups.length || !socketRef.current || !socketConnected) return;
+    if (
+      !pendingShareMedia ||
+      !groups.length ||
+      !socketRef.current ||
+      !socketConnected
+    )
+      return;
 
     // Prevent duplicate sends by checking if we've already sent to this specific group with this media
     const shareKey = `${pendingShareMedia.groupId}_${pendingShareMedia.mediaUrl}`;
     if (sentShareGroupIdRef.current === shareKey) return;
 
-    const targetGroup = groups.find(g => g.groupId === pendingShareMedia.groupId);
+    const targetGroup = groups.find(
+      (g) => g.groupId === pendingShareMedia.groupId
+    );
     if (targetGroup) {
       // Mark as sent immediately with the specific key
       sentShareGroupIdRef.current = shareKey;
@@ -741,7 +821,7 @@ const MessagesPage = () => {
 
       // Send the media after a short delay
       const sendMedia = async () => {
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise((resolve) => setTimeout(resolve, 500));
 
         // Double-check we still have socket connection before sending
         if (!socketRef.current || !socketConnected) {
@@ -776,9 +856,12 @@ const MessagesPage = () => {
           text: pendingShareMedia.mediaUrl,
           isImage: !pendingShareMedia.isVideo,
           isVideo: pendingShareMedia.isVideo,
-          time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          time: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
         };
-        setMessages(prev => [...prev, newMsg]);
+        setMessages((prev) => [...prev, newMsg]);
 
         // Clear pending and location state
         setPendingShareMedia(null);
@@ -813,7 +896,7 @@ const MessagesPage = () => {
     console.log("📞 Initiating video call:", callData);
 
     setIsAudioOnlyCall(false);
-    setCallStatus('waiting'); // Set to waiting for receiver to accept
+    setCallStatus("waiting"); // Set to waiting for receiver to accept
     setCurrentCallId(callData.callId);
     setIsCaller(true); // This user is the caller
     setCallRecipientId(activeChat.userId);
@@ -844,7 +927,7 @@ const MessagesPage = () => {
     console.log("📞 Initiating audio call:", callData);
 
     setIsAudioOnlyCall(true);
-    setCallStatus('waiting'); // Set to waiting for receiver to accept
+    setCallStatus("waiting"); // Set to waiting for receiver to accept
     setCurrentCallId(callData.callId);
     setIsCaller(true); // This user is the caller
     setCallRecipientId(activeChat.userId);
@@ -867,7 +950,7 @@ const MessagesPage = () => {
 
     // Show call modal with connecting status (receiver starts WebRTC immediately)
     setIsAudioOnlyCall(!incomingCallData.isVideoCall);
-    setCallStatus('connecting'); // Receiver goes directly to connecting
+    setCallStatus("connecting"); // Receiver goes directly to connecting
     setCurrentCallId(incomingCallData.callId);
     setIsCaller(false); // This user is the receiver, not the caller
     setCallRecipientId(incomingCallData.callerId); // The other user in call is the caller
@@ -893,8 +976,6 @@ const MessagesPage = () => {
       receiverId: user.id,
       callId: incomingCallData.callId,
     });
-
-
 
     setShowIncomingCall(false);
     setIncomingCallData(null);
@@ -942,7 +1023,10 @@ const MessagesPage = () => {
       // Track this message to prevent duplicate from socket echo
       const messageKey = `${messageData.groupId}_${messageData.message}_${messageData.senderId}`;
       recentlySentMessagesRef.current.add(messageKey);
-      setTimeout(() => recentlySentMessagesRef.current.delete(messageKey), 5000);
+      setTimeout(
+        () => recentlySentMessagesRef.current.delete(messageKey),
+        5000
+      );
 
       socketRef.current.emit("sendMessageToGroup", messageData);
       console.log("📤 Sent group message:", messageData);
@@ -956,7 +1040,6 @@ const MessagesPage = () => {
       };
 
       socketRef.current.emit("sendMessage", messageData);
-
     }
 
     // Add to local messages immediately
@@ -999,9 +1082,10 @@ const MessagesPage = () => {
 
       // Get image URL from response
       // Response format: { code: 1000, message: "Upload successful", result: { image: "url" } }
-      const imageUrl = uploadResult.result?.image || uploadResult.image || uploadResult.url;
+      const imageUrl =
+        uploadResult.result?.image || uploadResult.image || uploadResult.url;
 
-      if (!imageUrl || typeof imageUrl !== 'string') {
+      if (!imageUrl || typeof imageUrl !== "string") {
         console.error("Invalid upload response:", uploadResult);
         throw new Error("Could not get image URL");
       }
@@ -1018,7 +1102,10 @@ const MessagesPage = () => {
         // Track this message to prevent duplicate from socket echo
         const messageKey = `${messageData.groupId}_${messageData.message}_${messageData.senderId}`;
         recentlySentMessagesRef.current.add(messageKey);
-        setTimeout(() => recentlySentMessagesRef.current.delete(messageKey), 5000);
+        setTimeout(
+          () => recentlySentMessagesRef.current.delete(messageKey),
+          5000
+        );
 
         socketRef.current.emit("sendMessageToGroup", messageData);
       } else {
@@ -1043,7 +1130,6 @@ const MessagesPage = () => {
         }),
       };
       setMessages((prev) => [...prev, newMessage]);
-
     } catch (error) {
       console.error("Failed to send image:", error);
       alert("Unable to send image. Please try again!");
@@ -1081,9 +1167,12 @@ const MessagesPage = () => {
 
       // Get video URL from response
       // Response format: { code: 1000, message: "Upload video successful", result: { videoUrl: "url" } }
-      const videoUrl = uploadResult.result?.videoUrl || uploadResult.videoUrl || uploadResult.url;
+      const videoUrl =
+        uploadResult.result?.videoUrl ||
+        uploadResult.videoUrl ||
+        uploadResult.url;
 
-      if (!videoUrl || typeof videoUrl !== 'string') {
+      if (!videoUrl || typeof videoUrl !== "string") {
         console.error("Invalid upload response:", uploadResult);
         throw new Error("Could not get video URL");
       }
@@ -1101,7 +1190,10 @@ const MessagesPage = () => {
         // Track this message to prevent duplicate from socket echo
         const messageKey = `${messageData.groupId}_${messageData.message}_${messageData.senderId}`;
         recentlySentMessagesRef.current.add(messageKey);
-        setTimeout(() => recentlySentMessagesRef.current.delete(messageKey), 5000);
+        setTimeout(
+          () => recentlySentMessagesRef.current.delete(messageKey),
+          5000
+        );
 
         socketRef.current.emit("sendMessageToGroup", messageData);
       } else {
@@ -1127,7 +1219,6 @@ const MessagesPage = () => {
         }),
       };
       setMessages((prev) => [...prev, newMessage]);
-
     } catch (error) {
       console.error("Failed to send video:", error);
       alert("Unable to send video. Please try again!");
@@ -1184,7 +1275,9 @@ const MessagesPage = () => {
       fetchMyGroups();
 
       // Update active chat avatar - refetch group detail
-      const detailRes = await communicationApi.getGroupDetail(activeChat.groupId);
+      const detailRes = await communicationApi.getGroupDetail(
+        activeChat.groupId
+      );
       const groupData = detailRes?.data?.result;
       if (groupData?.image) {
         setActiveChat((prev) => ({ ...prev, avatar: groupData.image }));
@@ -1257,7 +1350,11 @@ const MessagesPage = () => {
 
   // Delete conversation (Direct messages)
   const handleDeleteConversation = async (userId, username) => {
-    if (!window.confirm(`Are you sure you want to delete the conversation with "${username}"?\n\nThis will delete all messages.`)) {
+    if (
+      !window.confirm(
+        `Are you sure you want to delete the conversation with "${username}"?\n\nThis will delete all messages.`
+      )
+    ) {
       return;
     }
 
@@ -1322,7 +1419,8 @@ const MessagesPage = () => {
     } catch (error) {
       console.error("Failed to leave group:", error);
       const errorMsg =
-        error.response?.data?.message || "Unable to leave group. Please try again!";
+        error.response?.data?.message ||
+        "Unable to leave group. Please try again!";
       alert(errorMsg);
     } finally {
       setLoadingAction(false);
@@ -1333,7 +1431,11 @@ const MessagesPage = () => {
   const handleRemoveMember = async (memberId, memberName) => {
     if (!activeChat?.groupId) return;
 
-    if (!window.confirm(`Are you sure you want to remove ${memberName} from the group?`))
+    if (
+      !window.confirm(
+        `Are you sure you want to remove ${memberName} from the group?`
+      )
+    )
       return;
 
     setLoadingAction(true);
@@ -1416,7 +1518,8 @@ const MessagesPage = () => {
   const isPremium =
     user?.isPremium || user?.premiumOneMonth || user?.premiumSixMonths;
 
-  const isCurrentUserAdmin = activeChat?.isGroup && activeChat?.adminId === user?.id;
+  const isCurrentUserAdmin =
+    activeChat?.isGroup && activeChat?.adminId === user?.id;
   const isCurrentUserMember = activeChat?.isGroup && activeChat?.isMember;
 
   return (
@@ -1425,7 +1528,8 @@ const MessagesPage = () => {
         {/* Offline Warning Banner */}
         {!socketConnected && (
           <div className="absolute top-0 left-0 right-0 bg-gray-900 text-white px-4 py-2 text-center text-sm font-medium z-10 border-b border-gray-700">
-            ⚠ Chat server offline - You can only view old messages, cannot send new ones
+            ⚠ Chat server offline - You can only view old messages, cannot send
+            new ones
           </div>
         )}
 
@@ -1433,7 +1537,9 @@ const MessagesPage = () => {
           <div className="border-b border-gray-200 p-5 bg-white">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2.5">
-                <h1 className="text-lg font-semibold text-gray-900 tracking-tight">Messages</h1>
+                <h1 className="text-lg font-semibold text-gray-900 tracking-tight">
+                  Messages
+                </h1>
                 <div
                   className={`h-1.5 w-1.5 rounded-full ${
                     socketConnected ? "bg-emerald-500" : "bg-gray-400"
@@ -1467,30 +1573,33 @@ const MessagesPage = () => {
               <button
                 type="button"
                 onClick={() => setActiveTab("direct")}
-                className={`flex-1 py-2 px-3 rounded-md text-xs font-medium transition-all ${activeTab === "direct"
-                  ? "bg-white text-gray-900 shadow-sm"
-                  : "text-gray-600 hover:text-gray-900"
-                  }`}
+                className={`flex-1 py-2 px-3 rounded-md text-xs font-medium transition-all ${
+                  activeTab === "direct"
+                    ? "bg-white text-gray-900 shadow-sm"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
               >
                 Direct
               </button>
               <button
                 type="button"
                 onClick={() => setActiveTab("groups")}
-                className={`flex-1 py-2 px-3 rounded-md text-xs font-medium transition-all ${activeTab === "groups"
-                  ? "bg-white text-gray-900 shadow-sm"
-                  : "text-gray-600 hover:text-gray-900"
-                  }`}
+                className={`flex-1 py-2 px-3 rounded-md text-xs font-medium transition-all ${
+                  activeTab === "groups"
+                    ? "bg-white text-gray-900 shadow-sm"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
               >
                 Groups
               </button>
               <button
                 type="button"
                 onClick={() => setActiveTab("explore")}
-                className={`flex-1 py-2 px-3 rounded-md text-xs font-medium transition-all ${activeTab === "explore"
-                  ? "bg-white text-gray-900 shadow-sm"
-                  : "text-gray-600 hover:text-gray-900"
-                  }`}
+                className={`flex-1 py-2 px-3 rounded-md text-xs font-medium transition-all ${
+                  activeTab === "explore"
+                    ? "bg-white text-gray-900 shadow-sm"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
               >
                 Explore
               </button>
@@ -1509,10 +1618,11 @@ const MessagesPage = () => {
                 conversations.map((chat) => (
                   <div
                     key={chat.id}
-                    className={`group/conv mx-2 mb-2 flex items-center gap-3 rounded-xl p-3 text-left transition-colors ${activeChat?.id === chat.id
-                      ? "bg-blue-50"
-                      : "hover:bg-gray-100"
-                      }`}
+                    className={`group/conv mx-2 mb-2 flex items-center gap-3 rounded-xl p-3 text-left transition-colors ${
+                      activeChat?.id === chat.id
+                        ? "bg-blue-50"
+                        : "hover:bg-gray-100"
+                    }`}
                   >
                     <button
                       type="button"
@@ -1532,21 +1642,25 @@ const MessagesPage = () => {
                       <div className="min-w-0 flex-1">
                         <div className="flex items-baseline justify-between">
                           <h3
-                            className={`truncate text-sm font-semibold ${activeChat?.id === chat.id
-                              ? "text-blue-700"
-                              : "text-gray-900"
-                              }`}
+                            className={`truncate text-sm font-semibold ${
+                              activeChat?.id === chat.id
+                                ? "text-blue-700"
+                                : "text-gray-900"
+                            }`}
                           >
                             {chat.name}
                           </h3>
-                          <span className="text-xs text-gray-400">{chat.time}</span>
+                          <span className="text-xs text-gray-400">
+                            {chat.time}
+                          </span>
                         </div>
                         <div className="mt-0.5 flex items-center justify-between">
                           <p
-                            className={`max-w-[120px] truncate text-xs ${chat.unread
-                              ? "font-bold text-gray-900"
-                              : "text-gray-500"
-                              }`}
+                            className={`max-w-[120px] truncate text-xs ${
+                              chat.unread
+                                ? "font-bold text-gray-900"
+                                : "text-gray-500"
+                            }`}
                           >
                             {chat.lastMessage}
                           </p>
@@ -1610,10 +1724,11 @@ const MessagesPage = () => {
                       setActiveChat(group);
                       setShowGroupInfo(false);
                     }}
-                    className={`mx-2 mb-2 flex items-center gap-3 rounded-xl p-3 text-left transition-colors w-[calc(100%-1rem)] ${activeChat?.id === group.id
-                      ? "bg-blue-50"
-                      : "hover:bg-gray-100"
-                      }`}
+                    className={`mx-2 mb-2 flex items-center gap-3 rounded-xl p-3 text-left transition-colors w-[calc(100%-1rem)] ${
+                      activeChat?.id === group.id
+                        ? "bg-blue-50"
+                        : "hover:bg-gray-100"
+                    }`}
                   >
                     <div className="relative">
                       <img
@@ -1628,10 +1743,11 @@ const MessagesPage = () => {
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
                         <h3
-                          className={`truncate text-sm font-semibold ${activeChat?.id === group.id
-                            ? "text-blue-700"
-                            : "text-gray-900"
-                            }`}
+                          className={`truncate text-sm font-semibold ${
+                            activeChat?.id === group.id
+                              ? "text-blue-700"
+                              : "text-gray-900"
+                          }`}
                         >
                           {group.name}
                         </h3>
@@ -1646,70 +1762,72 @@ const MessagesPage = () => {
                   </button>
                 ))
               )
+            ) : // Explore Tab (all groups - not joined)
+            exploreGroups.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12 text-gray-500">
+                <Users className="h-12 w-12 mb-3 text-gray-300" />
+                <p className="text-sm">No new groups to explore</p>
+                <p className="text-xs text-gray-400 mt-1">
+                  You've joined all groups!
+                </p>
+              </div>
             ) : (
-              // Explore Tab (all groups - not joined)
-              exploreGroups.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-gray-500">
-                  <Users className="h-12 w-12 mb-3 text-gray-300" />
-                  <p className="text-sm">No new groups to explore</p>
-                  <p className="text-xs text-gray-400 mt-1">You've joined all groups!</p>
-                </div>
-              ) : (
-                exploreGroups.map((group) => (
-                  <button
-                    type="button"
-                    key={group.id}
-                    onClick={() => {
-                      setActiveChat(group);
-                      setShowGroupInfo(false);
-                    }}
-                    className={`mx-2 mb-2 flex items-center gap-3 rounded-xl p-3 text-left transition-colors w-[calc(100%-1rem)] ${activeChat?.id === group.id
+              exploreGroups.map((group) => (
+                <button
+                  type="button"
+                  key={group.id}
+                  onClick={() => {
+                    setActiveChat(group);
+                    setShowGroupInfo(false);
+                  }}
+                  className={`mx-2 mb-2 flex items-center gap-3 rounded-xl p-3 text-left transition-colors w-[calc(100%-1rem)] ${
+                    activeChat?.id === group.id
                       ? "bg-purple-50"
                       : "hover:bg-gray-100"
-                      }`}
-                  >
-                    <div className="relative">
-                      <img
-                        src={group.avatar}
-                        alt={group.name}
-                        className="h-12 w-12 rounded-full object-cover"
-                      />
-                      <span className="absolute bottom-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-purple-500 text-white border-2 border-white">
-                        <Users className="h-2.5 w-2.5" />
-                      </span>
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
-                        <h3
-                          className={`truncate text-sm font-semibold ${activeChat?.id === group.id
+                  }`}
+                >
+                  <div className="relative">
+                    <img
+                      src={group.avatar}
+                      alt={group.name}
+                      className="h-12 w-12 rounded-full object-cover"
+                    />
+                    <span className="absolute bottom-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-purple-500 text-white border-2 border-white">
+                      <Users className="h-2.5 w-2.5" />
+                    </span>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <h3
+                        className={`truncate text-sm font-semibold ${
+                          activeChat?.id === group.id
                             ? "text-purple-700"
                             : "text-gray-900"
-                            }`}
-                        >
-                          {group.name}
-                        </h3>
-                      </div>
-                      <div className="mt-0.5 flex items-center justify-between">
-                        <p className="text-xs text-gray-500">
-                          {group.memberCount} members
-                        </p>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleRequestJoinGroup(group.groupId);
-                          }}
-                          disabled={loadingAction}
-                          className="flex items-center gap-1 px-2 py-1 rounded-full bg-purple-600 text-white text-xs font-medium hover:bg-purple-700 disabled:opacity-50"
-                        >
-                          <UserPlus className="h-3 w-3" />
-                          Join
-                        </button>
-                      </div>
+                        }`}
+                      >
+                        {group.name}
+                      </h3>
                     </div>
-                  </button>
-                ))
-              )
+                    <div className="mt-0.5 flex items-center justify-between">
+                      <p className="text-xs text-gray-500">
+                        {group.memberCount} members
+                      </p>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRequestJoinGroup(group.groupId);
+                        }}
+                        disabled={loadingAction}
+                        className="flex items-center gap-1 px-2 py-1 rounded-full bg-purple-600 text-white text-xs font-medium hover:bg-purple-700 disabled:opacity-50"
+                      >
+                        <UserPlus className="h-3 w-3" />
+                        Join
+                      </button>
+                    </div>
+                  </div>
+                </button>
+              ))
             )}
           </div>
         </div>
@@ -1718,8 +1836,14 @@ const MessagesPage = () => {
           <div className="flex h-16 items-center justify-between border-b border-gray-200 px-6 bg-white">
             <button
               type="button"
-              onClick={() => activeChat.isGroup && setShowGroupInfo(!showGroupInfo)}
-              className={`flex items-center gap-3 ${activeChat.isGroup ? "cursor-pointer hover:bg-gray-50 -ml-2 pl-2 pr-3 py-1.5 rounded-lg transition-colors" : ""}`}
+              onClick={() =>
+                activeChat.isGroup && setShowGroupInfo(!showGroupInfo)
+              }
+              className={`flex items-center gap-3 ${
+                activeChat.isGroup
+                  ? "cursor-pointer hover:bg-gray-50 -ml-2 pl-2 pr-3 py-1.5 rounded-lg transition-colors"
+                  : ""
+              }`}
             >
               <div className="relative">
                 <img
@@ -1744,12 +1868,16 @@ const MessagesPage = () => {
                   {activeChat.isGroup
                     ? `${activeChat.memberCount} members`
                     : activeChat.isOnline
-                      ? "Active now"
-                      : "Recently active"}
+                    ? "Active now"
+                    : "Recently active"}
                 </p>
               </div>
               {activeChat.isGroup && (
-                <ChevronRight className={`h-4 w-4 text-gray-400 transition-transform ${showGroupInfo ? "rotate-90" : ""}`} />
+                <ChevronRight
+                  className={`h-4 w-4 text-gray-400 transition-transform ${
+                    showGroupInfo ? "rotate-90" : ""
+                  }`}
+                />
               )}
             </button>
             <div className="flex items-center gap-2 text-gray-600">
@@ -1758,7 +1886,11 @@ const MessagesPage = () => {
                 onClick={handleStartAudioCall}
                 disabled={!activeChat || activeChat.isGroup}
                 className="rounded-lg p-2 transition-colors hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-                title={activeChat?.isGroup ? "Group calls not supported" : "Voice call"}
+                title={
+                  activeChat?.isGroup
+                    ? "Group calls not supported"
+                    : "Voice call"
+                }
               >
                 <Phone className="h-5 w-5" />
               </button>
@@ -1767,7 +1899,11 @@ const MessagesPage = () => {
                 onClick={handleStartVideoCall}
                 disabled={!activeChat || activeChat.isGroup}
                 className="rounded-lg p-2 transition-colors hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-                title={activeChat?.isGroup ? "Group calls not supported" : "Video call"}
+                title={
+                  activeChat?.isGroup
+                    ? "Group calls not supported"
+                    : "Video call"
+                }
               >
                 <Video className="h-5 w-5" />
               </button>
@@ -1782,7 +1918,11 @@ const MessagesPage = () => {
 
           <div className="flex flex-1 overflow-hidden">
             {/* Messages Area */}
-            <div className={`flex-1 flex flex-col ${showGroupInfo ? "border-r border-gray-100" : ""}`}>
+            <div
+              className={`flex-1 flex flex-col ${
+                showGroupInfo ? "border-r border-gray-100" : ""
+              }`}
+            >
               <div className="flex-1 space-y-4 overflow-y-auto bg-white p-4">
                 {messages.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-full text-gray-400">
@@ -1794,18 +1934,27 @@ const MessagesPage = () => {
                   messages.map((message) => (
                     <div
                       key={message.id}
-                      className={`flex ${message.sender === "me" ? "justify-end" : "justify-start"
-                        }`}
+                      className={`flex ${
+                        message.sender === "me"
+                          ? "justify-end"
+                          : "justify-start"
+                      }`}
                     >
                       {message.sender === "other" && (
                         <button
                           type="button"
                           onClick={() => {
-                            const targetUserId = activeChat.isGroup ? message.senderId : activeChat.userId;
+                            const targetUserId = activeChat.isGroup
+                              ? message.senderId
+                              : activeChat.userId;
                             if (targetUserId) navigate(`/user/${targetUserId}`);
                           }}
                           className="mr-2 self-end focus:outline-none rounded-full transition-transform hover:scale-110 relative group/avatar"
-                          title={`Xem profile ${activeChat.isGroup ? message.senderName : activeChat.name}`}
+                          title={`Xem profile ${
+                            activeChat.isGroup
+                              ? message.senderName
+                              : activeChat.name
+                          }`}
                         >
                           {/* Premium Avatar Frame */}
                           {activeChat.isGroup && message.senderIsPremium && (
@@ -1815,16 +1964,29 @@ const MessagesPage = () => {
                             />
                           )}
                           <div
-                            className={`relative ${activeChat.isGroup && message.senderIsPremium
-                              ? "p-0.5 bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 rounded-full"
-                              : ""
-                              }`}
+                            className={`relative ${
+                              activeChat.isGroup && message.senderIsPremium
+                                ? "p-0.5 bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 rounded-full"
+                                : ""
+                            }`}
                           >
                             <img
-                              src={activeChat.isGroup ? (message.senderAvatar || `https://i.pravatar.cc/150?u=${message.senderId}`) : activeChat.avatar}
-                              alt={activeChat.isGroup ? message.senderName : activeChat.name}
-                              className={`h-8 w-8 rounded-full object-cover cursor-pointer ${activeChat.isGroup && message.senderIsPremium ? "ring-1 ring-white" : ""
-                                }`}
+                              src={
+                                activeChat.isGroup
+                                  ? message.senderAvatar ||
+                                    `https://i.pravatar.cc/150?u=${message.senderId}`
+                                  : activeChat.avatar
+                              }
+                              alt={
+                                activeChat.isGroup
+                                  ? message.senderName
+                                  : activeChat.name
+                              }
+                              className={`h-8 w-8 rounded-full object-cover cursor-pointer ${
+                                activeChat.isGroup && message.senderIsPremium
+                                  ? "ring-1 ring-white"
+                                  : ""
+                              }`}
                             />
                           </div>
                           {/* Premium Crown Badge */}
@@ -1836,16 +1998,20 @@ const MessagesPage = () => {
                         </button>
                       )}
                       <div
-                        className={`group relative max-w-[70%] rounded-xl px-4 py-2.5 text-sm ${message.sender === "me"
-                          ? "rounded-br-sm bg-gray-900 text-white shadow-sm"
-                          : "rounded-bl-sm bg-gray-100 text-gray-800 border border-gray-200"
-                          }`}
+                        className={`group relative max-w-[70%] rounded-xl px-4 py-2.5 text-sm ${
+                          message.sender === "me"
+                            ? "rounded-br-sm bg-gray-900 text-white shadow-sm"
+                            : "rounded-bl-sm bg-gray-100 text-gray-800 border border-gray-200"
+                        }`}
                       >
                         {activeChat.isGroup && message.sender === "other" && (
-                          <p className={`text-xs font-medium mb-1 ${message.senderIsPremium
-                            ? "text-amber-600"
-                            : "text-gray-600"
-                            }`}>
+                          <p
+                            className={`text-xs font-medium mb-1 ${
+                              message.senderIsPremium
+                                ? "text-amber-600"
+                                : "text-gray-600"
+                            }`}
+                          >
                             {message.senderName}
                             {message.senderIsPremium && " ✨"}
                           </p>
@@ -1870,8 +2036,9 @@ const MessagesPage = () => {
                           message.text
                         )}
                         <span
-                          className={`pointer-events-none absolute bottom-full mb-1 text-[10px] text-gray-400 opacity-0 transition-opacity group-hover:opacity-100 ${message.sender === "me" ? "right-0" : "left-0"
-                            }`}
+                          className={`pointer-events-none absolute bottom-full mb-1 text-[10px] text-gray-400 opacity-0 transition-opacity group-hover:opacity-100 ${
+                            message.sender === "me" ? "right-0" : "left-0"
+                          }`}
                         >
                           {message.time}
                         </span>
@@ -1992,8 +2159,9 @@ const MessagesPage = () => {
                     <img
                       src={activeChat.avatar}
                       alt={activeChat.name}
-                      className={`h-20 w-20 rounded-full object-cover ${isCurrentUserAdmin ? "cursor-pointer" : ""
-                        }`}
+                      className={`h-20 w-20 rounded-full object-cover ${
+                        isCurrentUserAdmin ? "cursor-pointer" : ""
+                      }`}
                       onClick={() => {
                         if (isCurrentUserAdmin && avatarInputRef.current) {
                           avatarInputRef.current.click();
@@ -2018,15 +2186,21 @@ const MessagesPage = () => {
                       </div>
                     )}
                   </div>
-                  <h4 className="font-bold text-gray-900 text-lg">{activeChat.name}</h4>
-                  <p className="text-sm text-gray-500">{activeChat.memberCount} members</p>
+                  <h4 className="font-bold text-gray-900 text-lg">
+                    {activeChat.name}
+                  </h4>
+                  <p className="text-sm text-gray-500">
+                    {activeChat.memberCount} members
+                  </p>
                   {activeChat.description && (
                     <p className="text-xs text-gray-600 mt-2 px-2 py-1.5 bg-gray-100 rounded-lg text-center">
                       📝 {activeChat.description}
                     </p>
                   )}
                   {isCurrentUserAdmin && (
-                    <p className="text-xs text-blue-500 mt-1">Click on image to change</p>
+                    <p className="text-xs text-blue-500 mt-1">
+                      Click on image to change
+                    </p>
                   )}
                 </div>
 
@@ -2046,7 +2220,9 @@ const MessagesPage = () => {
                         </button>
                       ) : (
                         <div className="bg-white p-3 rounded-lg border border-gray-200 space-y-3">
-                          <p className="text-sm font-semibold text-gray-700">Edit Group</p>
+                          <p className="text-sm font-semibold text-gray-700">
+                            Edit Group
+                          </p>
                           <input
                             type="text"
                             value={editGroupName}
@@ -2056,7 +2232,9 @@ const MessagesPage = () => {
                           />
                           <textarea
                             value={editGroupDescription}
-                            onChange={(e) => setEditGroupDescription(e.target.value)}
+                            onChange={(e) =>
+                              setEditGroupDescription(e.target.value)
+                            }
                             placeholder="Group description (optional)"
                             rows={2}
                             className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 resize-none"
@@ -2121,7 +2299,10 @@ const MessagesPage = () => {
                           className="flex items-center gap-3 p-2 rounded-lg hover:bg-white"
                         >
                           <img
-                            src={member.avatarUrl || `https://i.pravatar.cc/150?u=${member.userId}`}
+                            src={
+                              member.avatarUrl ||
+                              `https://i.pravatar.cc/150?u=${member.userId}`
+                            }
                             alt={member.username}
                             className="h-9 w-9 rounded-full object-cover"
                           />
@@ -2130,7 +2311,8 @@ const MessagesPage = () => {
                               <p className="text-sm font-medium text-gray-900 truncate">
                                 {member.username || "User"}
                               </p>
-                              {(member.userId === activeChat.adminId || member.id === activeChat.adminId) && (
+                              {(member.userId === activeChat.adminId ||
+                                member.id === activeChat.adminId) && (
                                 <Crown className="h-3.5 w-3.5 text-yellow-500" />
                               )}
                             </div>
@@ -2141,7 +2323,10 @@ const MessagesPage = () => {
                               <button
                                 type="button"
                                 onClick={() =>
-                                  handleRemoveMember(member.userId, member.username)
+                                  handleRemoveMember(
+                                    member.userId,
+                                    member.username
+                                  )
                                 }
                                 disabled={loadingAction}
                                 className="p-1.5 rounded-full text-red-500 hover:bg-red-50 disabled:opacity-50"
@@ -2179,7 +2364,10 @@ const MessagesPage = () => {
                             title="View profile"
                           >
                             <img
-                              src={request.avatarUrl || `https://i.pravatar.cc/150?u=${request.userId}`}
+                              src={
+                                request.avatarUrl ||
+                                `https://i.pravatar.cc/150?u=${request.userId}`
+                              }
                               alt={request.username}
                               className="h-9 w-9 rounded-full object-cover cursor-pointer ring-2 ring-transparent group-hover/avatar:ring-blue-400 transition-all"
                             />
@@ -2187,7 +2375,9 @@ const MessagesPage = () => {
                           <div className="flex-1 min-w-0">
                             <button
                               type="button"
-                              onClick={() => navigate(`/user/${request.userId}`)}
+                              onClick={() =>
+                                navigate(`/user/${request.userId}`)
+                              }
                               className="text-sm font-medium text-gray-900 truncate hover:text-blue-600 hover:underline"
                               title="View profile"
                             >
@@ -2197,7 +2387,9 @@ const MessagesPage = () => {
                           <div className="flex gap-1">
                             <button
                               type="button"
-                              onClick={() => handleModifyRequest(request.userId, true)}
+                              onClick={() =>
+                                handleModifyRequest(request.userId, true)
+                              }
                               disabled={loadingAction}
                               className="p-1.5 rounded-full text-green-600 hover:bg-green-100 disabled:opacity-50"
                               title="Accept"
@@ -2206,7 +2398,9 @@ const MessagesPage = () => {
                             </button>
                             <button
                               type="button"
-                              onClick={() => handleModifyRequest(request.userId, false)}
+                              onClick={() =>
+                                handleModifyRequest(request.userId, false)
+                              }
                               disabled={loadingAction}
                               className="p-1.5 rounded-full text-red-500 hover:bg-red-100 disabled:opacity-50"
                               title="Reject"
@@ -2229,7 +2423,7 @@ const MessagesPage = () => {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md">
             <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl border border-gray-200">
               <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-60" />
-              
+
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gray-50 border border-gray-200">
