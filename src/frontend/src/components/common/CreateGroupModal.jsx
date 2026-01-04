@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { X, Users } from "lucide-react";
+import { X, Users, Loader2 } from "lucide-react";
 
-const CreateGroupModal = ({ isOpen, onClose, onSubmit }) => {
+const CreateGroupModal = ({ isOpen, onClose, onSubmit, isLoading = false }) => {
     const [groupName, setGroupName] = useState("");
 
     if (!isOpen) return null;
@@ -65,10 +65,17 @@ const CreateGroupModal = ({ isOpen, onClose, onSubmit }) => {
                         </button>
                         <button
                             type="submit"
-                            disabled={!groupName.trim()}
-                            className="flex-1 px-4 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                            disabled={!groupName.trim() || isLoading}
+                            className="flex-1 px-4 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
                         >
-                            Create Group
+                            {isLoading ? (
+                                <>
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                    Creating...
+                                </>
+                            ) : (
+                                "Create Group"
+                            )}
                         </button>
                     </div>
                 </form>
