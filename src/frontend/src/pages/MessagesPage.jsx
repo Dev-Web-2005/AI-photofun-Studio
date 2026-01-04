@@ -1431,6 +1431,24 @@ const MessagesPage = () => {
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-6rem)]">
+      {/* Success Toast */}
+      {successMessage && (
+        <div className="fixed top-4 right-4 z-50 animate-fade-in">
+          <div className="bg-green-500 text-white px-6 py-3 rounded-xl shadow-lg flex items-center gap-2">
+            <Check className="w-5 h-5" />
+            {successMessage}
+          </div>
+        </div>
+      )}
+
+      {/* Create Group Modal */}
+      <CreateGroupModal
+        isOpen={showCreateGroup}
+        onClose={() => setShowCreateGroup(false)}
+        onSubmit={handleCreateGroup}
+        isLoading={createGroupLoading}
+      />
+
       <div className="flex h-[calc(100vh-8rem)] w-full bg-gray-50 overflow-hidden rounded-3xl border border-gray-200 shadow-sm">
         {/* Offline Warning Banner */}
         {!socketConnected && (
