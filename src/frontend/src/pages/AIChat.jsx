@@ -461,9 +461,10 @@ const AIChat = () => {
     });
   };
 
-  // Handle example card click
-  const handleExampleClick = (prompt) => {
-    setInputValue(prompt);
+  // Handle example card click - pick random prompt from array
+  const handleExampleClick = (prompts) => {
+    const randomPrompt = prompts[Math.floor(Math.random() * prompts.length)];
+    setInputValue(randomPrompt);
     messageInputRef.current?.focus();
   };
 
@@ -601,7 +602,7 @@ const AIChat = () => {
                 {EXAMPLE_CARDS.map((card) => (
                   <button
                     key={card.id}
-                    onClick={() => handleExampleClick(card.prompt)}
+                    onClick={() => handleExampleClick(card.prompts)}
                     className="group flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-gray-200 text-gray-700 text-xs font-medium transition-all duration-200 hover:bg-gray-50 hover:border-gray-300 hover:shadow-sm cursor-pointer"
                   >
                     <span className="group-hover:scale-110 transition-transform duration-200">{card.icon}</span>
