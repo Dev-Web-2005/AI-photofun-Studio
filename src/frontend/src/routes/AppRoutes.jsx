@@ -20,6 +20,7 @@ import PromptToVideo from "../pages/PromptToVideo";
 import AIChat from "../pages/AIChat";
 import Notifications from "../pages/Notifications";
 import MessagesPage from "../pages/MessagesPage";
+import DiscoverPage from "../pages/DiscoverPage";
 import Profile from "../pages/Profile";
 import UserProfile from "../pages/UserProfile";
 import EditProfile from "../pages/EditProfile";
@@ -118,6 +119,7 @@ function AppRoutes() {
         <Route path="/prompt-to-video" element={<PromptToVideo />} />
         <Route path="/activity" element={<Notifications />} />
         <Route path="/messages" element={<MessagesPage />} />
+        <Route path="/discover" element={<DiscoverPage />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/edit" element={<EditProfile />} />
         <Route path="/user/:userId" element={<UserProfile />} />
