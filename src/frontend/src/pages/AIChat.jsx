@@ -572,19 +572,16 @@ const AIChat = () => {
           {/* Example Cards - show only when there's just the welcome message */}
           {messages.length === 1 && messages[0]?.id === "welcome" && (
             <div className="mt-4">
-              <p className="text-sm text-gray-500 mb-3">💡 Try one of these examples:</p>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              <p className="text-xs text-gray-400 mb-2">💡 Quick examples:</p>
+              <div className="flex flex-wrap gap-2">
                 {EXAMPLE_CARDS.map((card) => (
                   <button
                     key={card.id}
                     onClick={() => handleExampleClick(card.prompt)}
-                    className={`group p-4 rounded-xl bg-gradient-to-br ${card.gradient} text-white text-left transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer`}
+                    className="group flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-gray-200 text-gray-700 text-xs font-medium transition-all duration-200 hover:bg-gray-50 hover:border-gray-300 hover:shadow-sm cursor-pointer"
                   >
-                    <div className="text-2xl mb-2 group-hover:scale-110 transition-transform duration-300">
-                      {card.icon}
-                    </div>
-                    <div className="font-semibold text-sm">{card.title}</div>
-                    <div className="text-xs opacity-80 mt-1">{card.description}</div>
+                    <span className="group-hover:scale-110 transition-transform duration-200">{card.icon}</span>
+                    {card.title}
                   </button>
                 ))}
               </div>
