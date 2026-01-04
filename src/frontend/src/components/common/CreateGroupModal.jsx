@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { X, Users, Loader2 } from "lucide-react";
+import { X, Users, Loader2, Crown } from "lucide-react";
 
 const CreateGroupModal = ({ isOpen, onClose, onSubmit, isLoading = false }) => {
     const [groupName, setGroupName] = useState("");
@@ -39,6 +39,19 @@ const CreateGroupModal = ({ isOpen, onClose, onSubmit, isLoading = false }) => {
                     >
                         <X className="w-5 h-5 text-gray-500" />
                     </button>
+                </div>
+
+                {/* Premium Badge */}
+                <div className="mx-4 mt-4 p-3 rounded-lg bg-gradient-to-r from-yellow-50 via-orange-50 to-pink-50 border border-yellow-200">
+                    <div className="flex items-center gap-2 text-sm">
+                        <Crown className="h-4 w-4 text-orange-500" />
+                        <span className="text-gray-700">
+                            This feature is for members{" "}
+                            <span className="font-bold text-transparent bg-gradient-to-r from-yellow-500 via-orange-500 to-pink-500 bg-clip-text">
+                                Premium
+                            </span>
+                        </span>
+                    </div>
                 </div>
 
                 {/* Form */}
