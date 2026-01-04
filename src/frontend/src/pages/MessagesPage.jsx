@@ -1443,6 +1443,16 @@ const MessagesPage = () => {
         </div>
       )}
 
+      {/* Error Toast */}
+      {errorMessage && (
+        <div className="fixed top-4 right-4 z-50 animate-fade-in">
+          <div className="bg-red-500 text-white px-6 py-3 rounded-xl shadow-lg flex items-center gap-2">
+            <XCircle className="w-5 h-5" />
+            {errorMessage}
+          </div>
+        </div>
+      )}
+
       {/* Create Group Modal */}
       <CreateGroupModal
         isOpen={showCreateGroup}
