@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   ArrowLeft,
   Download,
@@ -49,6 +49,7 @@ const IMAGE_TO_VIDEO_MODELS = [
 
 const ImageToVideo = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const uploadInputRef = useRef(null);
   const pollIntervalRef = useRef(null);
 
@@ -63,6 +64,19 @@ const ImageToVideo = () => {
   const [videoUrl, setVideoUrl] = useState(null);
   const [error, setError] = useState("");
   const [dragOver, setDragOver] = useState(false);
+
+  // Check for prompt passed via navigation state
+  useEffect(() => {
+    if (location.state?.prompt) {
+      setPrompt(location.state.prompt);
+      // Show a nice notification
+      toast.success("Prompt loaded! Upload an image to get started.", {
+        description: "The motion description is ready for your video.",
+      });
+      // Clear the state to prevent re-applying on refresh
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   // Handle file upload
   const handleFileUpload = async (file) => {

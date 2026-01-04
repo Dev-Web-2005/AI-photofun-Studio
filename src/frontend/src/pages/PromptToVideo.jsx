@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft, Download, Film, Play, Share2, Video } from "lucide-react";
 import {
   suggestPrompts,
@@ -40,6 +40,7 @@ const PROMPT_TO_VIDEO_MODELS = [
 
 const PromptToVideo = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const pollIntervalRef = useRef(null);
   const suggestionTimeoutRef = useRef(null);
   const promptInputRef = useRef(null);
@@ -56,6 +57,19 @@ const PromptToVideo = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+
+  // Check for prompt passed via navigation state
+  useEffect(() => {
+    if (location.state?.prompt) {
+      setPrompt(location.state.prompt);
+      // Show a nice notification
+      toast.success("Prompt loaded! Ready to generate your video.", {
+        description: "You can edit the prompt or generate directly.",
+      });
+      // Clear the state to prevent re-applying on refresh
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   // Fetch suggestions
   const fetchSuggestions = useCallback(async (query) => {

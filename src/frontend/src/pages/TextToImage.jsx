@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   ArrowLeft,
   Download,
@@ -35,6 +35,7 @@ const readFileAsDataUrl = (file) =>
 
 const TextToImage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const uploadInputRef = useRef(null);
   const { createPost, currentUser } = usePosts();
 
@@ -58,6 +59,19 @@ const TextToImage = () => {
   const promptInputRef = useRef(null);
 
   const charCount = useMemo(() => prompt.length, [prompt]);
+
+  // Check for prompt passed via navigation state
+  useEffect(() => {
+    if (location.state?.prompt) {
+      setPrompt(location.state.prompt);
+      // Show a nice notification
+      toast.success("Prompt loaded! Ready to generate your image.", {
+        description: "You can edit the prompt or generate directly.",
+      });
+      // Clear the state to prevent re-applying on refresh
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   // Fetch suggestions when prompt changes (with debounce)
   const fetchSuggestions = useCallback(async (query) => {
