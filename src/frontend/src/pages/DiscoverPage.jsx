@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import {
     Compass,
     Clock,
-    ChevronRight,
     Film,
     Zap,
     Sparkles,
@@ -178,115 +177,268 @@ const DiscoverPage = () => {
     };
 
     return (
-        <div className="space-y-6 pb-8">
-            {/* Header */}
-            <header className={`${isDarkMode ? "bg-slate-800 border-slate-700" : "bg-white border-gray-200"} border-b -mx-6 px-6 py-5 mb-2`}>
+        <div className="space-y-6">
+            {/* Header - matching AITools style */}
+            <header
+                className={`${isDarkMode
+                        ? "bg-slate-800 border-slate-700"
+                        : "bg-white border-gray-200"
+                    } border-b -mx-6 px-6 py-5 mb-2`}
+            >
                 <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 ${isDarkMode ? "bg-gradient-to-br from-purple-500 to-pink-500" : "bg-gradient-to-br from-purple-600 to-pink-600"} rounded-xl flex items-center justify-center`}>
-                        <Compass className="w-5 h-5 text-white" />
+                    <div
+                        className={`w-8 h-8 ${isDarkMode ? "bg-slate-100" : "bg-gray-900"
+                            } rounded-lg flex items-center justify-center group/logo hover:scale-110 transition-transform duration-300`}
+                    >
+                        <Compass
+                            className={`w-4 h-4 ${isDarkMode ? "text-slate-900" : "text-white"
+                                } group-hover/logo:rotate-12 transition-transform duration-300`}
+                        />
                     </div>
                     <div>
-                        <h1 className={`text-xl font-bold ${isDarkMode ? "text-white" : "text-gray-900"}`}>Discover</h1>
-                        <p className={`text-xs ${isDarkMode ? "text-slate-400" : "text-gray-500"}`}>News & Tutorials about AI Tools</p>
+                        <h1
+                            className={`text-xl font-bold ${isDarkMode ? "text-white" : "text-gray-900"
+                                }`}
+                        >
+                            Discover
+                        </h1>
+                        <p
+                            className={`text-xs ${isDarkMode ? "text-slate-400" : "text-gray-500"
+                                }`}
+                        >
+                            News & Tutorials about AI Tools
+                        </p>
                     </div>
                 </div>
             </header>
 
-            {/* Featured Article */}
-            {activeCategory === "all" && featuredArticle && (
-                <button
-                    type="button"
-                    onClick={() => handleArticleClick(featuredArticle)}
-                    className={`w-full group relative overflow-hidden rounded-2xl ${isDarkMode ? "bg-slate-800" : "bg-white"} shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1`}
-                >
-                    <div className="relative h-64 overflow-hidden">
-                        <img src={featuredArticle.coverImage} alt={featuredArticle.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-                        <div className="absolute bottom-0 left-0 right-0 p-6 text-left">
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-600 text-white text-xs font-medium mb-3">
-                                <TrendingUp className="w-3 h-3" />
-                                Featured
-                            </span>
-                            <h2 className="text-2xl font-bold text-white mb-2">{featuredArticle.title}</h2>
-                            <p className="text-gray-200 text-sm line-clamp-2 mb-3">{featuredArticle.description}</p>
-                            <div className="flex items-center gap-4 text-gray-300 text-xs">
-                                <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{featuredArticle.readTime}</span>
-                                <span>{featuredArticle.date}</span>
+            <section className="space-y-8">
+                {/* Header Text */}
+                <div className="text-center max-w-2xl mx-auto">
+                    <h2
+                        className={`text-2xl font-bold mb-2 ${isDarkMode ? "text-white" : "text-gray-900"
+                            } animate-fade-in`}
+                    >
+                        Explore AI Tools & Features
+                    </h2>
+                    <p
+                        className={`text-sm ${isDarkMode ? "text-slate-400" : "text-gray-500"
+                            } animate-fade-in`}
+                        style={{ animationDelay: "100ms" }}
+                    >
+                        Learn about our powerful AI tools with detailed guides and tutorials
+                    </p>
+                </div>
+
+                {/* Category Tabs */}
+                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide justify-center flex-wrap">
+                    {CATEGORIES.map((category) => {
+                        const Icon = category.icon;
+                        return (
+                            <button
+                                key={category.id}
+                                type="button"
+                                onClick={() => setActiveCategory(category.id)}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 ${activeCategory === category.id
+                                        ? isDarkMode
+                                            ? "bg-slate-100 text-slate-900"
+                                            : "bg-gray-900 text-white"
+                                        : isDarkMode
+                                            ? "bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700"
+                                            : "bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"
+                                    }`}
+                            >
+                                <Icon className="w-4 h-4" />
+                                {category.label}
+                            </button>
+                        );
+                    })}
+                </div>
+
+                {/* Featured Article - AITools style card */}
+                {activeCategory === "all" && featuredArticle && (
+                    <button
+                        type="button"
+                        onClick={() => handleArticleClick(featuredArticle)}
+                        className={`w-full group/card relative ${isDarkMode
+                                ? "bg-slate-800 border-slate-700 hover:border-slate-400 hover:shadow-2xl hover:shadow-slate-900/60"
+                                : "bg-white border-gray-200 hover:border-gray-900 hover:shadow-2xl hover:shadow-gray-900/20"
+                            } border-2 rounded-2xl overflow-hidden text-left transition-all duration-500 hover:-translate-y-2 hover:scale-[1.01] active:scale-[0.99] animate-fade-in`}
+                    >
+                        {/* Glow effect on hover */}
+                        <div
+                            className={`absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 ${isDarkMode
+                                    ? "bg-gradient-to-br from-slate-600/30 via-transparent to-slate-700/30"
+                                    : "bg-gradient-to-br from-gray-100/80 via-transparent to-gray-200/80"
+                                }`}
+                        />
+                        <div className="relative h-64 overflow-hidden">
+                            <img
+                                src={featuredArticle.coverImage}
+                                alt={featuredArticle.title}
+                                className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-500"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                            <div className="absolute bottom-0 left-0 right-0 p-6">
+                                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full ${isDarkMode ? "bg-slate-100 text-slate-900" : "bg-gray-900 text-white"
+                                    } text-xs font-medium mb-3`}>
+                                    <TrendingUp className="w-3 h-3" />
+                                    Featured
+                                </span>
+                                <h2 className="text-2xl font-bold text-white mb-2">
+                                    {featuredArticle.title}
+                                </h2>
+                                <p className="text-gray-200 text-sm line-clamp-2 mb-3">
+                                    {featuredArticle.description}
+                                </p>
+                                <div className="flex items-center gap-4 text-gray-300 text-xs">
+                                    <span className="flex items-center gap-1">
+                                        <Clock className="w-3 h-3" />
+                                        {featuredArticle.readTime}
+                                    </span>
+                                    <span>{featuredArticle.date}</span>
+                                </div>
+                                <div
+                                    className="flex items-center text-xs font-medium text-white mt-4 group-hover/card:translate-x-2 transition-all duration-300"
+                                >
+                                    <span className="group-hover/card:font-semibold transition-all">
+                                        Read Article
+                                    </span>
+                                    <svg
+                                        className="w-4 h-4 ml-1 group-hover/card:translate-x-1 group-hover/card:scale-110 transition-all duration-300"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </button>
-            )}
+                    </button>
+                )}
 
-            {/* Category Tabs */}
-            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                {CATEGORIES.map((category) => {
-                    const Icon = category.icon;
-                    return (
-                        <button
-                            key={category.id}
-                            type="button"
-                            onClick={() => setActiveCategory(category.id)}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 ${activeCategory === category.id
-                                    ? isDarkMode ? "bg-white text-slate-900" : "bg-gray-900 text-white"
-                                    : isDarkMode ? "bg-slate-800 text-slate-300 hover:bg-slate-700" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                                }`}
-                        >
-                            <Icon className="w-4 h-4" />
-                            {category.label}
-                        </button>
-                    );
-                })}
-            </div>
-
-            {/* Articles Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {regularArticles.map((article, index) => {
-                    const Icon = article.icon;
-                    return (
-                        <button
-                            key={article.id}
-                            type="button"
-                            onClick={() => handleArticleClick(article)}
-                            className={`group text-left overflow-hidden rounded-xl ${isDarkMode ? "bg-slate-800 hover:bg-slate-750 border-slate-700" : "bg-white hover:bg-gray-50 border-gray-200"} border shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 animate-fade-in`}
-                            style={{ animationDelay: `${index * 50}ms` }}
-                        >
-                            <div className="relative h-40 overflow-hidden">
-                                <img src={article.coverImage} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                                <div className={`absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full ${isDarkMode ? "bg-slate-900/80" : "bg-white/90"} backdrop-blur-sm`}>
-                                    <Icon className={`w-3.5 h-3.5 ${isDarkMode ? "text-purple-400" : "text-purple-600"}`} />
-                                    <span className={`text-xs font-medium ${isDarkMode ? "text-slate-200" : "text-gray-700"}`}>
-                                        {CATEGORIES.find(c => c.id === article.category)?.label}
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="p-4">
-                                <h3 className={`font-semibold mb-2 line-clamp-2 group-hover:text-purple-600 transition-colors ${isDarkMode ? "text-white" : "text-gray-900"}`}>
-                                    {article.title}
-                                </h3>
-                                <p className={`text-sm line-clamp-2 mb-3 ${isDarkMode ? "text-slate-400" : "text-gray-500"}`}>
-                                    {article.description}
-                                </p>
-                                <div className={`flex items-center justify-between text-xs ${isDarkMode ? "text-slate-500" : "text-gray-400"}`}>
-                                    <div className="flex items-center gap-3">
-                                        <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{article.readTime}</span>
-                                        <span>{article.date}</span>
-                                    </div>
-                                    <ChevronRight className={`w-4 h-4 group-hover:translate-x-1 transition-transform ${isDarkMode ? "text-slate-500" : "text-gray-400"}`} />
-                                </div>
-                            </div>
-                        </button>
-                    );
-                })}
-            </div>
-
-            {/* Empty State */}
-            {regularArticles.length === 0 && (
-                <div className={`text-center py-12 ${isDarkMode ? "text-slate-400" : "text-gray-500"}`}>
-                    <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                    <p>No articles in this category</p>
+                {/* Divider */}
+                <div className="flex items-center gap-4 group/divider">
+                    <div
+                        className={`flex-1 h-px transition-all duration-500 ${isDarkMode
+                                ? "bg-slate-700 group-hover/divider:bg-slate-600"
+                                : "bg-gray-200 group-hover/divider:bg-gray-300"
+                            }`}
+                    />
+                    <span
+                        className={`text-xs font-medium ${isDarkMode ? "text-slate-500" : "text-gray-400"
+                            } uppercase tracking-wider transition-all duration-300 group-hover/divider:tracking-widest group-hover/divider:scale-105`}
+                    >
+                        All Articles
+                    </span>
+                    <div
+                        className={`flex-1 h-px transition-all duration-500 ${isDarkMode
+                                ? "bg-slate-700 group-hover/divider:bg-slate-600"
+                                : "bg-gray-200 group-hover/divider:bg-gray-300"
+                            }`}
+                    />
                 </div>
-            )}
+
+                {/* Articles Grid - AITools style */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {regularArticles.map((article, index) => {
+                        const Icon = article.icon;
+                        return (
+                            <button
+                                key={article.id}
+                                type="button"
+                                onClick={() => handleArticleClick(article)}
+                                className={`group/tool ${isDarkMode
+                                        ? "bg-slate-800 border-slate-700 hover:border-slate-500 hover:shadow-xl hover:shadow-slate-900/60"
+                                        : "bg-white border-gray-200 hover:border-gray-400 hover:shadow-xl hover:shadow-gray-900/10"
+                                    } border rounded-xl overflow-hidden text-left transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] active:scale-95 animate-fade-in`}
+                                style={{ animationDelay: `${index * 50}ms` }}
+                            >
+                                {/* Image */}
+                                <div className="relative h-40 overflow-hidden">
+                                    <img
+                                        src={article.coverImage}
+                                        alt={article.title}
+                                        className="w-full h-full object-cover group-hover/tool:scale-105 transition-transform duration-500"
+                                    />
+                                    <div className={`absolute inset-0 ${isDarkMode ? "bg-black/20" : "bg-black/10"} group-hover/tool:bg-transparent transition-colors duration-300`} />
+                                    <div className={`absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full ${isDarkMode ? "bg-slate-900/90" : "bg-white/95"
+                                        } backdrop-blur-sm`}>
+                                        <Icon className={`w-3.5 h-3.5 ${isDarkMode ? "text-slate-300" : "text-gray-700"}`} />
+                                        <span className={`text-xs font-medium ${isDarkMode ? "text-slate-200" : "text-gray-700"}`}>
+                                            {CATEGORIES.find(c => c.id === article.category)?.label}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {/* Content */}
+                                <div className="p-4 space-y-3">
+                                    <div
+                                        className={`relative w-10 h-10 ${isDarkMode
+                                                ? "bg-slate-700 text-slate-300 group-hover/tool:bg-slate-100 group-hover/tool:text-slate-900"
+                                                : "bg-gray-100 text-gray-700 group-hover/tool:bg-gray-900 group-hover/tool:text-white"
+                                            } rounded-lg flex items-center justify-center transition-all duration-300 group-hover/tool:scale-110 group-hover/tool:rotate-6 overflow-hidden`}
+                                    >
+                                        <Icon className="w-5 h-5 relative z-10" />
+                                        <span className="absolute inset-0 opacity-0 group-hover/tool:opacity-100 transition-opacity duration-300 bg-gradient-to-br from-white/20 to-transparent" />
+                                    </div>
+                                    <div>
+                                        <h4
+                                            className={`font-semibold text-sm mb-1 transition-all duration-300 group-hover/tool:font-bold ${isDarkMode ? "text-white" : "text-gray-900"
+                                                }`}
+                                        >
+                                            {article.title}
+                                        </h4>
+                                        <p
+                                            className={`text-xs transition-colors duration-300 ${isDarkMode
+                                                    ? "text-slate-400 group-hover/tool:text-slate-300"
+                                                    : "text-gray-500 group-hover/tool:text-gray-600"
+                                                } line-clamp-2`}
+                                        >
+                                            {article.description}
+                                        </p>
+                                    </div>
+                                    <div className={`flex items-center justify-between pt-2 border-t ${isDarkMode ? "border-slate-700" : "border-gray-100"
+                                        }`}>
+                                        <div className={`flex items-center gap-3 text-xs ${isDarkMode ? "text-slate-500" : "text-gray-400"
+                                            }`}>
+                                            <span className="flex items-center gap-1">
+                                                <Clock className="w-3 h-3" />
+                                                {article.readTime}
+                                            </span>
+                                        </div>
+                                        <div
+                                            className={`flex items-center text-xs font-medium ${isDarkMode ? "text-slate-300" : "text-gray-900"
+                                                } group-hover/tool:translate-x-1 transition-all duration-300`}
+                                        >
+                                            <span className="group-hover/tool:font-semibold transition-all">
+                                                Read
+                                            </span>
+                                            <svg
+                                                className="w-4 h-4 ml-1 group-hover/tool:translate-x-1 group-hover/tool:scale-110 transition-all duration-300"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </button>
+                        );
+                    })}
+                </div>
+
+                {/* Empty State */}
+                {regularArticles.length === 0 && (
+                    <div className={`text-center py-12 ${isDarkMode ? "text-slate-400" : "text-gray-500"}`}>
+                        <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                        <p>No articles in this category</p>
+                    </div>
+                )}
+            </section>
         </div>
     );
 };
