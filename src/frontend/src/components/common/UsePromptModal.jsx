@@ -65,10 +65,9 @@ export default function UsePromptModal({ isOpen, onClose, prompt, toolType }) {
       onClick={handleBackdropClick}
     >
       <div className="relative w-full max-w-md mx-4 bg-white rounded-2xl shadow-2xl animate-scaleIn overflow-hidden border border-gray-200">
-        
         {/* Subtle top accent */}
         <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-60" />
-        
+
         {/* Header */}
         <div className="p-6 pb-4 border-b border-gray-100">
           <div className="flex items-start justify-between">
