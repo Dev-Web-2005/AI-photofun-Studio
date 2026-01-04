@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import { MessageCircle, X, Send, Sparkles, Minimize2 } from "lucide-react";
 import { useAuthContext } from "../../context/AuthContext";
 import { chatBotApi } from "../../api/chatBotApi";
-import ImageLightbox from "./ImageLightbox";
 
 const ChatBot = () => {
   const { user } = useAuthContext();
@@ -355,13 +354,28 @@ const ChatBot = () => {
         </div>
       )}
 
-      {/* Image Lightbox */}
-      <ImageLightbox
-        isOpen={!!lightboxImage}
-        onClose={() => setLightboxImage(null)}
-        imageUrl={lightboxImage}
-        alt="Bot response image"
-      />
+      {/* Lightbox */}
+      {lightboxImage && (
+        <div
+          className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 cursor-pointer animate-fade-in backdrop-blur-sm"
+          onClick={() => setLightboxImage(null)}
+        >
+          <button
+            className="absolute top-6 right-6 w-12 h-12 flex items-center justify-center text-white bg-white/10 hover:bg-white/20 rounded-xl text-2xl transition-all duration-200 hover:scale-110 hover:rotate-90"
+            onClick={() => setLightboxImage(null)}
+          >
+            <X className="w-6 h-6" />
+          </button>
+          <div className="relative max-w-6xl max-h-[90vh] animate-scale-in">
+            <img
+              src={lightboxImage}
+              alt="Full size"
+              className="max-w-full max-h-[90vh] rounded-2xl shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+        </div>
+      )}
     </>
   );
 };
