@@ -59,6 +59,7 @@ const MessagesPage = () => {
   const [newGroupName, setNewGroupName] = useState("");
   const [createGroupLoading, setCreateGroupLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [socketConnected, setSocketConnected] = useState(false);
   const [pendingShareMedia, setPendingShareMedia] = useState(shareToGroup || null); // Media waiting to be sent
