@@ -110,7 +110,7 @@ const MessagesPage = () => {
         id: conv.userId,
         userId: conv.userId,
         name: conv.username || "User",
-        avatar: conv.avatarUrl || `https://i.pravatar.cc/150?u=${conv.userId}`,
+        avatar: conv.avatarUrl || DEFAULT_USER_AVATAR,
         lastMessage: "",
         time: "",
         unread: 0,
@@ -272,7 +272,7 @@ const MessagesPage = () => {
             const userRes = await userApi.getUserById(req.userId);
             const userData = userRes?.data?.result;
             const username = userData?.username || userData?.fullName || "User";
-            const avatarUrl = userData?.avatarUrl || `https://i.pravatar.cc/150?u=${req.userId}`;
+            const avatarUrl = userData?.avatarUrl || DEFAULT_USER_AVATAR;
 
             // Update cache
             setUserCache((prev) => ({
@@ -290,7 +290,7 @@ const MessagesPage = () => {
             return {
               ...req,
               username: "User",
-              avatarUrl: `https://i.pravatar.cc/150?u=${req.userId}`,
+              avatarUrl: DEFAULT_USER_AVATAR,
             };
           }
         })
@@ -342,7 +342,7 @@ const MessagesPage = () => {
               return {
                 id: senderId,
                 username: userData?.username || userData?.fullName || "User",
-                avatarUrl: userData?.avatarUrl || `https://i.pravatar.cc/150?u=${senderId}`,
+                avatarUrl: userData?.avatarUrl || DEFAULT_USER_AVATAR,
                 isPremium: isPremium,
               };
             } catch (err) {
@@ -350,7 +350,7 @@ const MessagesPage = () => {
               return {
                 id: senderId,
                 username: "User",
-                avatarUrl: `https://i.pravatar.cc/150?u=${senderId}`,
+                avatarUrl: DEFAULT_USER_AVATAR,
                 isPremium: false,
               };
             }
@@ -407,7 +407,7 @@ const MessagesPage = () => {
           sender: messageSenderId === user?.id ? "me" : "other",
           senderId: messageSenderId,
           senderName: userCache[messageSenderId]?.username || msg.senderName || "User",
-          senderAvatar: userCache[messageSenderId]?.avatarUrl || `https://i.pravatar.cc/150?u=${messageSenderId}`,
+          senderAvatar: userCache[messageSenderId]?.avatarUrl || DEFAULT_USER_AVATAR,
           senderIsPremium: userCache[messageSenderId]?.isPremium || false,
           text: messageText,
           // Use timestamp field if available (e.g., "16 hours ago"), otherwise format createdAt
@@ -522,7 +522,7 @@ const MessagesPage = () => {
         setIncomingCallData({
           callerId: data.callerId,
           callerName: userData?.username || userData?.fullName || "User",
-          callerAvatar: userData?.avatarUrl || `https://i.pravatar.cc/150?u=${data.callerId}`,
+          callerAvatar: userData?.avatarUrl || DEFAULT_USER_AVATAR,
           isVideoCall: data.isVideoCall,
           callId: data.callId,
         });
@@ -610,7 +610,7 @@ const MessagesPage = () => {
             );
             senderInfo = {
               username: userData?.username || userData?.fullName || "User",
-              avatarUrl: userData?.avatarUrl || `https://i.pravatar.cc/150?u=${data.senderId}`,
+              avatarUrl: userData?.avatarUrl || DEFAULT_USER_AVATAR,
               isPremium: isPremium,
             };
             // Update cache
@@ -619,7 +619,7 @@ const MessagesPage = () => {
             console.warn(`Failed to fetch user ${data.senderId}:`, err);
             senderInfo = {
               username: "User",
-              avatarUrl: `https://i.pravatar.cc/150?u=${data.senderId}`,
+              avatarUrl: DEFAULT_USER_AVATAR,
               isPremium: false,
             };
           }
@@ -1858,7 +1858,7 @@ const MessagesPage = () => {
                               }`}
                           >
                             <img
-                              src={activeChat.isGroup ? (message.senderAvatar || `https://i.pravatar.cc/150?u=${message.senderId}`) : activeChat.avatar}
+                              src={activeChat.isGroup ? (message.senderAvatar || DEFAULT_USER_AVATAR) : activeChat.avatar}
                               alt={activeChat.isGroup ? message.senderName : activeChat.name}
                               className={`h-8 w-8 rounded-full object-cover cursor-pointer ${activeChat.isGroup && message.senderIsPremium ? "ring-1 ring-white" : ""
                                 }`}
@@ -2158,7 +2158,7 @@ const MessagesPage = () => {
                           className="flex items-center gap-3 p-2 rounded-lg hover:bg-white"
                         >
                           <img
-                            src={member.avatarUrl || `https://i.pravatar.cc/150?u=${member.userId}`}
+                            src={member.avatarUrl || DEFAULT_USER_AVATAR}
                             alt={member.username}
                             className="h-9 w-9 rounded-full object-cover"
                           />
@@ -2216,7 +2216,7 @@ const MessagesPage = () => {
                             title="View profile"
                           >
                             <img
-                              src={request.avatarUrl || `https://i.pravatar.cc/150?u=${request.userId}`}
+                              src={request.avatarUrl || DEFAULT_USER_AVATAR}
                               alt={request.username}
                               className="h-9 w-9 rounded-full object-cover cursor-pointer ring-2 ring-transparent group-hover/avatar:ring-blue-400 transition-all"
                             />
