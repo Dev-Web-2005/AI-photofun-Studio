@@ -1166,8 +1166,9 @@ const MessagesPage = () => {
         error.response?.data?.message ||
         "Unable to create group. Please try again!";
       setSuccessMessage(null);
-      // Show error in modal or as toast - for now we keep alert for errors
-      alert(errorMsg);
+      setErrorMessage(errorMsg);
+      // Auto-hide error message after 5 seconds
+      setTimeout(() => setErrorMessage(null), 5000);
     } finally {
       setCreateGroupLoading(false);
     }
