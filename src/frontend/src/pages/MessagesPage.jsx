@@ -1143,15 +1143,18 @@ const MessagesPage = () => {
     }
   };
 
-  const handleCreateGroup = async () => {
-    if (!newGroupName.trim()) return;
+  const handleCreateGroup = async (groupName) => {
+    if (!groupName?.trim()) return;
 
+    setCreateGroupLoading(true);
     try {
-      const response = await communicationApi.createGroup(newGroupName);
+      const response = await communicationApi.createGroup(groupName);
 
-      alert(`Group "${newGroupName}" created successfully!`);
       setShowCreateGroup(false);
-      setNewGroupName("");
+      setSuccessMessage(`Group "${groupName}" created successfully!`);
+
+      // Auto-hide success message after 3 seconds
+      setTimeout(() => setSuccessMessage(null), 3000);
 
       // Refresh groups lists
       fetchMyGroups();
@@ -1161,7 +1164,11 @@ const MessagesPage = () => {
       const errorMsg =
         error.response?.data?.message ||
         "Unable to create group. Please try again!";
+      setSuccessMessage(null);
+      // Show error in modal or as toast - for now we keep alert for errors
       alert(errorMsg);
+    } finally {
+      setCreateGroupLoading(false);
     }
   };
 
