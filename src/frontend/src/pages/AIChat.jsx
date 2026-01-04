@@ -437,6 +437,12 @@ const AIChat = () => {
     });
   };
 
+  // Handle example card click
+  const handleExampleClick = (prompt) => {
+    setInputValue(prompt);
+    messageInputRef.current?.focus();
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -478,8 +484,8 @@ const AIChat = () => {
             >
               <div
                 className={`max-w-[80%] rounded-2xl px-4 py-3 ${msg.role === "user"
-                    ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-br-md"
-                    : "bg-white text-gray-800 rounded-bl-md shadow-sm border border-gray-100"
+                  ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-br-md"
+                  : "bg-white text-gray-800 rounded-bl-md shadow-sm border border-gray-100"
                   }`}
               >
                 {/* Message content */}
@@ -539,12 +545,12 @@ const AIChat = () => {
                   <div className="mt-2">
                     <span
                       className={`text-xs px-2 py-0.5 rounded-full ${msg.status === "COMPLETED"
-                          ? "bg-green-100 text-green-700"
-                          : msg.status === "PROCESSING"
-                            ? "bg-blue-100 text-blue-700"
-                            : msg.status === "FAILED"
-                              ? "bg-red-100 text-red-700"
-                              : "bg-yellow-100 text-yellow-700"
+                        ? "bg-green-100 text-green-700"
+                        : msg.status === "PROCESSING"
+                          ? "bg-blue-100 text-blue-700"
+                          : msg.status === "FAILED"
+                            ? "bg-red-100 text-red-700"
+                            : "bg-yellow-100 text-yellow-700"
                         }`}
                     >
                       {msg.status}
