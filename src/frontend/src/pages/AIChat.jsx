@@ -26,55 +26,79 @@ const AI_BACKEND_URL =
   import.meta.env.VITE_AI_BACKEND_URL ||
   "https://nmcnpm-api-ai.lethanhcong.site:46337/api/v1";
 
-// Example cards for quick actions
+// Example cards for quick actions with multiple prompts each
 const EXAMPLE_CARDS = [
   {
     id: 1,
     title: "Create Image",
-    description: "Generate stunning images from text",
     icon: "🎨",
-    prompt: "Create an image of a magical forest at sunset",
-    gradient: "from-purple-500 to-pink-500",
+    prompts: [
+      "Create an image of a magical forest at sunset",
+      "Generate a cute cat wearing a tiny hat",
+      "Create a futuristic city with flying cars",
+      "Draw a cozy coffee shop on a rainy day",
+      "Generate a beautiful mountain landscape with aurora",
+    ],
   },
   {
     id: 2,
     title: "Create Video",
-    description: "Transform images into videos",
     icon: "🎬",
-    prompt: "Create a video from this image",
-    gradient: "from-blue-500 to-cyan-500",
+    prompts: [
+      "Create a video from this image",
+      "Turn this image into an animated video",
+      "Generate a short video with camera movement",
+      "Create a looping video from this picture",
+      "Make this image come alive with motion",
+    ],
   },
   {
     id: 3,
     title: "Remove Background",
-    description: "Clean background removal",
     icon: "✂️",
-    prompt: "Remove the background from this image",
-    gradient: "from-green-500 to-emerald-500",
+    prompts: [
+      "Remove the background from this image",
+      "Make the background transparent",
+      "Cut out the main subject from background",
+      "Delete the background and keep the foreground",
+      "Extract the subject without background",
+    ],
   },
   {
     id: 4,
-    title: "Upscale Image",
-    description: "Enhance image resolution",
+    title: "Upscale",
     icon: "🔍",
-    prompt: "Upscale this image to higher resolution",
-    gradient: "from-orange-500 to-amber-500",
+    prompts: [
+      "Upscale this image to higher resolution",
+      "Enhance and upscale this image 2x",
+      "Make this image sharper and bigger",
+      "Increase the resolution of this photo",
+      "Upscale this image with better quality",
+    ],
   },
   {
     id: 5,
     title: "Style Transfer",
-    description: "Apply artistic styles",
     icon: "🎭",
-    prompt: "Apply oil painting style to this image",
-    gradient: "from-rose-500 to-red-500",
+    prompts: [
+      "Apply oil painting style to this image",
+      "Transform this into anime style",
+      "Make this look like a watercolor painting",
+      "Apply Van Gogh style to this image",
+      "Convert to pixel art style",
+    ],
   },
   {
     id: 6,
     title: "Reimagine",
-    description: "Creative image transformation",
     icon: "✨",
-    prompt: "Reimagine this image in a cyberpunk style",
-    gradient: "from-indigo-500 to-violet-500",
+    prompts: [
+      "Reimagine this image in cyberpunk style",
+      "Transform this into a fantasy world",
+      "Reimagine this in a steampunk setting",
+      "Make this look like it's from the future",
+      "Reimagine this as a cartoon version",
+    ],
   },
 ];
 
