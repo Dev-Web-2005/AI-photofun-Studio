@@ -310,10 +310,12 @@ const ImageExpand = () => {
         </section>
 
         <section className="space-y-6">
-          <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-            <h2 className="text-lg font-bold mb-4">Result</h2>
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-sm">
+            <h2 className="text-lg font-bold mb-4 dark:text-gray-200">
+              Result
+            </h2>
             {processing ? (
-              <div className="aspect-square bg-gray-50 rounded-2xl flex items-center justify-center">
+              <div className="aspect-square bg-gray-50 dark:bg-gray-900 rounded-2xl flex items-center justify-center">
                 <div className="text-center">
                   <div className="w-16 h-16 border-4 border-gray-200 dark:border-gray-600 border-t-blue-500 dark:border-t-white rounded-full animate-spin mx-auto mb-4" />
                   <p className="text-gray-700 dark:text-gray-200 font-semibold">

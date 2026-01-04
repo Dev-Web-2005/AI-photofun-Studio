@@ -1,7 +1,25 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Download, Image, Share2, Sparkles, Users } from "lucide-react";
-import { generateImage, pollTaskStatus, suggestPrompts, recordPromptChoice } from "../api/aiApi";
+import {
+  ArrowLeft,
+  Download,
+  Image,
+  Share2,
+  Sparkles,
+  Users,
+} from "lucide-react";
+import {
+  generateImage,
+  pollTaskStatus,
+  suggestPrompts,
+  recordPromptChoice,
+} from "../api/aiApi";
 import { usePosts } from "../hooks/usePosts";
 import CreatePostWidget from "../components/post/CreatePostWidget";
 import ShareToGroupModal from "../components/common/ShareToGroupModal";
@@ -54,7 +72,7 @@ const TextToImage = () => {
         setShowSuggestions(false);
       }
     } catch (err) {
-      console.error('Error fetching suggestions:', err);
+      console.error("Error fetching suggestions:", err);
     } finally {
       setLoadingSuggestions(false);
     }
@@ -98,12 +116,15 @@ const TextToImage = () => {
   // Close suggestions when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (promptInputRef.current && !promptInputRef.current.contains(event.target)) {
+      if (
+        promptInputRef.current &&
+        !promptInputRef.current.contains(event.target)
+      ) {
         setShowSuggestions(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleFilePick = async (files) => {
@@ -156,7 +177,7 @@ const TextToImage = () => {
     try {
       await recordPromptChoice(prompt.trim());
     } catch (err) {
-      console.error('Failed to record prompt choice:', err);
+      console.error("Failed to record prompt choice:", err);
     }
 
     // Helper to format error message
@@ -164,10 +185,15 @@ const TextToImage = () => {
       const errorStr = (error?.toString() || "").toLowerCase();
       const errorMsg = (error?.message || "").toLowerCase();
 
-      if (errorStr.includes("429") || errorStr.includes("rate limit") ||
-        errorStr.includes("quota") || errorStr.includes("limit") ||
-        errorMsg.includes("429") || errorMsg.includes("rate limit") ||
-        errorMsg.includes("exceeded")) {
+      if (
+        errorStr.includes("429") ||
+        errorStr.includes("rate limit") ||
+        errorStr.includes("quota") ||
+        errorStr.includes("limit") ||
+        errorMsg.includes("429") ||
+        errorMsg.includes("rate limit") ||
+        errorMsg.includes("exceeded")
+      ) {
         return "⚠️ You have reached your daily image generation limit. Please try again tomorrow or upgrade to Premium.";
       }
       if (errorStr.includes("401") || errorStr.includes("unauthorized")) {
@@ -294,7 +320,9 @@ const TextToImage = () => {
               {showSuggestions && suggestions.length > 0 && (
                 <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-auto">
                   {loadingSuggestions && (
-                    <div className="px-4 py-2 text-sm text-gray-500">Loading suggestions...</div>
+                    <div className="px-4 py-2 text-sm text-gray-500">
+                      Loading suggestions...
+                    </div>
                   )}
                   {suggestions.map((suggestion) => (
                     <button
@@ -325,7 +353,10 @@ const TextToImage = () => {
             {/* Model and Aspect Ratio Selection */}
             <div className="grid grid-cols-2 gap-4 mt-4">
               <div>
-                <label className="block text-sm font-semibold mb-2" htmlFor="model">
+                <label
+                  className="block text-sm font-semibold mb-2"
+                  htmlFor="model"
+                >
                   Model
                 </label>
                 <select
@@ -339,7 +370,10 @@ const TextToImage = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-semibold mb-2" htmlFor="aspect-ratio">
+                <label
+                  className="block text-sm font-semibold mb-2"
+                  htmlFor="aspect-ratio"
+                >
                   Aspect Ratio
                 </label>
                 <select
@@ -363,10 +397,11 @@ const TextToImage = () => {
               Upload Reference Image (Optional)
             </h2>
             <div
-              className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-colors ${dragOver
-                ? "border-blue-300 bg-blue-50"
-                : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
-                }`}
+              className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-colors ${
+                dragOver
+                  ? "border-blue-300 bg-blue-50"
+                  : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+              }`}
               onClick={() => uploadInputRef.current?.click()}
               onDrop={handleDrop}
               onDragOver={handleDragOver}
@@ -415,10 +450,10 @@ const TextToImage = () => {
 
         <section className="space-y-6">
           {loading && (
-            <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-              <div className="aspect-square rounded-2xl bg-gray-50 flex flex-col items-center justify-center text-center">
-                <div className="w-16 h-16 border-4 border-gray-200 border-t-black rounded-full animate-spin mb-4" />
-                <p className="font-semibold text-gray-700">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-sm">
+              <div className="aspect-square rounded-2xl bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center text-center">
+                <div className="w-16 h-16 border-4 border-gray-200 dark:border-gray-600 border-t-black dark:border-t-white rounded-full animate-spin mb-4" />
+                <p className="font-semibold text-gray-700 dark:text-gray-200">
                   Generating image...
                 </p>
                 <p className="text-sm text-gray-500">
@@ -482,11 +517,15 @@ const TextToImage = () => {
                   <div className="grid grid-cols-3 gap-3">
                     <div>
                       <p className="text-xs text-gray-500">Model</p>
-                      <p className="font-medium capitalize">{result.model || "Realism"}</p>
+                      <p className="font-medium capitalize">
+                        {result.model || "Realism"}
+                      </p>
                     </div>
                     <div>
                       <p className="text-xs text-gray-500">Aspect Ratio</p>
-                      <p className="font-medium">{result.aspectRatio || "1:1"}</p>
+                      <p className="font-medium">
+                        {result.aspectRatio || "1:1"}
+                      </p>
                     </div>
                     <div>
                       <p className="text-xs text-gray-500">Generated at</p>
@@ -536,7 +575,9 @@ const TextToImage = () => {
           autoOpen={true}
           hideComposer={true}
           initialImageUrl={result?.imageUrl}
-          initialPrompt={`🎨 Created with AI Text-to-Image\n\nPrompt: ${result?.prompt || prompt}`}
+          initialPrompt={`🎨 Created with AI Text-to-Image\n\nPrompt: ${
+            result?.prompt || prompt
+          }`}
           onClose={() => setShowShareModal(false)}
         />
       )}

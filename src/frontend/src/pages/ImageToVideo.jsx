@@ -390,8 +390,8 @@ const ImageToVideo = () => {
         {/* Right Column - Result */}
         <section className="space-y-6">
           {loading && !videoUrl && (
-            <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-              <div className="aspect-video rounded-2xl bg-gray-50 flex flex-col items-center justify-center">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-sm">
+              <div className="aspect-video rounded-2xl bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center">
                 <div className="w-16 h-16 border-4 border-gray-200 dark:border-gray-600 border-t-purple-500 dark:border-t-white rounded-full animate-spin mb-4" />
                 <p className="font-semibold text-gray-700 dark:text-gray-200">
                   Generating video...
