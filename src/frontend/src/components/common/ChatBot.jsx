@@ -279,18 +279,19 @@ const ChatBot = () => {
 
             {/* Suggestion Chips - show only when there's just the initial message */}
             {messages.length === 1 && (
-              <div className="flex flex-wrap gap-2 mb-4 p-3 rounded-xl bg-gradient-to-r from-transparent via-slate-100/5 to-transparent">
-                <p className={`w-full text-xs mb-2 ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
+              <div className="flex flex-wrap gap-2 mb-4 p-3 rounded-xl bg-gradient-to-r from-transparent via-slate-100/5 to-transparent animate-fade-in">
+                <p className={`w-full text-xs mb-2 ${isDarkMode ? "text-slate-400" : "text-slate-500"} animate-fade-in`}>
                   💡 Quick suggestions:
                 </p>
-                {SUGGESTION_PROMPTS.map((prompt) => (
+                {SUGGESTION_PROMPTS.map((prompt, index) => (
                   <button
                     key={prompt.id}
                     onClick={() => handleSuggestionClick(prompt.text)}
-                    className={`px-3 py-2 rounded-xl text-xs font-medium transition-all duration-200 ${isDarkMode
+                    className={`px-3 py-2 rounded-xl text-xs font-medium transition-all duration-200 animate-fade-in ${isDarkMode
                       ? "bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 hover:border-slate-500 shadow-sm shadow-slate-900/30 hover:shadow-md hover:shadow-slate-900/40"
                       : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-slate-400 shadow-sm shadow-slate-200/50 hover:shadow-md hover:shadow-slate-300/50"
                       } cursor-pointer hover:scale-105 active:scale-95`}
+                    style={{ animationDelay: `${(index + 1) * 100}ms` }}
                   >
                     <span className="mr-1.5">{prompt.icon}</span>
                     {prompt.text}
