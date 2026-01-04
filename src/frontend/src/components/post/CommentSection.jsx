@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import EmojiPicker from "emoji-picker-react";
 import {
   Loader2,
   MoreHorizontal,
@@ -84,9 +85,31 @@ export default function CommentSection({ postId }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editContent, setEditContent] = useState("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+  const onEmojiClick = (emojiObject) => {
+    setNewComment((prev) => prev + emojiObject.emoji);
+  };
 
   const [menuOpenId, setMenuOpenId] = useState(null);
   const socketRef = useRef(null);
+  const emojiPickerRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        emojiPickerRef.current &&
+        !emojiPickerRef.current.contains(event.target)
+      ) {
+        setShowEmojiPicker(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const currentUser = useMemo(() => buildCurrentUser(user), [user]);
 
@@ -576,8 +599,28 @@ export default function CommentSection({ postId }) {
               disabled={!currentUser.id || isSubmitting}
               className="w-full rounded-full border border-transparent bg-gray-100 py-2.5 pl-4 pr-16 text-sm text-gray-700 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400"
             />
-            <div className="pointer-events-none absolute inset-y-0 right-10 flex items-center text-gray-400">
-              <Smile className="h-4 w-4" />
+            <div
+              ref={emojiPickerRef}
+              className="absolute inset-y-0 right-10 flex items-center"
+            >
+              <button
+                type="button"
+                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                className="p-1 text-gray-400 hover:text-blue-500 transition-colors cursor-pointer"
+              >
+                <Smile className="h-5 w-5" />
+              </button>
+              {showEmojiPicker && (
+                <div className="absolute bottom-full right-0 mb-2 z-50 shadow-2xl rounded-xl border border-gray-100">
+                  <EmojiPicker
+                    onEmojiClick={onEmojiClick}
+                    width={320}
+                    height={400}
+                    previewConfig={{ showPreview: false }}
+                    searchDisabled={false}
+                  />
+                </div>
+              )}
             </div>
             <button
               type="button"
