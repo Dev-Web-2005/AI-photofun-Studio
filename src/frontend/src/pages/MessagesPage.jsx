@@ -1421,22 +1421,23 @@ const MessagesPage = () => {
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-6rem)]">
-      <div className="flex h-[calc(100vh-8rem)] w-full bg-gray-50 overflow-hidden rounded-3xl border border-gray-200 shadow-sm">
+      <div className="flex h-[calc(100vh-8rem)] w-full bg-white overflow-hidden rounded-2xl border border-gray-200 shadow-lg">
         {/* Offline Warning Banner */}
         {!socketConnected && (
-          <div className="absolute top-0 left-0 right-0 bg-yellow-500 text-white px-4 py-2 text-center text-sm font-medium z-10">
-            ⚠️ Chat server offline - You can only view old messages, cannot send new ones
+          <div className="absolute top-0 left-0 right-0 bg-gray-900 text-white px-4 py-2 text-center text-sm font-medium z-10 border-b border-gray-700">
+            ⚠ Chat server offline - You can only view old messages, cannot send new ones
           </div>
         )}
 
-        <div className="flex w-80 flex-col border-r border-gray-200 bg-white">
-          <div className="border-b border-gray-100 p-4">
+        <div className="flex w-80 flex-col border-r border-gray-200 bg-gray-50">
+          <div className="border-b border-gray-200 p-5 bg-white">
             <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <h1 className="text-xl font-bold text-gray-800">Chats</h1>
+              <div className="flex items-center gap-2.5">
+                <h1 className="text-lg font-semibold text-gray-900 tracking-tight">Messages</h1>
                 <div
-                  className={`h-2 w-2 rounded-full ${socketConnected ? "bg-green-500" : "bg-red-500"
-                    }`}
+                  className={`h-1.5 w-1.5 rounded-full ${
+                    socketConnected ? "bg-emerald-500" : "bg-gray-400"
+                  }`}
                   title={socketConnected ? "Connected" : "Disconnected"}
                 />
               </div>
@@ -1444,32 +1445,31 @@ const MessagesPage = () => {
                 <button
                   type="button"
                   onClick={() => setShowCreateGroup(true)}
-                  className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 px-3 py-1.5 text-xs font-bold text-white shadow-md hover:shadow-lg transition-all hover:scale-105"
+                  className="flex items-center gap-1.5 rounded-lg bg-gray-900 px-3 py-2 text-xs font-medium text-white hover:bg-black shadow-sm hover:shadow-md transition-all"
                   title="Create Group (Premium)"
                 >
-                  <Users className="h-4 w-4" />
-                  <span>Create Group</span>
-                  <Crown className="h-3.5 w-3.5" />
+                  <Users className="h-3.5 w-3.5" />
+                  <span>New Group</span>
                 </button>
               )}
             </div>
             <div className="relative">
-              <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+              <Search className="absolute left-3.5 top-2.5 h-4 w-4 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search"
-                className="w-full rounded-full bg-gray-100 py-2 pl-10 pr-4 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                placeholder="Search conversations..."
+                className="w-full rounded-lg bg-white border border-gray-200 py-2 pl-10 pr-4 text-sm text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 transition-all"
               />
             </div>
 
             {/* Tabs */}
-            <div className="flex gap-1 mt-4">
+            <div className="flex gap-1 mt-4 p-1 bg-gray-100 rounded-lg">
               <button
                 type="button"
                 onClick={() => setActiveTab("direct")}
-                className={`flex-1 py-2 px-3 rounded-lg text-xs font-semibold transition-colors ${activeTab === "direct"
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                className={`flex-1 py-2 px-3 rounded-md text-xs font-medium transition-all ${activeTab === "direct"
+                  ? "bg-white text-gray-900 shadow-sm"
+                  : "text-gray-600 hover:text-gray-900"
                   }`}
               >
                 Direct
@@ -1477,9 +1477,9 @@ const MessagesPage = () => {
               <button
                 type="button"
                 onClick={() => setActiveTab("groups")}
-                className={`flex-1 py-2 px-3 rounded-lg text-xs font-semibold transition-colors ${activeTab === "groups"
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                className={`flex-1 py-2 px-3 rounded-md text-xs font-medium transition-all ${activeTab === "groups"
+                  ? "bg-white text-gray-900 shadow-sm"
+                  : "text-gray-600 hover:text-gray-900"
                   }`}
               >
                 Groups
@@ -1487,12 +1487,12 @@ const MessagesPage = () => {
               <button
                 type="button"
                 onClick={() => setActiveTab("explore")}
-                className={`flex-1 py-2 px-3 rounded-lg text-xs font-semibold transition-colors ${activeTab === "explore"
-                  ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                className={`flex-1 py-2 px-3 rounded-md text-xs font-medium transition-all ${activeTab === "explore"
+                  ? "bg-white text-gray-900 shadow-sm"
+                  : "text-gray-600 hover:text-gray-900"
                   }`}
               >
-                🔍 Explore
+                Explore
               </button>
             </div>
           </div>
@@ -1566,10 +1566,14 @@ const MessagesPage = () => {
                         handleDeleteConversation(chat.userId, chat.name);
                       }}
                       disabled={loadingAction}
-                      className="p-1.5 rounded-full text-gray-400 hover:text-red-500 hover:bg-red-50 opacity-0 group-hover/conv:opacity-100 transition-all disabled:opacity-50"
+                      className={`p-1.5 rounded-lg opacity-0 group-hover/conv:opacity-100 transition-all disabled:opacity-50 ${
+                        activeChat?.id === chat.id
+                          ? "text-gray-400 hover:text-white hover:bg-white/10"
+                          : "text-gray-400 hover:text-gray-700 hover:bg-gray-100"
+                      }`}
                       title="Delete conversation"
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Trash2 className="h-3.5 w-3.5" />
                     </button>
                   </div>
                 ))
@@ -1711,11 +1715,11 @@ const MessagesPage = () => {
         </div>
 
         <div className="flex flex-1 flex-col bg-white">
-          <div className="flex h-16 items-center justify-between border-b border-gray-200 px-6">
+          <div className="flex h-16 items-center justify-between border-b border-gray-200 px-6 bg-white">
             <button
               type="button"
               onClick={() => activeChat.isGroup && setShowGroupInfo(!showGroupInfo)}
-              className={`flex items-center gap-3 ${activeChat.isGroup ? "cursor-pointer hover:bg-gray-50 -ml-2 pl-2 pr-3 py-1 rounded-lg" : ""}`}
+              className={`flex items-center gap-3 ${activeChat.isGroup ? "cursor-pointer hover:bg-gray-50 -ml-2 pl-2 pr-3 py-1.5 rounded-lg transition-colors" : ""}`}
             >
               <div className="relative">
                 <img
@@ -1724,16 +1728,16 @@ const MessagesPage = () => {
                   className="h-10 w-10 rounded-full object-cover"
                 />
                 {activeChat.isOnline && (
-                  <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-green-500"></span>
+                  <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-white bg-emerald-500"></span>
                 )}
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <p className="text-sm font-semibold text-gray-900">
+                  <p className="text-sm font-medium text-gray-900">
                     {activeChat.name}
                   </p>
                   {activeChat.isGroup && isCurrentUserAdmin && (
-                    <Shield className="h-4 w-4 text-yellow-500" />
+                    <Shield className="h-3.5 w-3.5 text-amber-500" />
                   )}
                 </div>
                 <p className="text-xs text-gray-500">
@@ -1748,12 +1752,12 @@ const MessagesPage = () => {
                 <ChevronRight className={`h-4 w-4 text-gray-400 transition-transform ${showGroupInfo ? "rotate-90" : ""}`} />
               )}
             </button>
-            <div className="flex items-center gap-4 text-blue-600">
+            <div className="flex items-center gap-2 text-gray-600">
               <button
                 type="button"
                 onClick={handleStartAudioCall}
                 disabled={!activeChat || activeChat.isGroup}
-                className="rounded-full p-2 transition-colors hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="rounded-lg p-2 transition-colors hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
                 title={activeChat?.isGroup ? "Group calls not supported" : "Voice call"}
               >
                 <Phone className="h-5 w-5" />
@@ -1762,14 +1766,14 @@ const MessagesPage = () => {
                 type="button"
                 onClick={handleStartVideoCall}
                 disabled={!activeChat || activeChat.isGroup}
-                className="rounded-full p-2 transition-colors hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="rounded-lg p-2 transition-colors hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
                 title={activeChat?.isGroup ? "Group calls not supported" : "Video call"}
               >
                 <Video className="h-5 w-5" />
               </button>
               <button
                 type="button"
-                className="rounded-full p-2 transition-colors hover:bg-blue-50"
+                className="rounded-lg p-2 transition-colors hover:bg-gray-100"
               >
                 <MoreVertical className="h-5 w-5" />
               </button>
@@ -1832,15 +1836,15 @@ const MessagesPage = () => {
                         </button>
                       )}
                       <div
-                        className={`group relative max-w-[70%] rounded-2xl px-4 py-2 text-sm ${message.sender === "me"
-                          ? "rounded-br-none bg-blue-600 text-white"
-                          : "rounded-bl-none bg-gray-100 text-gray-800"
+                        className={`group relative max-w-[70%] rounded-xl px-4 py-2.5 text-sm ${message.sender === "me"
+                          ? "rounded-br-sm bg-gray-900 text-white shadow-sm"
+                          : "rounded-bl-sm bg-gray-100 text-gray-800 border border-gray-200"
                           }`}
                       >
                         {activeChat.isGroup && message.sender === "other" && (
-                          <p className={`text-xs font-semibold mb-1 ${message.senderIsPremium
-                            ? "bg-gradient-to-r from-yellow-500 via-orange-500 to-pink-500 bg-clip-text text-transparent"
-                            : "text-blue-600"
+                          <p className={`text-xs font-medium mb-1 ${message.senderIsPremium
+                            ? "text-amber-600"
+                            : "text-gray-600"
                             }`}>
                             {message.senderName}
                             {message.senderIsPremium && " ✨"}
@@ -1906,26 +1910,26 @@ const MessagesPage = () => {
                     type="button"
                     onClick={() => imageInputRef.current?.click()}
                     disabled={uploadingImage || !socketConnected}
-                    className="rounded-full p-2 text-blue-600 transition-colors hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
                     title="Send image"
                   >
                     {uploadingImage ? (
-                      <Loader2 className="h-6 w-6 animate-spin" />
+                      <Loader2 className="h-5 w-5 animate-spin" />
                     ) : (
-                      <Image className="h-6 w-6" />
+                      <Image className="h-5 w-5" />
                     )}
                   </button>
                   <button
                     type="button"
                     onClick={() => videoInputRef.current?.click()}
                     disabled={uploadingVideo || !socketConnected}
-                    className="rounded-full p-2 text-blue-600 transition-colors hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
                     title="Send video"
                   >
                     {uploadingVideo ? (
-                      <Loader2 className="h-6 w-6 animate-spin" />
+                      <Loader2 className="h-5 w-5 animate-spin" />
                     ) : (
-                      <Video className="h-6 w-6" />
+                      <Video className="h-5 w-5" />
                     )}
                   </button>
                   <div className="relative flex-1">
@@ -1937,19 +1941,19 @@ const MessagesPage = () => {
                         socketConnected ? "Type a message..." : "Connecting..."
                       }
                       disabled={!socketConnected}
-                      className="w-full rounded-full bg-gray-100 py-2.5 pl-4 pr-10 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full rounded-lg bg-gray-50 border border-gray-200 py-2.5 pl-4 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                     />
                     <button
                       type="button"
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 transition-colors hover:text-blue-600"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-600"
                     >
-                      <Smile className="h-5 w-5" />
+                      <Smile className="h-4 w-4" />
                     </button>
                   </div>
                   <button
                     type="submit"
                     disabled={!inputMessage.trim() || !socketConnected}
-                    className="rounded-full bg-blue-600 p-3 text-white shadow-md transition-all hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="rounded-lg bg-gray-900 p-3 text-white hover:bg-black disabled:cursor-not-allowed disabled:opacity-50 transition-all"
                   >
                     <Send className="h-5 w-5" />
                   </button>
@@ -2222,14 +2226,16 @@ const MessagesPage = () => {
 
         {/* Create Group Modal */}
         {showCreateGroup && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-            <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl animate-in fade-in zoom-in duration-200">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md">
+            <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl border border-gray-200">
+              <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-60" />
+              
               <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500">
-                    <Users className="h-5 w-5 text-white" />
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gray-50 border border-gray-200">
+                    <Users className="h-5 w-5 text-gray-700" />
                   </div>
-                  <h2 className="text-lg font-bold text-gray-800">
+                  <h2 className="text-lg font-semibold text-gray-900">
                     Create New Group
                   </h2>
                 </div>
@@ -2239,27 +2245,24 @@ const MessagesPage = () => {
                     setShowCreateGroup(false);
                     setNewGroupName("");
                   }}
-                  className="rounded-full p-2 hover:bg-gray-100 transition-colors"
+                  className="rounded-lg p-2 hover:bg-gray-100 transition-colors"
                 >
                   <X className="h-5 w-5 text-gray-500" />
                 </button>
               </div>
 
-              <div className="mb-4 p-3 rounded-lg bg-gradient-to-r from-yellow-50 via-orange-50 to-pink-50 border border-yellow-200">
+              <div className="mb-4 p-3 rounded-lg bg-amber-50 border border-amber-200">
                 <div className="flex items-center gap-2 text-sm">
-                  <Crown className="h-4 w-4 text-orange-500" />
+                  <Crown className="h-4 w-4 text-amber-600" />
                   <span className="text-gray-700">
-                    This feature is for members{" "}
-                    <span className="font-bold text-transparent bg-gradient-to-r from-yellow-500 via-orange-500 to-pink-500 bg-clip-text">
-                      Premium
-                    </span>
+                    Premium feature - Create your own group
                   </span>
                 </div>
               </div>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-2">
                     Group Name
                   </label>
                   <input
@@ -2267,7 +2270,7 @@ const MessagesPage = () => {
                     value={newGroupName}
                     onChange={(e) => setNewGroupName(e.target.value)}
                     placeholder="Enter group name..."
-                    className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+                    className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900 transition-all"
                     autoFocus
                     onKeyDown={(e) => {
                       if (e.key === "Enter" && newGroupName.trim()) {
@@ -2284,7 +2287,7 @@ const MessagesPage = () => {
                       setShowCreateGroup(false);
                       setNewGroupName("");
                     }}
-                    className="flex-1 rounded-lg border border-gray-300 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                    className="flex-1 rounded-lg border border-gray-200 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
                   >
                     Cancel
                   </button>
@@ -2292,7 +2295,7 @@ const MessagesPage = () => {
                     type="button"
                     onClick={handleCreateGroup}
                     disabled={!newGroupName.trim()}
-                    className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 py-2.5 text-sm font-bold text-white shadow-md hover:shadow-lg transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-gray-900 py-2.5 text-sm font-medium text-white hover:bg-black disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                   >
                     <Users className="h-4 w-4" />
                     Create Group
