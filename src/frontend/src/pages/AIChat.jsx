@@ -418,7 +418,7 @@ const AIChat = () => {
           isDarkMode
             ? "bg-slate-800 border-slate-700"
             : "bg-white border-gray-200"
-        } border-b -mx-6 px-6 py-5`}
+        } border-b -mx-6 px-6 py-4`}
       >
         <div className="flex items-center justify-between">
           <button
@@ -436,18 +436,15 @@ const AIChat = () => {
 
           <div className="flex items-center gap-3">
             <div
-              className={`relative w-10 h-10 ${
-                isDarkMode
-                  ? "bg-gradient-to-br from-purple-500 to-blue-500"
-                  : "bg-gradient-to-br from-purple-600 to-blue-600"
-              } rounded-xl flex items-center justify-center shadow-lg overflow-hidden group/icon`}
+              className={`w-10 h-10 ${
+                isDarkMode ? "bg-slate-700" : "bg-gray-900"
+              } rounded-xl flex items-center justify-center shadow-sm group/icon transition-transform duration-200 hover:scale-105`}
             >
-              <MessageCircle className="w-5 h-5 text-white relative z-10 group-hover/icon:scale-110 transition-transform duration-300" />
-              <span className="absolute inset-0 bg-white/20 opacity-0 group-hover/icon:opacity-100 transition-opacity duration-300" />
+              <MessageCircle className="w-5 h-5 text-white group-hover/icon:scale-110 transition-transform duration-300" />
             </div>
             <div>
               <h1
-                className={`text-xl font-bold ${
+                className={`text-lg font-semibold ${
                   isDarkMode ? "text-white" : "text-gray-900"
                 }`}
               >
@@ -458,14 +455,14 @@ const AIChat = () => {
                   isDarkMode ? "text-slate-400" : "text-gray-500"
                 }`}
               >
-                Powered by advanced AI
+                Intelligent conversation
               </p>
             </div>
           </div>
 
           <button
             onClick={handleResetChat}
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg ${
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg ${
               isDarkMode
                 ? "text-slate-400 hover:text-white hover:bg-slate-700"
                 : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"
@@ -483,13 +480,13 @@ const AIChat = () => {
         className={`${
           isDarkMode
             ? "bg-slate-800 border-slate-700"
-            : "bg-white border-gray-200"
-        } border-2 rounded-2xl shadow-xl overflow-hidden`}
+            : "bg-white border-gray-100"
+        } border rounded-2xl shadow-sm overflow-hidden`}
       >
         {/* Messages Area */}
         <div
-          className={`h-[600px] overflow-y-auto p-6 space-y-4 ${
-            isDarkMode ? "bg-slate-900/50" : "bg-gray-50/50"
+          className={`h-[650px] overflow-y-auto p-6 space-y-5 ${
+            isDarkMode ? "bg-slate-900/30" : "bg-gray-50/30"
           }`}
         >
           {error && (
@@ -514,17 +511,17 @@ const AIChat = () => {
               style={{ animationDelay: `${index * 50}ms` }}
             >
               <div
-                className={`max-w-[85%] md:max-w-[75%] rounded-2xl px-5 py-4 ${
+                className={`max-w-[85%] md:max-w-[75%] rounded-2xl px-5 py-3.5 ${
                   msg.role === "user"
                     ? isDarkMode
-                      ? "bg-gradient-to-br from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-900/30"
-                      : "bg-gradient-to-br from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-600/20"
+                      ? "bg-slate-700 text-white shadow-sm"
+                      : "bg-gray-900 text-white shadow-sm"
                     : isDarkMode
-                    ? "bg-slate-800 text-slate-100 shadow-lg shadow-slate-900/50 border border-slate-700"
-                    : "bg-white text-gray-800 shadow-md border border-gray-100"
+                    ? "bg-slate-800 text-slate-100 shadow-sm border border-slate-700/50"
+                    : "bg-white text-gray-800 shadow-sm border border-gray-200"
                 } ${
                   msg.role === "user" ? "rounded-br-sm" : "rounded-bl-sm"
-                } transition-all duration-300 hover:scale-[1.01]`}
+                } transition-all duration-200 hover:shadow-md`}
               >
                 {/* Message content */}
                 <div className="whitespace-pre-wrap text-sm leading-relaxed">
@@ -620,7 +617,9 @@ const AIChat = () => {
                 <div
                   className={`text-xs mt-2 ${
                     msg.role === "user"
-                      ? "text-purple-100"
+                      ? isDarkMode
+                        ? "text-slate-300"
+                        : "text-gray-200"
                       : isDarkMode
                       ? "text-slate-500"
                       : "text-gray-400"
@@ -638,26 +637,26 @@ const AIChat = () => {
               <div
                 className={`${
                   isDarkMode
-                    ? "bg-slate-800 border-slate-700"
-                    : "bg-white border-gray-100"
-                } rounded-2xl rounded-bl-sm px-5 py-4 shadow-md border`}
+                    ? "bg-slate-800 border-slate-700/50"
+                    : "bg-white border-gray-200"
+                } rounded-2xl rounded-bl-sm px-5 py-3.5 shadow-sm border`}
               >
-                <div className="flex gap-1.5">
+                <div className="flex gap-1.5 items-center">
                   <span
                     className={`w-2 h-2 ${
-                      isDarkMode ? "bg-slate-500" : "bg-gray-400"
+                      isDarkMode ? "bg-slate-400" : "bg-gray-500"
                     } rounded-full animate-bounce`}
                     style={{ animationDelay: "0ms" }}
                   />
                   <span
                     className={`w-2 h-2 ${
-                      isDarkMode ? "bg-slate-500" : "bg-gray-400"
+                      isDarkMode ? "bg-slate-400" : "bg-gray-500"
                     } rounded-full animate-bounce`}
                     style={{ animationDelay: "150ms" }}
                   />
                   <span
                     className={`w-2 h-2 ${
-                      isDarkMode ? "bg-slate-500" : "bg-gray-400"
+                      isDarkMode ? "bg-slate-400" : "bg-gray-500"
                     } rounded-full animate-bounce`}
                     style={{ animationDelay: "300ms" }}
                   />
@@ -673,28 +672,30 @@ const AIChat = () => {
         <div
           className={`p-5 ${
             isDarkMode
-              ? "border-t-2 border-slate-700 bg-slate-800/50"
-              : "border-t-2 border-gray-200 bg-white"
+              ? "border-t border-slate-700 bg-slate-800/30"
+              : "border-t border-gray-200 bg-white"
           }`}
         >
           {/* Reply Preview */}
           {replyToMessageId && replyToImageUrl && (
             <div
-              className={`flex items-center gap-3 mb-4 p-3 rounded-xl border-2 transition-all duration-200 ${
+              className={`flex items-center gap-3 mb-4 p-3 rounded-xl border transition-all duration-200 ${
                 isDarkMode
-                  ? "bg-purple-900/20 border-purple-700"
-                  : "bg-purple-50 border-purple-200"
+                  ? "bg-slate-700/50 border-slate-600"
+                  : "bg-gray-50 border-gray-200"
               }`}
             >
               <img
                 src={replyToImageUrl}
                 alt=""
-                className="w-14 h-14 rounded-lg object-cover border-2 border-purple-300"
+                className={`w-14 h-14 rounded-lg object-cover border ${
+                  isDarkMode ? "border-slate-500" : "border-gray-300"
+                }`}
               />
               <div className="flex-1">
                 <div
                   className={`text-xs font-semibold mb-1 ${
-                    isDarkMode ? "text-purple-300" : "text-purple-600"
+                    isDarkMode ? "text-slate-200" : "text-gray-700"
                   }`}
                 >
                   ↩️ Editing this image
@@ -732,21 +733,23 @@ const AIChat = () => {
           {/* Attached Image Preview */}
           {(attachedImagePreview || attachedImageUrl) && (
             <div
-              className={`flex items-center gap-3 mb-4 p-3 rounded-xl border-2 transition-all duration-200 ${
+              className={`flex items-center gap-3 mb-4 p-3 rounded-xl border transition-all duration-200 ${
                 isDarkMode
-                  ? "bg-blue-900/20 border-blue-700"
-                  : "bg-blue-50 border-blue-200"
+                  ? "bg-slate-700/50 border-slate-600"
+                  : "bg-gray-50 border-gray-200"
               }`}
             >
               <img
                 src={attachedImagePreview || attachedImageUrl}
                 alt=""
-                className="w-14 h-14 rounded-lg object-cover border-2 border-blue-300"
+                className={`w-14 h-14 rounded-lg object-cover border ${
+                  isDarkMode ? "border-slate-500" : "border-gray-300"
+                }`}
               />
               <div className="flex-1 overflow-hidden">
                 <div
                   className={`text-xs font-semibold flex items-center gap-2 ${
-                    isDarkMode ? "text-blue-300" : "text-blue-600"
+                    isDarkMode ? "text-slate-200" : "text-gray-700"
                   }`}
                 >
                   {isUploading ? (
@@ -802,18 +805,22 @@ const AIChat = () => {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Describe what you want to create..."
-              className={`flex-1 px-5 py-3 rounded-xl transition-all duration-200 ${
+              placeholder="Type your message..."
+              className={`flex-1 px-4 py-2.5 rounded-xl transition-all duration-200 ${
                 isDarkMode
-                  ? "bg-slate-700 border-2 border-slate-600 text-white placeholder-slate-400 focus:border-purple-500"
-                  : "bg-white border-2 border-gray-300 text-gray-900 placeholder-gray-400 focus:border-purple-500"
-              } focus:outline-none focus:ring-2 focus:ring-purple-500/20`}
+                  ? "bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:border-slate-500 focus:bg-slate-600/50"
+                  : "bg-white border border-gray-300 text-gray-900 placeholder-gray-400 focus:border-gray-400 focus:bg-gray-50"
+              } focus:outline-none`}
               disabled={isLoading}
             />
             <button
               onClick={handleSendMessage}
               disabled={isLoading || !inputValue.trim()}
-              className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-600 to-blue-600 text-white flex items-center justify-center hover:scale-110 hover:shadow-xl hover:shadow-purple-500/30 transition-all duration-200 disabled:opacity-50 disabled:hover:scale-100 group/send"
+              className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-200 disabled:opacity-40 ${
+                isDarkMode
+                  ? "bg-slate-700 hover:bg-slate-600 text-white"
+                  : "bg-gray-900 hover:bg-gray-800 text-white"
+              } disabled:hover:bg-slate-700 group/send`}
             >
               {isLoading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
