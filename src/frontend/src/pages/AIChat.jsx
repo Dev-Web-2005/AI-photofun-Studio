@@ -26,6 +26,58 @@ const AI_BACKEND_URL =
   import.meta.env.VITE_AI_BACKEND_URL ||
   "https://nmcnpm-api-ai.lethanhcong.site:46337/api/v1";
 
+// Example cards for quick actions
+const EXAMPLE_CARDS = [
+  {
+    id: 1,
+    title: "Create Image",
+    description: "Generate stunning images from text",
+    icon: "🎨",
+    prompt: "Create an image of a magical forest at sunset",
+    gradient: "from-purple-500 to-pink-500",
+  },
+  {
+    id: 2,
+    title: "Create Video",
+    description: "Transform images into videos",
+    icon: "🎬",
+    prompt: "Create a video from this image",
+    gradient: "from-blue-500 to-cyan-500",
+  },
+  {
+    id: 3,
+    title: "Remove Background",
+    description: "Clean background removal",
+    icon: "✂️",
+    prompt: "Remove the background from this image",
+    gradient: "from-green-500 to-emerald-500",
+  },
+  {
+    id: 4,
+    title: "Upscale Image",
+    description: "Enhance image resolution",
+    icon: "🔍",
+    prompt: "Upscale this image to higher resolution",
+    gradient: "from-orange-500 to-amber-500",
+  },
+  {
+    id: 5,
+    title: "Style Transfer",
+    description: "Apply artistic styles",
+    icon: "🎭",
+    prompt: "Apply oil painting style to this image",
+    gradient: "from-rose-500 to-red-500",
+  },
+  {
+    id: 6,
+    title: "Reimagine",
+    description: "Creative image transformation",
+    icon: "✨",
+    prompt: "Reimagine this image in a cyberpunk style",
+    gradient: "from-indigo-500 to-violet-500",
+  },
+];
+
 const AIChat = () => {
   const navigate = useNavigate();
   const { user } = useAuthContext();
@@ -175,13 +227,13 @@ const AIChat = () => {
       prev.map((m) =>
         m.id === apiMsg.message_id
           ? {
-              ...m,
-              content,
-              imageUrl,
-              status: apiMsg.status,
-              intent,
-              extractedParams,
-            }
+            ...m,
+            content,
+            imageUrl,
+            status: apiMsg.status,
+            intent,
+            extractedParams,
+          }
           : m
       )
     );
@@ -421,16 +473,14 @@ const AIChat = () => {
           {messages.map((msg) => (
             <div
               key={msg.id}
-              className={`flex ${
-                msg.role === "user" ? "justify-end" : "justify-start"
-              }`}
+              className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"
+                }`}
             >
               <div
-                className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-                  msg.role === "user"
+                className={`max-w-[80%] rounded-2xl px-4 py-3 ${msg.role === "user"
                     ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-br-md"
                     : "bg-white text-gray-800 rounded-bl-md shadow-sm border border-gray-100"
-                }`}
+                  }`}
               >
                 {/* Message content */}
                 <div className="whitespace-pre-wrap text-sm">{msg.content}</div>
@@ -488,15 +538,14 @@ const AIChat = () => {
                 {msg.status && msg.role === "bot" && (
                   <div className="mt-2">
                     <span
-                      className={`text-xs px-2 py-0.5 rounded-full ${
-                        msg.status === "COMPLETED"
+                      className={`text-xs px-2 py-0.5 rounded-full ${msg.status === "COMPLETED"
                           ? "bg-green-100 text-green-700"
                           : msg.status === "PROCESSING"
-                          ? "bg-blue-100 text-blue-700"
-                          : msg.status === "FAILED"
-                          ? "bg-red-100 text-red-700"
-                          : "bg-yellow-100 text-yellow-700"
-                      }`}
+                            ? "bg-blue-100 text-blue-700"
+                            : msg.status === "FAILED"
+                              ? "bg-red-100 text-red-700"
+                              : "bg-yellow-100 text-yellow-700"
+                        }`}
                     >
                       {msg.status}
                     </span>
@@ -505,9 +554,8 @@ const AIChat = () => {
 
                 {/* Timestamp */}
                 <div
-                  className={`text-xs mt-1 ${
-                    msg.role === "user" ? "text-purple-100" : "text-gray-400"
-                  }`}
+                  className={`text-xs mt-1 ${msg.role === "user" ? "text-purple-100" : "text-gray-400"
+                    }`}
                 >
                   {formatTime(msg.timestamp)}
                 </div>
