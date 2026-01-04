@@ -1,6 +1,8 @@
 import React from "react";
 import { Phone, Video, PhoneOff, User } from "lucide-react";
 
+const DEFAULT_USER_AVATAR = "https://res.cloudinary.com/derwtva4p/image/upload/v1735724007/default-avatar_ysrrdy.png";
+
 const IncomingCallModal = ({
   isOpen,
   onAccept,
@@ -20,7 +22,7 @@ const IncomingCallModal = ({
           <div className="relative mb-6">
             <div className="absolute inset-0 animate-ping rounded-full bg-white/30"></div>
             <img
-              src={callerAvatar || `https://i.pravatar.cc/150?u=${callerName}`}
+              src={callerAvatar || DEFAULT_USER_AVATAR}
               alt={callerName}
               className="relative h-24 w-24 rounded-full border-4 border-white object-cover shadow-lg"
             />
