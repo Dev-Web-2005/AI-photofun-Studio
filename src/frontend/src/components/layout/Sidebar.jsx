@@ -92,7 +92,7 @@ const Sidebar = () => {
       {/* Mobile Menu Button - Fixed at top left */}
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="md:hidden fixed top-4 left-4 z-50 p-3 bg-white border border-gray-200 rounded-xl shadow-lg hover:bg-gray-50 transition-colors"
+        className="md:hidden fixed top-4 left-4 z-[60] p-3 bg-white border border-gray-200 rounded-xl shadow-lg hover:bg-gray-50 transition-colors"
         aria-label="Toggle sidebar"
       >
         <Menu className="w-6 h-6 text-gray-600" />
