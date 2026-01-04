@@ -255,7 +255,7 @@ const ChatBot = () => {
                         title="Click to view larger image"
                       />
                       {/* Image overlay on hover */}
-                      <div className="absolute inset-0 bg-slate-900/0 group-hover/img:bg-slate-900/10 transition-colors duration-300 rounded-lg"></div>
+                      <div className="absolute inset-0 bg-slate-900/0 group-hover/img:bg-slate-900/10 transition-colors duration-300 rounded-lg pointer-events-none"></div>
                     </div>
                   )}
                   <p className="text-sm whitespace-pre-wrap leading-relaxed">
