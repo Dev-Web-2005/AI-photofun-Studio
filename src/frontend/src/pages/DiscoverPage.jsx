@@ -23,6 +23,7 @@ import {
 const ARTICLES = [
     {
         id: 1,
+        slug: "wan-26-image-to-video",
         title: "Wan 2.6 - Tạo Video Chất Lượng Cao từ Hình Ảnh",
         description: "Khám phá model Wan 2.6 mới nhất với khả năng tạo video chất lượng cao từ bất kỳ hình ảnh nào. Hỗ trợ motion smooth và chi tiết sắc nét.",
         category: "video",
@@ -31,10 +32,10 @@ const ARTICLES = [
         readTime: "5 phút",
         date: "04/01/2026",
         featured: true,
-        link: "/image-to-video",
     },
     {
         id: 2,
+        slug: "wan-turbo-fast-video",
         title: "Wan Turbo - Video Nhanh Như Chớp",
         description: "Model Wan 2.1 Turbo cho tốc độ xử lý cực nhanh, phù hợp khi bạn cần video gấp mà vẫn đảm bảo chất lượng.",
         category: "video",
@@ -42,10 +43,10 @@ const ARTICLES = [
         coverImage: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop",
         readTime: "3 phút",
         date: "03/01/2026",
-        link: "/image-to-video",
     },
     {
         id: 3,
+        slug: "text-to-image-guide",
         title: "Text to Image - Tạo Ảnh Từ Mô Tả Văn Bản",
         description: "Hướng dẫn chi tiết cách sử dụng Text to Image với các style như Realism, Anime, Digital Art... để tạo ra những bức ảnh ấn tượng.",
         category: "image",
@@ -53,10 +54,10 @@ const ARTICLES = [
         coverImage: "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=800&h=400&fit=crop",
         readTime: "7 phút",
         date: "02/01/2026",
-        link: "/text-to-image",
     },
     {
         id: 4,
+        slug: "prompt-to-video",
         title: "Prompt to Video - Tạo Video Từ Văn Bản",
         description: "Model Wan 2.6-t2v cho phép bạn tạo video trực tiếp từ mô tả văn bản, không cần hình ảnh đầu vào.",
         category: "video",
@@ -64,10 +65,10 @@ const ARTICLES = [
         coverImage: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=800&h=400&fit=crop",
         readTime: "6 phút",
         date: "01/01/2026",
-        link: "/prompt-to-video",
     },
     {
         id: 5,
+        slug: "style-transfer",
         title: "Style Transfer - Biến Ảnh Thành Tranh Nghệ Thuật",
         description: "Chuyển đổi phong cách ảnh của bạn thành tranh Van Gogh, Monet, hay bất kỳ phong cách nghệ thuật nào bạn muốn.",
         category: "image",
@@ -75,10 +76,10 @@ const ARTICLES = [
         coverImage: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&h=400&fit=crop",
         readTime: "4 phút",
         date: "31/12/2025",
-        link: "/style-transfer",
     },
     {
         id: 6,
+        slug: "image-enhance",
         title: "Image Enhance - Nâng Cấp Chất Lượng Ảnh",
         description: "Công cụ nâng cấp độ phân giải ảnh lên 2x, 4x với công nghệ AI tiên tiến, giữ nguyên chi tiết và sắc nét.",
         category: "enhance",
@@ -86,10 +87,10 @@ const ARTICLES = [
         coverImage: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&h=400&fit=crop",
         readTime: "3 phút",
         date: "30/12/2025",
-        link: "/image-enhance",
     },
     {
         id: 7,
+        slug: "relight",
         title: "Relight - Làm Mới Ánh Sáng Cho Ảnh",
         description: "Thay đổi ánh sáng trong ảnh một cách tự nhiên - từ ánh sáng studio đến hoàng hôn lãng mạn.",
         category: "enhance",
@@ -97,10 +98,10 @@ const ARTICLES = [
         coverImage: "https://images.unsplash.com/photo-1507400492013-162706c8c05e?w=800&h=400&fit=crop",
         readTime: "4 phút",
         date: "29/12/2025",
-        link: "/relight",
     },
     {
         id: 8,
+        slug: "ai-chat-assistant",
         title: "AI Chat Assistant - Trợ Lý AI Thông Minh",
         description: "Chatbot AI hỗ trợ bạn tạo và chỉnh sửa ảnh chỉ bằng cuộc trò chuyện tự nhiên. Hỏi bất cứ điều gì!",
         category: "tips",
@@ -108,10 +109,10 @@ const ARTICLES = [
         coverImage: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=400&fit=crop",
         readTime: "5 phút",
         date: "28/12/2025",
-        link: "/ai-chat",
     },
     {
         id: 9,
+        slug: "background-tools",
         title: "Background Tools - Xóa & Thay Đổi Nền Ảnh",
         description: "Công cụ xử lý nền ảnh mạnh mẽ: xóa nền, thay nền mới, hoặc làm mờ nền chỉ trong vài click.",
         category: "image",
@@ -119,10 +120,10 @@ const ARTICLES = [
         coverImage: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=400&fit=crop",
         readTime: "4 phút",
         date: "27/12/2025",
-        link: "/background-tools",
     },
     {
         id: 10,
+        slug: "image-expand",
         title: "Image Expand - Mở Rộng Khung Ảnh",
         description: "Mở rộng biên ảnh bằng AI - thêm nội dung mới vào các cạnh ảnh một cách tự nhiên và liền mạch.",
         category: "image",
@@ -130,7 +131,6 @@ const ARTICLES = [
         coverImage: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=400&fit=crop",
         readTime: "3 phút",
         date: "26/12/2025",
-        link: "/image-expand",
     },
 ];
 
@@ -179,7 +179,7 @@ const DiscoverPage = () => {
     const regularArticles = filteredArticles.filter(article => !article.featured || activeCategory !== "all");
 
     const handleArticleClick = (article) => {
-        navigate(article.link);
+        navigate(`/discover/${article.slug}`);
     };
 
     return (
@@ -187,8 +187,8 @@ const DiscoverPage = () => {
             {/* Header */}
             <header
                 className={`${isDarkMode
-                        ? "bg-slate-800 border-slate-700"
-                        : "bg-white border-gray-200"
+                    ? "bg-slate-800 border-slate-700"
+                    : "bg-white border-gray-200"
                     } border-b -mx-6 px-6 py-5 mb-2`}
             >
                 <div className="flex items-center gap-3">
@@ -263,12 +263,12 @@ const DiscoverPage = () => {
                             type="button"
                             onClick={() => setActiveCategory(category.id)}
                             className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 ${activeCategory === category.id
-                                    ? isDarkMode
-                                        ? "bg-white text-slate-900"
-                                        : "bg-gray-900 text-white"
-                                    : isDarkMode
-                                        ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                                ? isDarkMode
+                                    ? "bg-white text-slate-900"
+                                    : "bg-gray-900 text-white"
+                                : isDarkMode
+                                    ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                                 }`}
                         >
                             <Icon className="w-4 h-4" />
@@ -288,8 +288,8 @@ const DiscoverPage = () => {
                             type="button"
                             onClick={() => handleArticleClick(article)}
                             className={`group text-left overflow-hidden rounded-xl ${isDarkMode
-                                    ? "bg-slate-800 hover:bg-slate-750 border-slate-700"
-                                    : "bg-white hover:bg-gray-50 border-gray-200"
+                                ? "bg-slate-800 hover:bg-slate-750 border-slate-700"
+                                : "bg-white hover:bg-gray-50 border-gray-200"
                                 } border shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 animate-fade-in`}
                             style={{ animationDelay: `${index * 50}ms` }}
                         >
