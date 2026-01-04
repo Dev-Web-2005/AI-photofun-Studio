@@ -606,19 +606,38 @@ export default function CommentSection({ postId }) {
               <button
                 type="button"
                 onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                className="p-1 text-gray-400 hover:text-blue-500 transition-colors cursor-pointer"
+                className={`p-1.5 rounded-full transition-all duration-200 cursor-pointer ${
+                  showEmojiPicker
+                    ? "bg-blue-100 text-blue-600 scale-110"
+                    : "text-gray-400 hover:bg-gray-100 hover:text-blue-500"
+                }`}
+                aria-label="Add emoji"
               >
                 <Smile className="h-5 w-5" />
               </button>
               {showEmojiPicker && (
-                <div className="absolute bottom-full right-0 mb-2 z-50 shadow-2xl rounded-xl border border-gray-100">
-                  <EmojiPicker
-                    onEmojiClick={onEmojiClick}
-                    width={320}
-                    height={400}
-                    previewConfig={{ showPreview: false }}
-                    searchDisabled={false}
-                  />
+                <div className="absolute bottom-full right-0 mb-3 z-50 opacity-0 animate-[fadeIn_0.2s_ease-in-out_forwards]">
+                  <div className="relative">
+                    {/* Elegant shadow backdrop */}
+                    <div className="absolute inset-0 bg-linear-to-t from-gray-900/10 to-transparent rounded-2xl blur-xl transform translate-y-2" />
+
+                    {/* Emoji Picker Container */}
+                    <div className="relative rounded-2xl overflow-hidden border border-gray-200 bg-white shadow-2xl ring-1 ring-black/5">
+                      <EmojiPicker
+                        onEmojiClick={onEmojiClick}
+                        width={340}
+                        height={420}
+                        previewConfig={{ showPreview: false }}
+                        searchDisabled={false}
+                        theme="light"
+                        skinTonesDisabled={false}
+                        emojiStyle="native"
+                      />
+                    </div>
+
+                    {/* Elegant arrow pointer */}
+                    <div className="absolute -bottom-2 right-4 w-4 h-4 bg-white border-r border-b border-gray-200 transform rotate-45" />
+                  </div>
                 </div>
               )}
             </div>
