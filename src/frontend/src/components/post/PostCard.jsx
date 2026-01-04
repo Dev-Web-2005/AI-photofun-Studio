@@ -158,7 +158,7 @@ export default function PostCard({
           )}
 
           {post.hasPrompt && (
-            <PromptDisplaySection 
+            <PromptDisplaySection
               prompt={post.prompt}
               toolType={post.video ? "prompt-to-video" : "text-to-image"}
             />

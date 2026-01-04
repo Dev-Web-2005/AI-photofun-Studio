@@ -71,7 +71,9 @@ export default function UsePromptModal({ isOpen, onClose, prompt, toolType }) {
     >
       <div className="relative w-full max-w-lg mx-4 bg-white rounded-2xl shadow-2xl animate-scaleIn overflow-hidden">
         {/* Header with gradient */}
-        <div className={`bg-gradient-to-r ${toolInfo.color} p-6 relative overflow-hidden`}>
+        <div
+          className={`bg-gradient-to-r ${toolInfo.color} p-6 relative overflow-hidden`}
+        >
           {/* Decorative background pattern */}
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full -translate-y-1/2 translate-x-1/2" />
@@ -84,8 +86,12 @@ export default function UsePromptModal({ isOpen, onClose, prompt, toolType }) {
                 <Sparkles className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-white">Use This Prompt?</h3>
-                <p className="text-sm text-white/90 mt-0.5">{toolInfo.description}</p>
+                <h3 className="text-xl font-bold text-white">
+                  Use This Prompt?
+                </h3>
+                <p className="text-sm text-white/90 mt-0.5">
+                  {toolInfo.description}
+                </p>
               </div>
             </div>
             <button
@@ -102,12 +108,16 @@ export default function UsePromptModal({ isOpen, onClose, prompt, toolType }) {
         <div className="p-6">
           {/* Tool destination info */}
           <div className="flex items-center gap-3 mb-4 p-3 bg-gray-50 rounded-xl">
-            <div className={`p-2 bg-gradient-to-r ${toolInfo.color} rounded-lg`}>
+            <div
+              className={`p-2 bg-gradient-to-r ${toolInfo.color} rounded-lg`}
+            >
               <IconComponent className="w-5 h-5 text-white" />
             </div>
             <div>
               <p className="text-xs text-gray-500 font-medium">Navigate to</p>
-              <p className="text-sm font-semibold text-gray-900">{toolInfo.title}</p>
+              <p className="text-sm font-semibold text-gray-900">
+                {toolInfo.title}
+              </p>
             </div>
           </div>
 

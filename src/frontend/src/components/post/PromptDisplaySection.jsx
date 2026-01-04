@@ -7,7 +7,10 @@ import { toast } from "../../hooks/use-toast";
  * PromptDisplaySection - An elegant, interactive prompt display
  * Features hover effects, copy functionality, and click-to-use
  */
-export default function PromptDisplaySection({ prompt, toolType = "text-to-image" }) {
+export default function PromptDisplaySection({
+  prompt,
+  toolType = "text-to-image",
+}) {
   const [isHovered, setIsHovered] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -109,7 +112,9 @@ export default function PromptDisplaySection({ prompt, toolType = "text-to-image
         {/* Shine effect on hover */}
         <div
           className={`absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none`}
-          style={{ transform: isHovered ? "translateX(100%)" : "translateX(-100%)" }}
+          style={{
+            transform: isHovered ? "translateX(100%)" : "translateX(-100%)",
+          }}
         />
       </div>
 
