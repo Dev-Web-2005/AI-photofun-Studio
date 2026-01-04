@@ -7,7 +7,7 @@ import PremiumAvatar from "../components/ui/PremiumAvatar";
 
 const fallbackUser = {
   username: "Guest",
-  avatarUrl: "https://i.pravatar.cc/150?img=32",
+  avatarUrl: "https://res.cloudinary.com/derwtva4p/image/upload/v1735724007/default-avatar_ysrrdy.png",
   isPremium: false,
 };
 
@@ -74,9 +74,8 @@ const PremiumLayout = ({ user: suppliedUser }) => {
               className="p-2.5 cursor-pointer"
             >
               <Icon
-                className={`w-6 h-6 ${
-                  isActive ? "text-black" : "text-gray-400"
-                }`}
+                className={`w-6 h-6 ${isActive ? "text-black" : "text-gray-400"
+                  }`}
               />
             </button>
           );
