@@ -37,6 +37,7 @@ import { stopCall } from "../api/call-video";
 // For localhost: use window.location.origin with Vite proxy
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || window.location.origin;
 const DEFAULT_GROUP_AVATAR = "https://res.cloudinary.com/derwtva4p/image/upload/v1765458810/file-service/fffsss.png";
+const DEFAULT_USER_AVATAR = "https://res.cloudinary.com/derwtva4p/image/upload/v1735724007/default-avatar_ysrrdy.png";
 
 const MessagesPage = () => {
   const { user } = useAuth();
