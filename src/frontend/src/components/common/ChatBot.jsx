@@ -129,6 +129,59 @@ const ChatBot = () => {
     });
   };
 
+  // Handle suggestion chip click
+  const handleSuggestionClick = (suggestionText) => {
+    setInputMessage(suggestionText);
+    // Create a synthetic event to trigger send
+    const syntheticEvent = { preventDefault: () => { } };
+    // Use setTimeout to allow state update before sending
+    setTimeout(() => {
+      const userMessage = {
+        id: messages.length + 1,
+        text: suggestionText,
+        sender: "user",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, userMessage]);
+      setInputMessage("");
+      setIsTyping(true);
+      setError(null);
+
+      // Call API
+      chatBotApi.sendMessage(suggestionText)
+        .then((response) => {
+          let botText = "Sorry, I didn't receive a response from the server.";
+          let imageUrl = null;
+          if (response && response.result) {
+            botText = response.result.answer || botText;
+            imageUrl = response.result.imageUrl || null;
+          }
+          const botResponse = {
+            id: messages.length + 2,
+            text: botText,
+            imageUrl: imageUrl,
+            sender: "bot",
+            timestamp: new Date(),
+          };
+          setMessages((prev) => [...prev, botResponse]);
+        })
+        .catch((error) => {
+          console.error("Error sending message:", error);
+          setError("Unable to connect to chatbot. Please try again.");
+          const errorResponse = {
+            id: messages.length + 2,
+            text: "Sorry, I'm having connection issues. Please try again later.",
+            sender: "bot",
+            timestamp: new Date(),
+          };
+          setMessages((prev) => [...prev, errorResponse]);
+        })
+        .finally(() => {
+          setIsTyping(false);
+        });
+    }, 0);
+  };
+
   return (
     <>
       {/* Chat Bubble Button */}
@@ -233,6 +286,7 @@ const ChatBot = () => {
                 {SUGGESTION_PROMPTS.map((prompt) => (
                   <button
                     key={prompt.id}
+                    onClick={() => handleSuggestionClick(prompt.text)}
                     className={`px-3 py-2 rounded-xl text-xs font-medium transition-all duration-200 ${isDarkMode
                       ? "bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 hover:border-slate-500 shadow-sm shadow-slate-900/30 hover:shadow-md hover:shadow-slate-900/40"
                       : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-slate-400 shadow-sm shadow-slate-200/50 hover:shadow-md hover:shadow-slate-300/50"
