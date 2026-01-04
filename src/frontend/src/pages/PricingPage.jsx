@@ -106,7 +106,7 @@ const PricingPage = () => {
         blurb:
           "For focused creators who need fast output without long commitments.",
         features: [
-          "8000 tokens per month",
+          "7000 tokens per month",
           "Fast image generation",
           "All styles unlocked",
         ],
