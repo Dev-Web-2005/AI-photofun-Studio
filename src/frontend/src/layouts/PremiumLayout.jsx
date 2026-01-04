@@ -7,7 +7,7 @@ import PremiumAvatar from "../components/ui/PremiumAvatar";
 
 const fallbackUser = {
   username: "Guest",
-  avatarUrl: "https://res.cloudinary.com/derwtva4p/image/upload/v1735724007/default-avatar_ysrrdy.png",
+  avatarUrl: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
   isPremium: false,
 };
 

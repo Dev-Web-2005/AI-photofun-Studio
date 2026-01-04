@@ -1,7 +1,7 @@
 import React from "react";
 import { Phone, Video, PhoneOff, User } from "lucide-react";
 
-const DEFAULT_USER_AVATAR = "https://res.cloudinary.com/derwtva4p/image/upload/v1735724007/default-avatar_ysrrdy.png";
+const DEFAULT_USER_AVATAR = "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
 
 const IncomingCallModal = ({
   isOpen,
