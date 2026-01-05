@@ -23,9 +23,9 @@ config:
     limit-account-per-ip: ${LIMIT_ACCOUNT_PER_IP:1000}
 
   cookie:
-    secure: ${COOKIE_SECURE:false}
-    same-site: ${COOKIE_SAME_SITE:Lax}
-    domain: ${COOKIE_DOMAIN:}
+    secure: ${COOKIE_SECURE:true}
+    same-site: ${COOKIE_SAME_SITE:None}
+    domain: ${COOKIE_DOMAIN:.lethanhcong.site}
   http:
     profile: ${PROFILE_SERVICE_URL:http://localhost:8081/profiles}
     file: https://file-service-cdal.onrender.com

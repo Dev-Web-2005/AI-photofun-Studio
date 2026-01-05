@@ -16,6 +16,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.identity.DTOs.HttpResponse;
@@ -64,9 +66,9 @@ public class AuthController {
     service.identity.entity.User user = authService.login(loginRequest);
     String accessToken = utils.generateToken(user);
     String refreshToken = utils.generateRefreshToken(user);
-    Cookie cookie = cookieUtils.createJwtCookie(refreshToken);
+    ResponseCookie cookie = cookieUtils.createJwtCookie(refreshToken);
 
-    httpServletResponse.addCookie(cookie);
+    httpServletResponse.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     return HttpResponse.<LoginResponse>builder()
         .code(1000)
         .message("Login successful")
@@ -120,8 +122,8 @@ public class AuthController {
                   .orElse(null);
 
     authService.logout(accessToken, refreshToken);
-    Cookie cookie = cookieUtils.createExpiredJwtCookie();
-    httpServletResponse.addCookie(cookie);
+    ResponseCookie cookie = cookieUtils.createExpiredJwtCookie();
+    httpServletResponse.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     return HttpResponse.builder()
         .code(1000)
         .message("Logout successful")
@@ -133,13 +135,13 @@ public class AuthController {
                                     HttpServletResponse httpServletResponse)
       throws ParseException, JOSEException {
     String accessToken = authService.refreshToken(token);
-    Cookie cookie;
+    ResponseCookie cookie;
     if (accessToken == null) {
       cookie = cookieUtils.createExpiredJwtCookie();
     } else
       cookie = cookieUtils.createJwtCookie(accessToken);
 
-    httpServletResponse.addCookie(cookie);
+    httpServletResponse.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     return HttpResponse.<String>builder()
         .code(1000)
         .message(null)
@@ -174,8 +176,8 @@ public class AuthController {
     service.identity.entity.User user = authService.refresh(refreshToken);
     String accessToken = utils.generateToken(user);
     String refreshNewToken = utils.generateRefreshToken(user);
-    Cookie cookie = cookieUtils.createJwtCookie(refreshNewToken);
-    httpServletResponse.addCookie(cookie);
+    ResponseCookie cookie = cookieUtils.createJwtCookie(refreshNewToken);
+    httpServletResponse.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     return HttpResponse.<RefreshTokenResponse>builder()
         .code(1000)
         .message("Refresh token successful")
