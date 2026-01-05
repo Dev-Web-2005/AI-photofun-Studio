@@ -165,7 +165,7 @@ const MessagesPage = () => {
     }
   }, [user?.id]);
 
-  // Fetch my groups (joined groups)
+  // Fetch my groups (join groups)
   const fetchMyGroups = useCallback(async () => {
     if (!user?.id) return;
 
