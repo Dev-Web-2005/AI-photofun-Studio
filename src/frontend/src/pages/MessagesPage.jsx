@@ -22,6 +22,8 @@ import {
   Shield,
   Camera,
   Trash2,
+  ArrowLeft,
+  Menu,
 } from "lucide-react";
 import io from "socket.io-client";
 import { useAuth } from "../hooks/useAuth";
@@ -73,6 +75,9 @@ const MessagesPage = () => {
   const [userCache, setUserCache] = useState({}); // Cache user info { odId: { username, avatarUrl } }
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadingVideo, setUploadingVideo] = useState(false);
+
+  // Mobile responsive state
+  const [showMobileSidebar, setShowMobileSidebar] = useState(true);
 
   // Edit Group State (Admin Only)
   const [isEditingGroup, setIsEditingGroup] = useState(false);
@@ -1522,22 +1527,34 @@ const MessagesPage = () => {
     activeChat?.isGroup && activeChat?.adminId === user?.id;
   const isCurrentUserMember = activeChat?.isGroup && activeChat?.isMember;
 
+  // Handle mobile chat selection
+  const handleMobileChatSelect = (chat) => {
+    setActiveChat(chat);
+    setShowMobileSidebar(false); // Hide sidebar on mobile when chat selected
+  };
+
+  // Handle mobile back to sidebar
+  const handleMobileBack = () => {
+    setShowMobileSidebar(true);
+  };
+
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-6rem)]">
-      <div className="flex h-[calc(100vh-8rem)] w-full bg-white overflow-hidden rounded-2xl border border-gray-200 shadow-lg">
+    <div className="flex items-center justify-center min-h-[calc(100vh-6rem)] md:min-h-[calc(100vh-6rem)] min-h-screen">
+      <div className="flex h-screen md:h-[calc(100vh-8rem)] w-full bg-white overflow-hidden md:rounded-2xl md:border border-gray-200 md:shadow-lg">
         {/* Offline Warning Banner */}
         {!socketConnected && (
-          <div className="absolute top-0 left-0 right-0 bg-gray-900 text-white px-4 py-2 text-center text-sm font-medium z-10 border-b border-gray-700">
+          <div className="absolute top-0 left-0 right-0 bg-gray-900 text-white px-4 py-2 text-center text-xs md:text-sm font-medium z-10 border-b border-gray-700">
             ⚠ Chat server offline - You can only view old messages, cannot send
             new ones
           </div>
         )}
 
-        <div className="flex w-80 flex-col border-r border-gray-200 bg-gray-50">
-          <div className="border-b border-gray-200 p-5 bg-white">
-            <div className="flex items-center justify-between mb-4">
+        {/* Sidebar - Hidden on mobile when chat is active, always visible on desktop */}
+        <div className={`${showMobileSidebar ? 'flex' : 'hidden'} md:flex w-full md:w-80 flex-col border-r border-gray-200 bg-gray-50`}>
+          <div className="border-b border-gray-200 p-4 md:p-5 bg-white">
+            <div className="flex items-center justify-between mb-3 md:mb-4">
               <div className="flex items-center gap-2.5">
-                <h1 className="text-lg font-semibold text-gray-900 tracking-tight">
+                <h1 className="text-base md:text-lg font-semibold text-gray-900 tracking-tight">
                   Messages
                 </h1>
                 <div
@@ -1551,29 +1568,30 @@ const MessagesPage = () => {
                 <button
                   type="button"
                   onClick={() => setShowCreateGroup(true)}
-                  className="flex items-center gap-1.5 rounded-lg bg-gray-900 px-3 py-2 text-xs font-medium text-white hover:bg-black shadow-sm hover:shadow-md transition-all cursor-pointer"
+                  className="flex items-center gap-1.5 rounded-lg bg-gray-900 px-2.5 md:px-3 py-1.5 md:py-2 text-xs font-medium text-white hover:bg-black shadow-sm hover:shadow-md transition-all cursor-pointer"
                   title="Create Group (Premium)"
                 >
                   <Users className="h-3.5 w-3.5" />
-                  <span>New Group</span>
+                  <span className="hidden sm:inline">New Group</span>
+                  <span className="sm:hidden">New</span>
                 </button>
               )}
             </div>
             <div className="relative">
-              <Search className="absolute left-3.5 top-2.5 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 md:left-3.5 top-2 md:top-2.5 h-4 w-4 text-gray-400" />
               <input
                 type="text"
                 placeholder="Search conversations..."
-                className="w-full rounded-lg bg-white border border-gray-200 py-2 pl-10 pr-4 text-sm text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 transition-all"
+                className="w-full rounded-lg bg-white border border-gray-200 py-2 pl-9 md:pl-10 pr-4 text-sm text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 transition-all"
               />
             </div>
 
             {/* Tabs */}
-            <div className="flex gap-1 mt-4 p-1 bg-gray-100 rounded-lg">
+            <div className="flex gap-1 mt-3 md:mt-4 p-1 bg-gray-100 rounded-lg">
               <button
                 type="button"
                 onClick={() => setActiveTab("direct")}
-                className={`flex-1 py-2 px-3 rounded-md text-xs font-medium transition-all cursor-pointer ${
+                className={`flex-1 py-1.5 md:py-2 px-2 md:px-3 rounded-md text-xs font-medium transition-all cursor-pointer ${
                   activeTab === "direct"
                     ? "bg-white text-gray-900 shadow-sm"
                     : "text-gray-600 hover:text-gray-900"
@@ -1584,7 +1602,7 @@ const MessagesPage = () => {
               <button
                 type="button"
                 onClick={() => setActiveTab("groups")}
-                className={`flex-1 py-2 px-3 rounded-md text-xs font-medium transition-all cursor-pointer ${
+                className={`flex-1 py-1.5 md:py-2 px-2 md:px-3 rounded-md text-xs font-medium transition-all cursor-pointer ${
                   activeTab === "groups"
                     ? "bg-white text-gray-900 shadow-sm"
                     : "text-gray-600 hover:text-gray-900"
@@ -1595,7 +1613,7 @@ const MessagesPage = () => {
               <button
                 type="button"
                 onClick={() => setActiveTab("explore")}
-                className={`flex-1 py-2 px-3 rounded-md text-xs font-medium transition-all cursor-pointer ${
+                className={`flex-1 py-1.5 md:py-2 px-2 md:px-3 rounded-md text-xs font-medium transition-all cursor-pointer ${
                   activeTab === "explore"
                     ? "bg-white text-gray-900 shadow-sm"
                     : "text-gray-600 hover:text-gray-900"
@@ -1618,16 +1636,16 @@ const MessagesPage = () => {
                 conversations.map((chat) => (
                   <div
                     key={chat.id}
-                    className={`group/conv mx-2 mb-1 flex items-center gap-3 rounded-lg p-3 text-left transition-all duration-200 border-l-2 ${
+                    className={`group/conv mx-2 mb-1 flex items-center gap-2 md:gap-3 rounded-lg p-2.5 md:p-3 text-left transition-all duration-200 border-l-2 ${
                       activeChat?.id === chat.id
                         ? "bg-gray-900 shadow-sm border-l-amber-500"
-                        : "border-l-transparent hover:border-l-gray-400 hover:bg-white/80 hover:shadow-md"
+                        : "border-l-transparent hover:border-l-gray-400 hover:bg-white/80 hover:shadow-md active:bg-white/90"
                     }`}
                   >
                     <button
                       type="button"
-                      onClick={() => setActiveChat(chat)}
-                      className="flex items-center gap-3 flex-1 min-w-0 cursor-pointer"
+                      onClick={() => handleMobileChatSelect(chat)}
+                      className="flex items-center gap-2 md:gap-3 flex-1 min-w-0 cursor-pointer"
                     >
                       <div className="relative">
                         <img
@@ -1740,10 +1758,10 @@ const MessagesPage = () => {
                     type="button"
                     key={group.id}
                     onClick={() => {
-                      setActiveChat(group);
+                      handleMobileChatSelect(group);
                       setShowGroupInfo(false);
                     }}
-                    className={`mx-2 mb-1 flex items-center gap-3 rounded-lg p-3 text-left transition-all duration-200 w-[calc(100%-1rem)] border-l-2 ${
+                    className={`mx-2 mb-1 flex items-center gap-2 md:gap-3 rounded-lg p-2.5 md:p-3 text-left transition-all duration-200 w-[calc(100%-1rem)] border-l-2 active:bg-white/90 ${
                       activeChat?.id === group.id
                         ? "bg-gray-900 shadow-sm border-l-amber-500"
                         : "border-l-transparent hover:border-l-gray-400 hover:bg-white/80 hover:shadow-md"
@@ -1814,10 +1832,10 @@ const MessagesPage = () => {
                   type="button"
                   key={group.id}
                   onClick={() => {
-                    setActiveChat(group);
+                    handleMobileChatSelect(group);
                     setShowGroupInfo(false);
                   }}
-                  className={`mx-2 mb-1 flex items-center gap-3 rounded-lg p-3 text-left transition-all duration-200 w-[calc(100%-1rem)] border-l-2 ${
+                  className={`mx-2 mb-1 flex items-center gap-2 md:gap-3 rounded-lg p-2.5 md:p-3 text-left transition-all duration-200 w-[calc(100%-1rem)] border-l-2 active:bg-white/90 ${
                     activeChat?.id === group.id
                       ? "bg-gray-900 shadow-sm border-l-amber-500"
                       : "border-l-transparent hover:border-l-gray-400 hover:bg-white/80 hover:shadow-md"
@@ -1885,39 +1903,50 @@ const MessagesPage = () => {
           </div>
         </div>
 
-        <div className="flex flex-1 flex-col bg-white">
-          <div className="flex h-16 items-center justify-between border-b border-gray-200 px-6 bg-white">
-            <button
-              type="button"
-              onClick={() =>
-                activeChat.isGroup && setShowGroupInfo(!showGroupInfo)
-              }
-              className={`flex items-center gap-3 ${
-                activeChat.isGroup
-                  ? "hover:bg-gray-50 -ml-2 pl-2 pr-3 py-1.5 rounded-lg transition-colors cursor-pointer"
-                  : ""
-              }`}
-            >
-              <div className="relative">
-                <img
-                  src={activeChat.avatar}
-                  alt={activeChat.name}
-                  className="h-10 w-10 rounded-full object-cover"
-                />
-                {activeChat.isOnline && (
+        {/* Chat Area - Hidden on mobile when sidebar is active, always visible on desktop */}
+        <div className={`${!showMobileSidebar ? 'flex' : 'hidden'} md:flex flex-1 flex-col bg-white`}>
+          <div className="flex h-14 md:h-16 items-center justify-between border-b border-gray-200 px-3 md:px-6 bg-white">
+            <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
+              {/* Mobile back button */}
+              <button
+                type="button"
+                onClick={handleMobileBack}
+                className="md:hidden p-2 -ml-2 rounded-lg hover:bg-gray-100 cursor-pointer"
+              >
+                <ArrowLeft className="h-5 w-5 text-gray-700" />
+              </button>
+              
+              <button
+                type="button"
+                onClick={() =>
+                  activeChat.isGroup && setShowGroupInfo(!showGroupInfo)
+                }
+                className={`flex items-center gap-2 md:gap-3 min-w-0 ${
+                  activeChat.isGroup
+                    ? "hover:bg-gray-50 -ml-2 pl-2 pr-2 md:pr-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+                    : ""
+                }`}
+              >
+                <div className="relative flex-shrink-0">
+                  <img
+                    src={activeChat.avatar}
+                    alt={activeChat.name}
+                    className="h-9 w-9 md:h-10 md:w-10 rounded-full object-cover"
+                  />
+                  {activeChat.isOnline && (
                   <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-white bg-emerald-500"></span>
                 )}
               </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <p className="text-sm font-medium text-gray-900">
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-1.5 md:gap-2">
+                  <p className="text-sm md:text-base font-medium text-gray-900 truncate">
                     {activeChat.name}
                   </p>
                   {activeChat.isGroup && isCurrentUserAdmin && (
-                    <Shield className="h-3.5 w-3.5 text-amber-500" />
+                    <Shield className="h-3 w-3 md:h-3.5 md:w-3.5 text-amber-500 flex-shrink-0" />
                   )}
                 </div>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-gray-500 truncate">
                   {activeChat.isGroup
                     ? `${activeChat.memberCount} members`
                     : activeChat.isOnline
@@ -1927,44 +1956,45 @@ const MessagesPage = () => {
               </div>
               {activeChat.isGroup && (
                 <ChevronRight
-                  className={`h-4 w-4 text-gray-400 transition-transform ${
+                  className={`hidden md:block h-4 w-4 text-gray-400 transition-transform flex-shrink-0 ${
                     showGroupInfo ? "rotate-90" : ""
                   }`}
                 />
               )}
             </button>
-            <div className="flex items-center gap-2 text-gray-600">
+            </div>
+            <div className="flex items-center gap-1 md:gap-2 text-gray-600">
               <button
                 type="button"
                 onClick={handleStartAudioCall}
                 disabled={!activeChat || activeChat.isGroup}
-                className="rounded-lg p-2 transition-colors hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                className="rounded-lg p-1.5 md:p-2 transition-colors hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 title={
                   activeChat?.isGroup
                     ? "Group calls not supported"
                     : "Voice call"
                 }
               >
-                <Phone className="h-5 w-5" />
+                <Phone className="h-4 w-4 md:h-5 md:w-5" />
               </button>
               <button
                 type="button"
                 onClick={handleStartVideoCall}
                 disabled={!activeChat || activeChat.isGroup}
-                className="rounded-lg p-2 transition-colors hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                className="rounded-lg p-1.5 md:p-2 transition-colors hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 title={
                   activeChat?.isGroup
                     ? "Group calls not supported"
                     : "Video call"
                 }
               >
-                <Video className="h-5 w-5" />
+                <Video className="h-4 w-4 md:h-5 md:w-5" />
               </button>
               <button
                 type="button"
-                className="rounded-lg p-2 transition-colors hover:bg-gray-100 cursor-pointer"
+                className="rounded-lg p-1.5 md:p-2 transition-colors hover:bg-gray-100 cursor-pointer"
               >
-                <MoreVertical className="h-5 w-5" />
+                <MoreVertical className="h-4 w-4 md:h-5 md:w-5" />
               </button>
             </div>
           </div>
@@ -1973,13 +2003,13 @@ const MessagesPage = () => {
             {/* Messages Area */}
             <div
               className={`flex-1 flex flex-col ${
-                showGroupInfo ? "border-r border-gray-100" : ""
+                showGroupInfo ? "md:border-r border-gray-100" : ""
               }`}
             >
-              <div className="flex-1 space-y-4 overflow-y-auto bg-white p-4">
+              <div className="flex-1 space-y-3 md:space-y-4 overflow-y-auto bg-white p-3 md:p-4">
                 {messages.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-full text-gray-400">
-                    <Send className="h-16 w-16 mb-3 text-gray-300" />
+                    <Send className="h-12 w-12 md:h-16 md:w-16 mb-3 text-gray-300" />
                     <p className="text-sm">No messages yet</p>
                     <p className="text-xs mt-1">Start a conversation now!</p>
                   </div>
@@ -2102,8 +2132,8 @@ const MessagesPage = () => {
                 <div ref={messagesEndRef} />
               </div>
 
-              <div className="border-t border-gray-100 p-4">
-                {/* Hidden file input for images */}
+              <div className="border-t border-gray-100 p-3 md:p-4 bg-white">
+                {/* Hidden file inputs */}
                 <input
                   ref={imageInputRef}
                   type="file"
@@ -2112,7 +2142,6 @@ const MessagesPage = () => {
                   className="hidden"
                   id="chat-image-upload"
                 />
-                {/* Hidden file input for videos */}
                 <input
                   ref={videoInputRef}
                   type="file"
@@ -2124,32 +2153,32 @@ const MessagesPage = () => {
 
                 <form
                   onSubmit={handleSendMessage}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-1.5 md:gap-2"
                 >
                   <button
                     type="button"
                     onClick={() => imageInputRef.current?.click()}
                     disabled={uploadingImage || !socketConnected}
-                    className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                    className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer touch-manipulation"
                     title="Send image"
                   >
                     {uploadingImage ? (
-                      <Loader2 className="h-5 w-5 animate-spin" />
+                      <Loader2 className="h-4 w-4 md:h-5 md:w-5 animate-spin" />
                     ) : (
-                      <Image className="h-5 w-5" />
+                      <Image className="h-4 w-4 md:h-5 md:w-5" />
                     )}
                   </button>
                   <button
                     type="button"
                     onClick={() => videoInputRef.current?.click()}
                     disabled={uploadingVideo || !socketConnected}
-                    className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                    className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer touch-manipulation"
                     title="Send video"
                   >
                     {uploadingVideo ? (
-                      <Loader2 className="h-5 w-5 animate-spin" />
+                      <Loader2 className="h-4 w-4 md:h-5 md:w-5 animate-spin" />
                     ) : (
-                      <Video className="h-5 w-5" />
+                      <Video className="h-4 w-4 md:h-5 md:w-5" />
                     )}
                   </button>
                   <div className="relative flex-1">
@@ -2161,11 +2190,11 @@ const MessagesPage = () => {
                         socketConnected ? "Type a message..." : "Connecting..."
                       }
                       disabled={!socketConnected}
-                      className="w-full rounded-lg bg-gray-50 border border-gray-200 py-2.5 pl-4 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                      className="w-full rounded-lg bg-gray-50 border border-gray-200 py-2.5 md:py-3 pl-4 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                     />
                     <button
                       type="button"
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-600 cursor-pointer"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-600 cursor-pointer hidden md:block"
                     >
                       <Smile className="h-4 w-4" />
                     </button>
@@ -2173,25 +2202,36 @@ const MessagesPage = () => {
                   <button
                     type="submit"
                     disabled={!inputMessage.trim() || !socketConnected}
-                    className="rounded-lg bg-gray-900 p-3 text-white hover:bg-black disabled:cursor-not-allowed disabled:opacity-50 transition-all cursor-pointer"
+                    className="rounded-lg bg-gray-900 p-2.5 md:p-3 text-white hover:bg-black disabled:cursor-not-allowed disabled:opacity-50 transition-all cursor-pointer touch-manipulation"
                   >
-                    <Send className="h-5 w-5" />
+                    <Send className="h-4 w-4 md:h-5 md:w-5" />
                   </button>
                 </form>
               </div>
             </div>
+            </div>
 
-            {/* Group Info Panel */}
+            {/* Group Info Panel - Slide over on mobile, sidebar on desktop */}
             {showGroupInfo && activeChat.isGroup && (
-              <div className="w-72 bg-gray-50 p-4 overflow-y-auto">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-semibold text-gray-800">Group Info</h3>
-                  <button
-                    type="button"
-                    onClick={() => setShowGroupInfo(false)}
-                    className="p-1 rounded-full hover:bg-gray-200 cursor-pointer"
-                  >
-                    <X className="h-4 w-4 text-gray-500" />
+              <>
+                {/* Mobile overlay backdrop */}
+                <div 
+                  className="md:hidden fixed inset-0 bg-black/50 z-40"
+                  onClick={() => setShowGroupInfo(false)}
+                />
+                
+                {/* Group info panel */}
+                <div className="fixed md:relative inset-y-0 right-0 w-full sm:w-80 md:w-72 bg-gray-50 p-4 overflow-y-auto z-50 md:z-auto shadow-2xl md:shadow-none">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-semibold text-gray-800 text-base md:text-sm">Group Info</h3>
+                    <button
+                      type="button"
+                      onClick={() => setShowGroupInfo(false)}
+                      className="p-1.5 md:p-1 rounded-full hover:bg-gray-200 cursor-pointer"
+                    >
+                      <X className="h-5 w-5 md:h-4 md:w-4 text-gray-500" />
+                    </button>
+                  </div>
                   </button>
                 </div>
 
@@ -2466,23 +2506,29 @@ const MessagesPage = () => {
                     </div>
                   </div>
                 )}
-              </div>
+                </div>
+              </>
             )}
           </div>
         </div>
 
-        {/* Create Group Modal */}
+        {/* Create Group Modal - Bottom sheet on mobile, center modal on desktop */}
         {showCreateGroup && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md">
-            <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl border border-gray-200">
-              <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-60" />
+          <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/70 backdrop-blur-md">
+            <div className="w-full md:max-w-md md:rounded-2xl rounded-t-2xl md:rounded-b-2xl bg-white p-5 md:p-6 shadow-2xl border-t md:border border-gray-200 animate-slide-up md:animate-none">
+              <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-60 hidden md:block" />
+
+              {/* Mobile drag indicator */}
+              <div className="md:hidden flex justify-center mb-3">
+                <div className="w-10 h-1 bg-gray-300 rounded-full" />
+              </div>
 
               <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gray-50 border border-gray-200">
-                    <Users className="h-5 w-5 text-gray-700" />
+                <div className="flex items-center gap-2 md:gap-3">
+                  <div className="flex items-center justify-center w-9 h-9 md:w-10 md:h-10 rounded-xl bg-gray-50 border border-gray-200">
+                    <Users className="h-4 w-4 md:h-5 md:w-5 text-gray-700" />
                   </div>
-                  <h2 className="text-lg font-semibold text-gray-900">
+                  <h2 className="text-base md:text-lg font-semibold text-gray-900">
                     Create New Group
                   </h2>
                 </div>
@@ -2492,7 +2538,7 @@ const MessagesPage = () => {
                     setShowCreateGroup(false);
                     setNewGroupName("");
                   }}
-                  className="rounded-lg p-2 hover:bg-gray-100 transition-colors cursor-pointer"
+                  className="rounded-lg p-1.5 md:p-2 hover:bg-gray-100 transition-colors cursor-pointer"
                 >
                   <X className="h-5 w-5 text-gray-500" />
                 </button>
