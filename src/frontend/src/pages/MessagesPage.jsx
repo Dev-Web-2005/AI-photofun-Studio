@@ -25,6 +25,7 @@ import {
   ArrowLeft,
   Menu,
 } from "lucide-react";
+import EmojiPicker from "emoji-picker-react";
 import io from "socket.io-client";
 import { useAuth } from "../hooks/useAuth";
 import { communicationApi } from "../api/communicationApi";
@@ -76,6 +77,9 @@ const MessagesPage = () => {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadingVideo, setUploadingVideo] = useState(false);
 
+  // Emoji picker state
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
   // Mobile responsive state
   const [showMobileSidebar, setShowMobileSidebar] = useState(true);
 
@@ -99,8 +103,31 @@ const MessagesPage = () => {
   const socketRef = useRef(null);
   const imageInputRef = useRef(null);
   const videoInputRef = useRef(null);
+  const emojiPickerRef = useRef(null);
   // Track recently sent messages to prevent duplicates from socket echo
   const recentlySentMessagesRef = useRef(new Set());
+
+  // Emoji picker handlers
+  const onEmojiClick = (emojiObject) => {
+    setInputMessage((prev) => prev + emojiObject.emoji);
+  };
+
+  // Close emoji picker when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        emojiPickerRef.current &&
+        !emojiPickerRef.current.contains(event.target)
+      ) {
+        setShowEmojiPicker(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   // Fetch conversations from API
   const fetchConversations = useCallback(async () => {
@@ -2199,18 +2226,61 @@ const MessagesPage = () => {
                       type="text"
                       value={inputMessage}
                       onChange={(event) => setInputMessage(event.target.value)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" && !event.shiftKey) {
+                          event.preventDefault();
+                          handleSendMessage(event);
+                        }
+                      }}
                       placeholder={
                         socketConnected ? "Type a message..." : "Connecting..."
                       }
                       disabled={!socketConnected}
                       className="w-full rounded-lg bg-gray-50 border border-gray-200 py-2.5 md:py-3 pl-4 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                     />
-                    <button
-                      type="button"
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-600 cursor-pointer hidden md:block"
+                    <div
+                      ref={emojiPickerRef}
+                      className="absolute inset-y-0 right-3 flex items-center"
                     >
-                      <Smile className="h-4 w-4" />
-                    </button>
+                      <button
+                        type="button"
+                        onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                        disabled={!socketConnected}
+                        className={`p-1.5 rounded-full transition-all duration-200 cursor-pointer hidden md:flex ${
+                          showEmojiPicker
+                            ? "bg-gray-900 text-white scale-110"
+                            : "text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+                        } disabled:opacity-50 disabled:cursor-not-allowed`}
+                        aria-label="Add emoji"
+                      >
+                        <Smile className="h-4 w-4" />
+                      </button>
+                      {showEmojiPicker && (
+                        <div className="absolute bottom-full right-0 mb-3 z-50 opacity-0 animate-[fadeIn_0.2s_ease-in-out_forwards]">
+                          <div className="relative">
+                            {/* Elegant shadow backdrop */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-gray-900/10 to-transparent rounded-2xl blur-xl transform translate-y-2" />
+
+                            {/* Emoji Picker Container */}
+                            <div className="relative rounded-2xl overflow-hidden border border-gray-200 bg-white shadow-2xl ring-1 ring-black/5">
+                              <EmojiPicker
+                                onEmojiClick={onEmojiClick}
+                                width={340}
+                                height={420}
+                                previewConfig={{ showPreview: false }}
+                                searchDisabled={false}
+                                theme="light"
+                                skinTonesDisabled={false}
+                                emojiStyle="native"
+                              />
+                            </div>
+
+                            {/* Elegant arrow pointer */}
+                            <div className="absolute -bottom-2 right-4 w-4 h-4 bg-white border-r border-b border-gray-200 transform rotate-45" />
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <button
                     type="submit"
