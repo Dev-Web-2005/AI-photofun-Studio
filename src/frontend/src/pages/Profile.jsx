@@ -256,11 +256,16 @@ const Profile = () => {
 
               <div className="grid grid-cols-3 gap-3">
                 {profileStats.map((stat) => (
-                  <div key={stat.label} className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700/50 dark:to-gray-800/50 rounded-2xl p-4 border border-gray-200/50 dark:border-gray-600/50 hover:shadow-lg transition-all duration-300 hover:scale-105">
+                  <div
+                    key={stat.label}
+                    className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700/50 dark:to-gray-800/50 rounded-2xl p-4 border border-gray-200/50 dark:border-gray-600/50 hover:shadow-lg transition-all duration-300 hover:scale-105"
+                  >
                     <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold tracking-wider">
                       {stat.label}
                     </p>
-                    <p className="text-2xl md:text-3xl font-bold mt-2 text-gray-900 dark:text-gray-100">{stat.value}</p>
+                    <p className="text-2xl md:text-3xl font-bold mt-2 text-gray-900 dark:text-gray-100">
+                      {stat.value}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -286,7 +291,9 @@ const Profile = () => {
       </section>
 
       <section className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl border border-gray-200/50 dark:border-gray-700/50 rounded-3xl p-6 shadow-[0_20px_70px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_70px_-15px_rgba(0,0,0,0.6)]">
-        <h2 className="text-lg font-bold mb-5 text-gray-900 dark:text-gray-100">Contact Information</h2>
+        <h2 className="text-lg font-bold mb-5 text-gray-900 dark:text-gray-100">
+          Contact Information
+        </h2>
         <div className="space-y-4">
           {contactDetails.map((item) => {
             const Icon = item.icon;
@@ -383,7 +390,9 @@ const Profile = () => {
 
       <section className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl border border-gray-200/50 dark:border-gray-700/50 rounded-3xl p-6 shadow-[0_20px_70px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_70px_-15px_rgba(0,0,0,0.6)]">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Recent Posts</h2>
+          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+            Recent Posts
+          </h2>
           <button
             type="button"
             onClick={() => navigate("/dashboard")}
