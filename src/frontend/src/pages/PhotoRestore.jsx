@@ -140,10 +140,11 @@ const PhotoRestore = () => {
           <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
             <p className="text-sm font-semibold mb-3">Upload Original Image</p>
             <div
-              className={`relative h-64 border-2 border-dashed rounded-2xl flex items-center justify-center text-center p-4 cursor-pointer transition-colors ${dragOver
+              className={`relative h-64 border-2 border-dashed rounded-2xl flex items-center justify-center text-center p-4 cursor-pointer transition-colors ${
+                dragOver
                   ? "border-blue-300 bg-blue-50"
                   : "border-gray-300 hover:border-gray-400"
-                }`}
+              }`}
               onDragOver={(event) => {
                 event.preventDefault();
                 setDragOver(true);
@@ -209,12 +210,14 @@ const PhotoRestore = () => {
                 <button
                   type="button"
                   onClick={card.action}
-                  className={`relative inline-flex items-center h-7 w-12 rounded-full transition-colors ${card.value ? "bg-emerald-500" : "bg-gray-300"
-                    }`}
+                  className={`relative inline-flex items-center h-7 w-12 rounded-full transition-colors ${
+                    card.value ? "bg-emerald-500" : "bg-gray-300"
+                  }`}
                 >
                   <span
-                    className={`inline-block h-5 w-5 bg-white rounded-full transform transition-transform ${card.value ? "translate-x-5" : "translate-x-1"
-                      }`}
+                    className={`inline-block h-5 w-5 bg-white rounded-full transform transition-transform ${
+                      card.value ? "translate-x-5" : "translate-x-1"
+                    }`}
                   />
                 </button>
               </div>
@@ -223,13 +226,17 @@ const PhotoRestore = () => {
         </section>
 
         <section className="space-y-4">
-          <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-            <p className="text-sm font-semibold mb-3">Result</p>
-            <div className="relative h-64 rounded-2xl border border-gray-200 flex items-center justify-center overflow-hidden">
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-sm">
+            <p className="text-sm font-semibold mb-3 dark:text-gray-200">
+              Result
+            </p>
+            <div className="relative h-64 rounded-2xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 flex items-center justify-center overflow-hidden">
               {processing && (
                 <div className="text-center space-y-2">
-                  <div className="w-12 h-12 border-2 border-gray-200 border-t-black rounded-full animate-spin mx-auto" />
-                  <p className="text-sm font-semibold">Restoring...</p>
+                  <div className="w-12 h-12 border-2 border-gray-200 dark:border-gray-600 border-t-black dark:border-t-white rounded-full animate-spin mx-auto" />
+                  <p className="text-sm font-semibold dark:text-gray-200">
+                    Restoring...
+                  </p>
                   <p className="text-xs text-gray-500">
                     This process may take a few seconds
                   </p>
@@ -275,8 +282,8 @@ const PhotoRestore = () => {
             </button>
           </div>
           <p className="text-xs text-gray-500">
-            This demo simulates restoration in the browser. Integrate with backend
-            for actual results.
+            This demo simulates restoration in the browser. Integrate with
+            backend for actual results.
           </p>
         </section>
       </div>

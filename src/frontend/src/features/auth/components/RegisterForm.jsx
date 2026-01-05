@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "../../../hooks/use-toast";
 import { useAuth } from "../../../hooks/useAuth";
+import { Check, X, Eye, EyeOff } from "lucide-react";
 
 /**
  * Format registration errors into user-friendly messages
@@ -40,7 +41,11 @@ const formatRegistrationError = (error) => {
   }
 
   // Handle HTTP status codes
-  if (status === 429 || message?.toLowerCase().includes('rate limit') || message?.toLowerCase().includes('too many')) {
+  if (
+    status === 429 ||
+    message?.toLowerCase().includes("rate limit") ||
+    message?.toLowerCase().includes("too many")
+  ) {
     return "Too many registration attempts. Please wait a few minutes before trying again.";
   }
 
@@ -54,24 +59,24 @@ const formatRegistrationError = (error) => {
 
   if (status === 400) {
     // Try to extract meaningful message from 400 errors
-    if (message && !message.includes('code') && message.length < 200) {
+    if (message && !message.includes("code") && message.length < 200) {
       return message;
     }
     return "Invalid registration information. Please check your details and try again.";
   }
 
   // Handle network errors
-  if (error?.code === 'ERR_NETWORK' || message?.includes('Network Error')) {
+  if (error?.code === "ERR_NETWORK" || message?.includes("Network Error")) {
     return "Unable to connect to our servers. Please check your internet connection and try again.";
   }
 
   // Handle timeout errors
-  if (error?.code === 'ECONNABORTED' || message?.includes('timeout')) {
+  if (error?.code === "ECONNABORTED" || message?.includes("timeout")) {
     return "The request timed out. Please check your connection and try again.";
   }
 
   // If we have a clean, user-friendly message from the server, use it
-  if (message && typeof message === 'string' && message.length < 200) {
+  if (message && typeof message === "string" && message.length < 200) {
     // Filter out technical-looking messages
     const technicalPatterns = [
       /error\s*code/i,
@@ -79,11 +84,13 @@ const formatRegistrationError = (error) => {
       /stack\s*trace/i,
       /null\s*pointer/i,
       /undefined/i,
-      /^\{.*\}$/,  // JSON-like strings
-      /^\[.*\]$/,  // Array-like strings
+      /^\{.*\}$/, // JSON-like strings
+      /^\[.*\]$/, // Array-like strings
     ];
 
-    const isTechnical = technicalPatterns.some(pattern => pattern.test(message));
+    const isTechnical = technicalPatterns.some((pattern) =>
+      pattern.test(message)
+    );
 
     if (!isTechnical) {
       return message;
@@ -103,6 +110,37 @@ const RegisterPage = () => {
     confirmpass: "",
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordFocused, setPasswordFocused] = useState(false);
+
+  // Password validation logic
+  const passwordValidation = useMemo(() => {
+    const password = formData.password;
+    return {
+      minLength: password.length >= 8,
+      hasLowercase: /[a-z]/.test(password),
+      hasUppercase: /[A-Z]/.test(password),
+      hasNumber: /\d/.test(password),
+    };
+  }, [formData.password]);
+
+  // Check if all password requirements are met
+  const isPasswordValid = useMemo(() => {
+    return Object.values(passwordValidation).every(Boolean);
+  }, [passwordValidation]);
+
+  // Calculate password strength
+  const passwordStrength = useMemo(() => {
+    const validCount = Object.values(passwordValidation).filter(Boolean).length;
+    if (validCount === 0) return { level: 0, label: "", color: "" };
+    if (validCount <= 2)
+      return { level: 1, label: "Weak", color: "bg-red-500" };
+    if (validCount === 3)
+      return { level: 2, label: "Fair", color: "bg-amber-500" };
+    return { level: 3, label: "Strong", color: "bg-emerald-500" };
+  }, [passwordValidation]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -120,8 +158,26 @@ const RegisterPage = () => {
     if (e && e.preventDefault) e.preventDefault();
     setError("");
 
+    // Validate password requirements
+    if (!isPasswordValid) {
+      const msg = "Password must meet all requirements";
+      setError(msg);
+      toast({
+        variant: "destructive",
+        title: "Invalid password",
+        description: msg,
+      });
+      return;
+    }
+
     if (formData.password !== formData.confirmpass) {
-      setError("Confirmation password does not match!");
+      const msg = "Confirmation password does not match!";
+      setError(msg);
+      toast({
+        variant: "destructive",
+        title: "Passwords don't match",
+        description: msg,
+      });
       return;
     }
 
@@ -135,14 +191,20 @@ const RegisterPage = () => {
         fullName: formData.fullname,
         roles: ["USER"],
       });
-      toast.success(
-        "Registration successful! Please log in."
-      );
+      toast({
+        variant: "success",
+        title: "Registration successful! ✨",
+        description: "Please log in to continue.",
+      });
       navigate("/login");
     } catch (err) {
       const msg = formatRegistrationError(err);
       setError(msg);
-      toast.error(msg);
+      toast({
+        variant: "destructive",
+        title: "Registration failed",
+        description: msg,
+      });
     } finally {
       setLoading(false);
     }
@@ -173,116 +235,308 @@ const RegisterPage = () => {
     window.location.href = googleAuthUrl;
   };
 
-
-
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-white p-5 overflow-auto">
+    <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-5 overflow-auto">
       <div className="w-full max-w-md mx-auto my-5">
-        <div className="bg-white rounded-3xl px-10 py-12 shadow-2xl">
+        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl px-10 py-12 shadow-[0_20px_70px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_70px_-15px_rgba(0,0,0,0.6)] border border-gray-200/50 dark:border-gray-700/50">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">
-              {/* Translated */}
-              Sign Up
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+              Create Account
             </h1>
-            <p className="text-gray-500 text-sm m-0">
-              {/* Translated */}
-              Create your new account
+            <p className="text-gray-500 dark:text-gray-400 text-sm m-0">
+              Join us and start your journey
             </p>
           </div>
 
+          {/* Error Alert */}
+          {error && (
+            <div className="mb-6 p-4 rounded-xl bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 border border-red-200 dark:border-red-800 animate-[fadeIn_0.3s_ease-in-out]">
+              <div className="flex items-start gap-3">
+                <div className="shrink-0 mt-0.5">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-red-500 rounded-full opacity-20 animate-ping" />
+                    <div className="relative bg-red-100 dark:bg-red-900/50 rounded-full p-1">
+                      <X className="h-4 w-4 text-red-600 dark:text-red-400" />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-red-900 dark:text-red-200 leading-relaxed">
+                    {error}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Form */}
-          <div className="mb-6">
+          <form onSubmit={handleSubmit} className="mb-6 space-y-5">
             {/* Username */}
-            <div className="mb-[18px]">
+            <div className="group">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 transition-colors">
+                Username
+              </label>
               <input
                 type="text"
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
-                // Translated
-                placeholder="Enter username"
-                className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl text-sm transition-all duration-300 outline-none focus:border-black focus:ring-4 focus:ring-black/10"
+                required
+                placeholder="Choose a unique username"
+                className="w-full px-4 py-3.5 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 rounded-xl text-sm transition-all duration-300 outline-none focus:border-gray-900 dark:focus:border-gray-300 focus:ring-4 focus:ring-gray-900/10 dark:focus:ring-gray-300/10 hover:border-gray-300 dark:hover:border-gray-500"
               />
             </div>
 
             {/* Full Name */}
-            <div className="mb-[18px]">
+            <div className="group">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 transition-colors">
+                Full Name
+              </label>
               <input
                 type="text"
                 name="fullname"
                 value={formData.fullname}
                 onChange={handleChange}
-                // Translated
+                required
                 placeholder="Enter your full name"
-                className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl text-sm transition-all duration-300 outline-none focus:border-black focus:ring-4 focus:ring-black/10"
+                className="w-full px-4 py-3.5 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 rounded-xl text-sm transition-all duration-300 outline-none focus:border-gray-900 dark:focus:border-gray-300 focus:ring-4 focus:ring-gray-900/10 dark:focus:ring-gray-300/10 hover:border-gray-300 dark:hover:border-gray-500"
               />
             </div>
 
             {/* Email */}
-            <div className="mb-[18px]">
+            <div className="group">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 transition-colors">
+                Email Address
+              </label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                // Translated
-                placeholder="Enter your email"
-                className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl text-sm transition-all duration-300 outline-none focus:border-black focus:ring-4 focus:ring-black/10"
+                required
+                placeholder="your.email@example.com"
+                className="w-full px-4 py-3.5 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 rounded-xl text-sm transition-all duration-300 outline-none focus:border-gray-900 dark:focus:border-gray-300 focus:ring-4 focus:ring-gray-900/10 dark:focus:ring-gray-300/10 hover:border-gray-300 dark:hover:border-gray-500"
               />
             </div>
 
-            {/* Password */}
-            <div className="mb-[18px]">
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                // Translated
-                placeholder="Enter password"
-                className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl text-sm transition-all duration-300 outline-none focus:border-black focus:ring-4 focus:ring-black/10"
-              />
+            {/* Password with Validation */}
+            <div className="group">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 transition-colors">
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  onFocus={() => setPasswordFocused(true)}
+                  required
+                  placeholder="Create a strong password"
+                  className="w-full px-4 py-3.5 pr-12 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 rounded-xl text-sm transition-all duration-300 outline-none focus:border-gray-900 dark:focus:border-gray-300 focus:ring-4 focus:ring-gray-900/10 dark:focus:ring-gray-300/10 hover:border-gray-300 dark:hover:border-gray-500"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+
+              {/* Password Strength Meter */}
+              {formData.password && (
+                <div className="mt-3 space-y-2 animate-[fadeIn_0.3s_ease-in-out]">
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 h-1.5 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full transition-all duration-500 ${passwordStrength.color}`}
+                        style={{
+                          width: `${(passwordStrength.level / 3) * 100}%`,
+                        }}
+                      />
+                    </div>
+                    {passwordStrength.label && (
+                      <span
+                        className={`text-xs font-semibold ${
+                          passwordStrength.level === 1
+                            ? "text-red-600 dark:text-red-400"
+                            : passwordStrength.level === 2
+                            ? "text-amber-600 dark:text-amber-400"
+                            : "text-emerald-600 dark:text-emerald-400"
+                        }`}
+                      >
+                        {passwordStrength.label}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Password Requirements */}
+              {(passwordFocused || formData.password) && (
+                <div className="mt-3 p-4 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 animate-[fadeIn_0.3s_ease-in-out]">
+                  <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                    Password must contain:
+                  </p>
+                  <div className="space-y-2">
+                    {[
+                      { key: "minLength", label: "At least 8 characters" },
+                      {
+                        key: "hasLowercase",
+                        label: "One lowercase letter (a-z)",
+                      },
+                      {
+                        key: "hasUppercase",
+                        label: "One uppercase letter (A-Z)",
+                      },
+                      { key: "hasNumber", label: "One number (0-9)" },
+                    ].map((requirement) => (
+                      <div
+                        key={requirement.key}
+                        className="flex items-center gap-2"
+                      >
+                        <div
+                          className={`shrink-0 rounded-full p-0.5 transition-all duration-300 ${
+                            passwordValidation[requirement.key]
+                              ? "bg-emerald-500 scale-100"
+                              : "bg-gray-300 dark:bg-gray-600 scale-90"
+                          }`}
+                        >
+                          <Check
+                            className={`h-3 w-3 transition-all duration-300 ${
+                              passwordValidation[requirement.key]
+                                ? "text-white opacity-100"
+                                : "text-transparent opacity-0"
+                            }`}
+                          />
+                        </div>
+                        <span
+                          className={`text-xs transition-colors duration-300 ${
+                            passwordValidation[requirement.key]
+                              ? "text-emerald-700 dark:text-emerald-400 font-medium"
+                              : "text-gray-500 dark:text-gray-400"
+                          }`}
+                        >
+                          {requirement.label}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Confirm Password */}
-            <div className="mb-6">
-              <input
-                type="password"
-                name="confirmpass"
-                value={formData.confirmpass}
-                onChange={handleChange}
-                // Translated
-                placeholder="Confirm your password"
-                className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl text-sm transition-all duration-300 outline-none focus:border-black focus:ring-4 focus:ring-black/10"
-              />
+            <div className="group">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 transition-colors">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  name="confirmpass"
+                  value={formData.confirmpass}
+                  onChange={handleChange}
+                  required
+                  placeholder="Re-enter your password"
+                  className="w-full px-4 py-3.5 pr-12 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 rounded-xl text-sm transition-all duration-300 outline-none focus:border-gray-900 dark:focus:border-gray-300 focus:ring-4 focus:ring-gray-900/10 dark:focus:ring-gray-300/10 hover:border-gray-300 dark:hover:border-gray-500"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all"
+                  aria-label={
+                    showConfirmPassword ? "Hide password" : "Show password"
+                  }
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+
+              {/* Password Match Indicator */}
+              {formData.confirmpass && (
+                <div className="mt-2 animate-[fadeIn_0.3s_ease-in-out]">
+                  {formData.password === formData.confirmpass ? (
+                    <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+                      <Check className="h-4 w-4" />
+                      <span className="text-xs font-medium">
+                        Passwords match
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2 text-red-600 dark:text-red-400">
+                      <X className="h-4 w-4" />
+                      <span className="text-xs font-medium">
+                        Passwords don't match
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Register Button */}
             <button
-              type="button"
-              onClick={handleSubmit}
-              disabled={loading}
-              className={`w-full py-3.5 bg-black text-white rounded-xl text-base font-semibold ${loading ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+              type="submit"
+              disabled={loading || !isPasswordValid}
+              className={`w-full py-3.5 bg-gradient-to-r from-gray-900 to-gray-800 dark:from-gray-100 dark:to-gray-200 text-white dark:text-gray-900 rounded-xl text-base font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] ${
+                loading || !isPasswordValid
+                  ? "opacity-50 cursor-not-allowed hover:scale-100"
+                  : ""
+              }`}
             >
-              {loading ? "Signing up..." : "Sign Up"}
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      fill="none"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    />
+                  </svg>
+                  Creating account...
+                </span>
+              ) : (
+                "Create Account"
+              )}
             </button>
-          </div>
+          </form>
 
           {/* Divider */}
           <div className="flex items-center my-6 gap-4">
-            <div className="flex-1 h-px bg-gray-200"></div>
-            {/* Translated */}
-            <span className="text-sm text-gray-400">Or sign up with</span>
-            <div className="flex-1 h-px bg-gray-200"></div>
+            <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent"></div>
+            <span className="text-sm text-gray-400 dark:text-gray-500 font-medium">
+              Or continue with
+            </span>
+            <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent"></div>
           </div>
 
           {/* Social Login */}
           <div className="flex gap-3 mb-6">
             <button
+              type="button"
               onClick={loginWithGoogle}
-              className="flex-1 p-3 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition-all duration-300 flex items-center justify-center gap-2 font-semibold text-sm hover:border-black hover:bg-gray-50 hover:-translate-y-0.5 active:translate-y-0"
+              className="flex-1 p-3.5 bg-white dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 rounded-xl cursor-pointer transition-all duration-300 flex items-center justify-center gap-2 font-semibold text-sm text-gray-700 dark:text-gray-200 hover:border-gray-900 dark:hover:border-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 hover:scale-[1.02] active:scale-[0.98] hover:shadow-lg"
             >
               <svg width="20" height="20" viewBox="0 0 24 24">
                 <path
@@ -304,21 +558,18 @@ const RegisterPage = () => {
               </svg>
               Google
             </button>
-
-
           </div>
 
           {/* Login Link */}
           <div className="text-center">
-            <span className="text-sm text-gray-500">
-              {/* Translated */}
+            <span className="text-sm text-gray-500 dark:text-gray-400">
               Already have an account?{" "}
             </span>
             <Link
               to="/login"
-              className="text-black bg-transparent border-none cursor-pointer font-semibold transition-opacity duration-300 hover:opacity-70 text-sm"
+              className="text-gray-900 dark:text-gray-100 bg-transparent border-none cursor-pointer font-semibold transition-all duration-300 hover:text-gray-600 dark:hover:text-gray-300 text-sm hover:underline underline-offset-4"
             >
-              Log in now
+              Sign in
             </Link>
           </div>
         </div>

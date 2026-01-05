@@ -106,7 +106,7 @@ const PricingPage = () => {
         blurb:
           "For focused creators who need fast output without long commitments.",
         features: [
-          "500 tokens per day",
+          "7000 tokens per month",
           "Fast image generation",
           "All styles unlocked",
         ],
@@ -120,7 +120,7 @@ const PricingPage = () => {
         cadence: "$3.3/mo · billed every 6 months",
         blurb: "Best value for teams and power users who ship often.",
         features: [
-          "2000 tokens per day",
+          "8000 tokens per month",
           "Highest priority queue",
           "24/7 support and early access",
           "Keep full image history",

@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @custom-variant hover (&:hover);
+@custom-variant dark (.dark &);
 
 /* Base reset for proper layout */
 *,
@@ -106,6 +107,22 @@ body {
   animation: pulse-subtle 3s ease-in-out infinite;
 }
 
+/* Mobile bottom sheet slide-up animation */
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
 /* Scale-in animation for modals */
 @keyframes scale-in {
   from {
@@ -115,6 +132,18 @@ body {
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+/* Fade-in animation for emoji picker */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -326,4 +355,28 @@ body.dark::-webkit-scrollbar-thumb {
 
 body.dark::-webkit-scrollbar-thumb:hover {
   background-color: #6b7280;
+}
+/* Dark mode for spinners - CRITICAL FIX */
+body.dark .border-gray-200.animate-spin {
+  border-color: #4b5563 !important;
+}
+
+body.dark .border-t-black.animate-spin {
+  border-top-color: #ffffff !important;
+}
+
+body.dark .border-t-purple-500.animate-spin {
+  border-top-color: #ffffff !important;
+}
+
+body.dark .border-t-orange-500.animate-spin {
+  border-top-color: #ffffff !important;
+}
+
+body.dark .border-t-blue-500.animate-spin {
+  border-top-color: #ffffff !important;
+}
+
+body.dark .border-t-pink-500.animate-spin {
+  border-top-color: #ffffff !important;
 }
