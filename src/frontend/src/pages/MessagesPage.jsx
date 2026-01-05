@@ -1550,7 +1550,11 @@ const MessagesPage = () => {
         )}
 
         {/* Sidebar - Hidden on mobile when chat is active, always visible on desktop */}
-        <div className={`${showMobileSidebar ? 'flex' : 'hidden'} md:flex w-full md:w-80 flex-col border-r border-gray-200 bg-gray-50`}>
+        <div
+          className={`${
+            showMobileSidebar ? "flex" : "hidden"
+          } md:flex w-full md:w-80 flex-col border-r border-gray-200 bg-gray-50`}
+        >
           <div className="border-b border-gray-200 p-4 md:p-5 bg-white">
             <div className="flex items-center justify-between mb-3 md:mb-4">
               <div className="flex items-center gap-2.5">
@@ -1904,7 +1908,11 @@ const MessagesPage = () => {
         </div>
 
         {/* Chat Area - Hidden on mobile when sidebar is active, always visible on desktop */}
-        <div className={`${!showMobileSidebar ? 'flex' : 'hidden'} md:flex flex-1 flex-col bg-white`}>
+        <div
+          className={`${
+            !showMobileSidebar ? "flex" : "hidden"
+          } md:flex flex-1 flex-col bg-white`}
+        >
           <div className="flex h-14 md:h-16 items-center justify-between border-b border-gray-200 px-3 md:px-6 bg-white">
             <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
               {/* Mobile back button */}
@@ -1915,7 +1923,7 @@ const MessagesPage = () => {
               >
                 <ArrowLeft className="h-5 w-5 text-gray-700" />
               </button>
-              
+
               <button
                 type="button"
                 onClick={() =>
@@ -1934,34 +1942,34 @@ const MessagesPage = () => {
                     className="h-9 w-9 md:h-10 md:w-10 rounded-full object-cover"
                   />
                   {activeChat.isOnline && (
-                  <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-white bg-emerald-500"></span>
-                )}
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-1.5 md:gap-2">
-                  <p className="text-sm md:text-base font-medium text-gray-900 truncate">
-                    {activeChat.name}
-                  </p>
-                  {activeChat.isGroup && isCurrentUserAdmin && (
-                    <Shield className="h-3 w-3 md:h-3.5 md:w-3.5 text-amber-500 flex-shrink-0" />
+                    <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-white bg-emerald-500"></span>
                   )}
                 </div>
-                <p className="text-xs text-gray-500 truncate">
-                  {activeChat.isGroup
-                    ? `${activeChat.memberCount} members`
-                    : activeChat.isOnline
-                    ? "Active now"
-                    : "Recently active"}
-                </p>
-              </div>
-              {activeChat.isGroup && (
-                <ChevronRight
-                  className={`hidden md:block h-4 w-4 text-gray-400 transition-transform flex-shrink-0 ${
-                    showGroupInfo ? "rotate-90" : ""
-                  }`}
-                />
-              )}
-            </button>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5 md:gap-2">
+                    <p className="text-sm md:text-base font-medium text-gray-900 truncate">
+                      {activeChat.name}
+                    </p>
+                    {activeChat.isGroup && isCurrentUserAdmin && (
+                      <Shield className="h-3 w-3 md:h-3.5 md:w-3.5 text-amber-500 flex-shrink-0" />
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-500 truncate">
+                    {activeChat.isGroup
+                      ? `${activeChat.memberCount} members`
+                      : activeChat.isOnline
+                      ? "Active now"
+                      : "Recently active"}
+                  </p>
+                </div>
+                {activeChat.isGroup && (
+                  <ChevronRight
+                    className={`hidden md:block h-4 w-4 text-gray-400 transition-transform flex-shrink-0 ${
+                      showGroupInfo ? "rotate-90" : ""
+                    }`}
+                  />
+                )}
+              </button>
             </div>
             <div className="flex items-center gap-1 md:gap-2 text-gray-600">
               <button
@@ -2209,21 +2217,22 @@ const MessagesPage = () => {
                 </form>
               </div>
             </div>
-            </div>
 
             {/* Group Info Panel - Slide over on mobile, sidebar on desktop */}
             {showGroupInfo && activeChat.isGroup && (
               <>
                 {/* Mobile overlay backdrop */}
-                <div 
+                <div
                   className="md:hidden fixed inset-0 bg-black/50 z-40"
                   onClick={() => setShowGroupInfo(false)}
                 />
-                
+
                 {/* Group info panel */}
                 <div className="fixed md:relative inset-y-0 right-0 w-full sm:w-80 md:w-72 bg-gray-50 p-4 overflow-y-auto z-50 md:z-auto shadow-2xl md:shadow-none">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-semibold text-gray-800 text-base md:text-sm">Group Info</h3>
+                    <h3 className="font-semibold text-gray-800 text-base md:text-sm">
+                      Group Info
+                    </h3>
                     <button
                       type="button"
                       onClick={() => setShowGroupInfo(false)}
@@ -2232,280 +2241,282 @@ const MessagesPage = () => {
                       <X className="h-5 w-5 md:h-4 md:w-4 text-gray-500" />
                     </button>
                   </div>
-                  </button>
-                </div>
 
-                {/* Group Avatar & Name */}
-                <div className="flex flex-col items-center mb-6">
-                  {/* Hidden file input */}
-                  <input
-                    ref={avatarInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleUploadGroupAvatar}
-                    className="hidden"
-                    id="group-avatar-upload"
-                  />
-
-                  {/* Avatar with upload overlay for admin */}
-                  <div className="relative group/avatar mb-3">
-                    <img
-                      src={activeChat.avatar}
-                      alt={activeChat.name}
-                      className={`h-20 w-20 rounded-full object-cover ${
-                        isCurrentUserAdmin ? "cursor-pointer" : ""
-                      }`}
-                      onClick={() => {
-                        if (isCurrentUserAdmin && avatarInputRef.current) {
-                          avatarInputRef.current.click();
-                        }
-                      }}
+                  {/* Group Avatar & Name */}
+                  <div className="flex flex-col items-center mb-6">
+                    {/* Hidden file input */}
+                    <input
+                      ref={avatarInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleUploadGroupAvatar}
+                      className="hidden"
+                      id="group-avatar-upload"
                     />
-                    {/* Upload overlay for admin */}
-                    {isCurrentUserAdmin && (
-                      <div
-                        className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity cursor-pointer"
+
+                    {/* Avatar with upload overlay for admin */}
+                    <div className="relative group/avatar mb-3">
+                      <img
+                        src={activeChat.avatar}
+                        alt={activeChat.name}
+                        className={`h-20 w-20 rounded-full object-cover ${
+                          isCurrentUserAdmin ? "cursor-pointer" : ""
+                        }`}
                         onClick={() => {
-                          if (avatarInputRef.current) {
+                          if (isCurrentUserAdmin && avatarInputRef.current) {
                             avatarInputRef.current.click();
                           }
                         }}
-                      >
-                        {loadingAction ? (
-                          <Loader2 className="h-6 w-6 text-white animate-spin" />
-                        ) : (
-                          <Camera className="h-6 w-6 text-white" />
-                        )}
-                      </div>
-                    )}
-                  </div>
-                  <h4 className="font-bold text-gray-900 text-lg">
-                    {activeChat.name}
-                  </h4>
-                  <p className="text-sm text-gray-500">
-                    {activeChat.memberCount} members
-                  </p>
-                  {activeChat.description && (
-                    <p className="text-xs text-gray-600 mt-2 px-2 py-1.5 bg-gray-100 rounded-lg text-center">
-                      📝 {activeChat.description}
-                    </p>
-                  )}
-                  {isCurrentUserAdmin && (
-                    <p className="text-xs text-blue-500 mt-1">
-                      Click on image to change
-                    </p>
-                  )}
-                </div>
-
-                {/* Actions */}
-                <div className="space-y-2 mb-6">
-                  {/* Edit Group (Admin Only) */}
-                  {isCurrentUserAdmin && (
-                    <>
-                      {!isEditingGroup ? (
-                        <button
-                          type="button"
-                          onClick={startEditGroup}
-                          className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer"
-                        >
-                          <Settings className="h-4 w-4" />
-                          Edit Group
-                        </button>
-                      ) : (
-                        <div className="bg-white p-3 rounded-lg border border-gray-200 space-y-3">
-                          <p className="text-sm font-semibold text-gray-700">
-                            Edit Group
-                          </p>
-                          <input
-                            type="text"
-                            value={editGroupName}
-                            onChange={(e) => setEditGroupName(e.target.value)}
-                            placeholder="Group name"
-                            className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 transition-all"
-                          />
-                          <textarea
-                            value={editGroupDescription}
-                            onChange={(e) =>
-                              setEditGroupDescription(e.target.value)
+                      />
+                      {/* Upload overlay for admin */}
+                      {isCurrentUserAdmin && (
+                        <div
+                          className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity cursor-pointer"
+                          onClick={() => {
+                            if (avatarInputRef.current) {
+                              avatarInputRef.current.click();
                             }
-                            placeholder="Group description (optional)"
-                            rows={2}
-                            className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 resize-none transition-all"
-                          />
-                          <div className="flex gap-2">
-                            <button
-                              type="button"
-                              onClick={handleUpdateGroup}
-                              disabled={loadingAction || !editGroupName.trim()}
-                              className="flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg bg-gray-900 text-white text-sm font-medium hover:bg-black disabled:opacity-50 transition-all cursor-pointer"
-                            >
-                              {loadingAction ? (
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                              ) : (
-                                <Check className="h-4 w-4" />
-                              )}
-                              Save
-                            </button>
-                            <button
-                              type="button"
-                              onClick={cancelEditGroup}
-                              disabled={loadingAction}
-                              className="px-3 py-2 rounded-lg border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50 disabled:opacity-50 transition-all cursor-pointer"
-                            >
-                              Cancel
-                            </button>
-                          </div>
+                          }}
+                        >
+                          {loadingAction ? (
+                            <Loader2 className="h-6 w-6 text-white animate-spin" />
+                          ) : (
+                            <Camera className="h-6 w-6 text-white" />
+                          )}
                         </div>
                       )}
-                    </>
-                  )}
-
-                  {isCurrentUserMember && !isCurrentUserAdmin && (
-                    <button
-                      type="button"
-                      onClick={handleLeaveGroup}
-                      disabled={loadingAction}
-                      className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg bg-red-50 border border-red-200 text-sm font-medium text-red-600 hover:bg-red-100 disabled:opacity-50 cursor-pointer"
-                    >
-                      <LogOut className="h-4 w-4" />
-                      Leave Group
-                    </button>
-                  )}
-
-                  {isCurrentUserAdmin && (
-                    <p className="text-xs text-gray-400 text-center px-2">
-                      Admin cannot leave group. Delete the group if needed.
+                    </div>
+                    <h4 className="font-bold text-gray-900 text-lg">
+                      {activeChat.name}
+                    </h4>
+                    <p className="text-sm text-gray-500">
+                      {activeChat.memberCount} members
                     </p>
-                  )}
-                </div>
-
-                {/* Members List */}
-                <div>
-                  <h5 className="text-sm font-semibold text-gray-700 mb-3">
-                    Members ({groupMembers.length || activeChat.memberCount})
-                  </h5>
-                  <div className="space-y-2">
-                    {groupMembers.length > 0 ? (
-                      groupMembers.map((member) => (
-                        <div
-                          key={member.userId || member.id}
-                          className="flex items-center gap-3 p-2 rounded-lg hover:bg-white"
-                        >
-                          <img
-                            src={
-                              member.avatarUrl ||
-                              `https://i.pravatar.cc/150?u=${member.userId}`
-                            }
-                            alt={member.username}
-                            className="h-9 w-9 rounded-full object-cover"
-                          />
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-1.5">
-                              <p className="text-sm font-medium text-gray-900 truncate">
-                                {member.username || "User"}
-                              </p>
-                              {(member.userId === activeChat.adminId ||
-                                member.id === activeChat.adminId) && (
-                                <Crown className="h-3.5 w-3.5 text-amber-500" />
-                              )}
-                            </div>
-                          </div>
-                          {isCurrentUserAdmin &&
-                            member.userId !== user.id &&
-                            member.userId !== activeChat.adminId && (
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  handleRemoveMember(
-                                    member.userId,
-                                    member.username
-                                  )
-                                }
-                                disabled={loadingAction}
-                                className="p-1.5 rounded-full text-red-500 hover:bg-red-50 disabled:opacity-50 cursor-pointer"
-                                title="Remove member"
-                              >
-                                <UserMinus className="h-4 w-4" />
-                              </button>
-                            )}
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-sm text-gray-400 text-center py-2">
-                        Loading members...
+                    {activeChat.description && (
+                      <p className="text-xs text-gray-600 mt-2 px-2 py-1.5 bg-gray-100 rounded-lg text-center">
+                        📝 {activeChat.description}
+                      </p>
+                    )}
+                    {isCurrentUserAdmin && (
+                      <p className="text-xs text-blue-500 mt-1">
+                        Click on image to change
                       </p>
                     )}
                   </div>
-                </div>
 
-                {/* Pending Requests (Admin Only) */}
-                {isCurrentUserAdmin && pendingRequests.length > 0 && (
-                  <div className="mt-6">
-                    <h5 className="text-sm font-semibold text-gray-700 mb-3">
-                      Pending Requests ({pendingRequests.length})
-                    </h5>
-                    <div className="space-y-2">
-                      {pendingRequests.map((request) => (
-                        <div
-                          key={request.userId}
-                          className="flex items-center gap-3 p-2 rounded-lg bg-yellow-50 border border-yellow-200"
-                        >
+                  {/* Actions */}
+                  <div className="space-y-2 mb-6">
+                    {/* Edit Group (Admin Only) */}
+                    {isCurrentUserAdmin && (
+                      <>
+                        {!isEditingGroup ? (
                           <button
                             type="button"
-                            onClick={() => navigate(`/user/${request.userId}`)}
-                            className="relative group/avatar"
-                            title="View profile"
+                            onClick={startEditGroup}
+                            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer"
+                          >
+                            <Settings className="h-4 w-4" />
+                            Edit Group
+                          </button>
+                        ) : (
+                          <div className="bg-white p-3 rounded-lg border border-gray-200 space-y-3">
+                            <p className="text-sm font-semibold text-gray-700">
+                              Edit Group
+                            </p>
+                            <input
+                              type="text"
+                              value={editGroupName}
+                              onChange={(e) => setEditGroupName(e.target.value)}
+                              placeholder="Group name"
+                              className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 transition-all"
+                            />
+                            <textarea
+                              value={editGroupDescription}
+                              onChange={(e) =>
+                                setEditGroupDescription(e.target.value)
+                              }
+                              placeholder="Group description (optional)"
+                              rows={2}
+                              className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 resize-none transition-all"
+                            />
+                            <div className="flex gap-2">
+                              <button
+                                type="button"
+                                onClick={handleUpdateGroup}
+                                disabled={
+                                  loadingAction || !editGroupName.trim()
+                                }
+                                className="flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg bg-gray-900 text-white text-sm font-medium hover:bg-black disabled:opacity-50 transition-all cursor-pointer"
+                              >
+                                {loadingAction ? (
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  <Check className="h-4 w-4" />
+                                )}
+                                Save
+                              </button>
+                              <button
+                                type="button"
+                                onClick={cancelEditGroup}
+                                disabled={loadingAction}
+                                className="px-3 py-2 rounded-lg border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50 disabled:opacity-50 transition-all cursor-pointer"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    )}
+
+                    {isCurrentUserMember && !isCurrentUserAdmin && (
+                      <button
+                        type="button"
+                        onClick={handleLeaveGroup}
+                        disabled={loadingAction}
+                        className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg bg-red-50 border border-red-200 text-sm font-medium text-red-600 hover:bg-red-100 disabled:opacity-50 cursor-pointer"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Leave Group
+                      </button>
+                    )}
+
+                    {isCurrentUserAdmin && (
+                      <p className="text-xs text-gray-400 text-center px-2">
+                        Admin cannot leave group. Delete the group if needed.
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Members List */}
+                  <div>
+                    <h5 className="text-sm font-semibold text-gray-700 mb-3">
+                      Members ({groupMembers.length || activeChat.memberCount})
+                    </h5>
+                    <div className="space-y-2">
+                      {groupMembers.length > 0 ? (
+                        groupMembers.map((member) => (
+                          <div
+                            key={member.userId || member.id}
+                            className="flex items-center gap-3 p-2 rounded-lg hover:bg-white"
                           >
                             <img
                               src={
-                                request.avatarUrl ||
-                                `https://i.pravatar.cc/150?u=${request.userId}`
+                                member.avatarUrl ||
+                                `https://i.pravatar.cc/150?u=${member.userId}`
                               }
-                              alt={request.username}
-                              className="h-9 w-9 rounded-full object-cover cursor-pointer ring-2 ring-transparent group-hover/avatar:ring-blue-400 transition-all"
+                              alt={member.username}
+                              className="h-9 w-9 rounded-full object-cover"
                             />
-                          </button>
-                          <div className="flex-1 min-w-0">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-1.5">
+                                <p className="text-sm font-medium text-gray-900 truncate">
+                                  {member.username || "User"}
+                                </p>
+                                {(member.userId === activeChat.adminId ||
+                                  member.id === activeChat.adminId) && (
+                                  <Crown className="h-3.5 w-3.5 text-amber-500" />
+                                )}
+                              </div>
+                            </div>
+                            {isCurrentUserAdmin &&
+                              member.userId !== user.id &&
+                              member.userId !== activeChat.adminId && (
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    handleRemoveMember(
+                                      member.userId,
+                                      member.username
+                                    )
+                                  }
+                                  disabled={loadingAction}
+                                  className="p-1.5 rounded-full text-red-500 hover:bg-red-50 disabled:opacity-50 cursor-pointer"
+                                  title="Remove member"
+                                >
+                                  <UserMinus className="h-4 w-4" />
+                                </button>
+                              )}
+                          </div>
+                        ))
+                      ) : (
+                        <p className="text-sm text-gray-400 text-center py-2">
+                          Loading members...
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Pending Requests (Admin Only) */}
+                  {isCurrentUserAdmin && pendingRequests.length > 0 && (
+                    <div className="mt-6">
+                      <h5 className="text-sm font-semibold text-gray-700 mb-3">
+                        Pending Requests ({pendingRequests.length})
+                      </h5>
+                      <div className="space-y-2">
+                        {pendingRequests.map((request) => (
+                          <div
+                            key={request.userId}
+                            className="flex items-center gap-3 p-2 rounded-lg bg-yellow-50 border border-yellow-200"
+                          >
                             <button
                               type="button"
                               onClick={() =>
                                 navigate(`/user/${request.userId}`)
                               }
-                              className="text-sm font-medium text-gray-900 truncate hover:text-blue-600 hover:underline cursor-pointer"
+                              className="relative group/avatar"
                               title="View profile"
                             >
-                              {request.username || "User"}
+                              <img
+                                src={
+                                  request.avatarUrl ||
+                                  `https://i.pravatar.cc/150?u=${request.userId}`
+                                }
+                                alt={request.username}
+                                className="h-9 w-9 rounded-full object-cover cursor-pointer ring-2 ring-transparent group-hover/avatar:ring-blue-400 transition-all"
+                              />
                             </button>
+                            <div className="flex-1 min-w-0">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  navigate(`/user/${request.userId}`)
+                                }
+                                className="text-sm font-medium text-gray-900 truncate hover:text-blue-600 hover:underline cursor-pointer"
+                                title="View profile"
+                              >
+                                {request.username || "User"}
+                              </button>
+                            </div>
+                            <div className="flex gap-1">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  handleModifyRequest(request.userId, true)
+                                }
+                                disabled={loadingAction}
+                                className="p-1.5 rounded-full text-green-600 hover:bg-green-100 disabled:opacity-50 cursor-pointer"
+                                title="Accept"
+                              >
+                                <Check className="h-4 w-4" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  handleModifyRequest(request.userId, false)
+                                }
+                                disabled={loadingAction}
+                                className="p-1.5 rounded-full text-red-500 hover:bg-red-100 disabled:opacity-50 cursor-pointer"
+                                title="Reject"
+                              >
+                                <XCircle className="h-4 w-4" />
+                              </button>
+                            </div>
                           </div>
-                          <div className="flex gap-1">
-                            <button
-                              type="button"
-                              onClick={() =>
-                                handleModifyRequest(request.userId, true)
-                              }
-                              disabled={loadingAction}
-                              className="p-1.5 rounded-full text-green-600 hover:bg-green-100 disabled:opacity-50 cursor-pointer"
-                              title="Accept"
-                            >
-                              <Check className="h-4 w-4" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() =>
-                                handleModifyRequest(request.userId, false)
-                              }
-                              disabled={loadingAction}
-                              className="p-1.5 rounded-full text-red-500 hover:bg-red-100 disabled:opacity-50 cursor-pointer"
-                              title="Reject"
-                            >
-                              <XCircle className="h-4 w-4" />
-                            </button>
-                          </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
                 </div>
               </>
             )}
