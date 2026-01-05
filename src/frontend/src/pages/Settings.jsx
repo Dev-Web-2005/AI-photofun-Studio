@@ -49,6 +49,19 @@ const Settings = () => {
     };
   }, [passwordForm.newPassword, passwordForm.confirmNewPassword]);
 
+  // Password strength calculation
+  const passwordStrength = useMemo(() => {
+    const { newPassword } = passwordForm;
+    if (!newPassword) return { level: 0, label: "", color: "" };
+    
+    const validCount = [passwordValidation.minLength, passwordValidation.hasUppercase, passwordValidation.hasLowercase, passwordValidation.hasNumber].filter(Boolean).length;
+    
+    if (validCount === 0) return { level: 0, label: "", color: "" };
+    if (validCount <= 2) return { level: 1, label: "Weak", color: "bg-red-500 dark:bg-red-400" };
+    if (validCount === 3) return { level: 2, label: "Fair", color: "bg-amber-500 dark:bg-amber-400" };
+    return { level: 3, label: "Strong", color: "bg-emerald-500 dark:bg-emerald-400" };
+  }, [passwordForm.newPassword, passwordValidation]);
+
   const isPasswordValid = useMemo(() => {
     return (
       passwordValidation.minLength &&
@@ -341,33 +354,38 @@ const Settings = () => {
 
       {/* Change Password Modal */}
       {isChangePasswordOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-[fadeIn_0.2s_ease-in-out]">
           {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md"
             onClick={closeChangePasswordModal}
           />
 
           {/* Modal */}
-          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden animate-in fade-in zoom-in duration-200">
+          <div className="relative bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-3xl shadow-[0_20px_70px_-15px_rgba(0,0,0,0.4)] dark:shadow-[0_20px_70px_-15px_rgba(0,0,0,0.8)] border border-gray-200/50 dark:border-gray-700/50 w-full max-w-md overflow-hidden animate-[fadeIn_0.3s_ease-in-out]">
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-indigo-50 to-purple-50">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200/50 dark:border-gray-700/50 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700">
               <div className="flex items-center gap-3">
-                <span className="p-2 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg">
-                  <Lock className="w-5 h-5" />
-                </span>
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gray-900 dark:bg-gray-100 rounded-xl opacity-20 blur-lg" />
+                  <span className="relative p-2.5 rounded-xl bg-gradient-to-br from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 text-white dark:text-gray-900 shadow-lg">
+                    <Lock className="w-5 h-5" />
+                  </span>
+                </div>
                 <div>
-                  <h2 className="text-lg font-bold text-gray-900">
+                  <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
                     Change Password
                   </h2>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
                     Update your account security
                   </p>
                 </div>
               </div>
               <button
+                type="button"
                 onClick={closeChangePasswordModal}
-                className="p-2 rounded-full hover:bg-white/80 text-gray-500 hover:text-gray-700 transition-colors"
+                className="p-2 rounded-xl hover:bg-white/80 dark:hover:bg-gray-600/80 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-all hover:scale-110 active:scale-95"
+                aria-label="Close modal"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -377,30 +395,51 @@ const Settings = () => {
             <div className="p-6 space-y-5">
               {/* Success Message */}
               {passwordSuccess && (
-                <div className="flex items-center gap-3 p-4 rounded-xl bg-emerald-50 border border-emerald-200">
-                  <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0" />
-                  <p className="text-sm font-medium text-emerald-700">
-                    Password changed successfully!
-                  </p>
+                <div className="flex items-start gap-3 p-4 rounded-xl bg-gradient-to-br from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 border border-emerald-200 dark:border-emerald-800 animate-[fadeIn_0.3s_ease-in-out]">
+                  <div className="shrink-0 mt-0.5">
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-emerald-500 rounded-full opacity-20 animate-ping" />
+                      <div className="relative bg-emerald-100 dark:bg-emerald-900/50 rounded-full p-1">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-emerald-900 dark:text-emerald-200 leading-relaxed">
+                      Password changed successfully!
+                    </p>
+                    <p className="text-xs text-emerald-700 dark:text-emerald-300 mt-1">
+                      Your account is now more secure.
+                    </p>
+                  </div>
                 </div>
               )}
 
               {/* Error Message */}
               {passwordError && (
-                <div className="flex items-center gap-3 p-4 rounded-xl bg-red-50 border border-red-200">
-                  <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
-                  <p className="text-sm font-medium text-red-700">
-                    {passwordError}
-                  </p>
+                <div className="flex items-start gap-3 p-4 rounded-xl bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 border border-red-200 dark:border-red-800 animate-[fadeIn_0.3s_ease-in-out]">
+                  <div className="shrink-0 mt-0.5">
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-red-500 rounded-full opacity-20 animate-ping" />
+                      <div className="relative bg-red-100 dark:bg-red-900/50 rounded-full p-1">
+                        <AlertCircle className="w-4 h-4 text-red-600 dark:text-red-400" />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-red-900 dark:text-red-200 leading-relaxed">
+                      {passwordError}
+                    </p>
+                  </div>
                 </div>
               )}
 
               {/* Current Password */}
               <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
                   Current Password
                 </label>
-                <div className="relative">
+                <div className="relative group">
                   <input
                     type={showPasswords.old ? "text" : "password"}
                     value={passwordForm.oldPassword}
@@ -408,14 +447,15 @@ const Settings = () => {
                       handlePasswordChange("oldPassword", e.target.value)
                     }
                     placeholder="Enter your current password"
-                    className="w-full px-4 py-3 pr-12 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all"
+                    className="w-full px-4 py-3.5 pr-12 rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-gray-900 dark:focus:border-gray-300 focus:ring-4 focus:ring-gray-900/10 dark:focus:ring-gray-300/10 outline-none transition-all hover:border-gray-300 dark:hover:border-gray-500"
                   />
                   <button
                     type="button"
                     onClick={() =>
                       setShowPasswords((prev) => ({ ...prev, old: !prev.old }))
                     }
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all"
+                    aria-label={showPasswords.old ? "Hide password" : "Show password"}
                   >
                     {showPasswords.old ? (
                       <EyeOff className="w-4 h-4" />
@@ -428,10 +468,10 @@ const Settings = () => {
 
               {/* New Password */}
               <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
                   New Password
                 </label>
-                <div className="relative">
+                <div className="relative group">
                   <input
                     type={showPasswords.new ? "text" : "password"}
                     value={passwordForm.newPassword}
@@ -439,14 +479,15 @@ const Settings = () => {
                       handlePasswordChange("newPassword", e.target.value)
                     }
                     placeholder="Enter your new password"
-                    className="w-full px-4 py-3 pr-12 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all"
+                    className="w-full px-4 py-3.5 pr-12 rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-gray-900 dark:focus:border-gray-300 focus:ring-4 focus:ring-gray-900/10 dark:focus:ring-gray-300/10 outline-none transition-all hover:border-gray-300 dark:hover:border-gray-500"
                   />
                   <button
                     type="button"
                     onClick={() =>
                       setShowPasswords((prev) => ({ ...prev, new: !prev.new }))
                     }
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all"
+                    aria-label={showPasswords.new ? "Hide password" : "Show password"}
                   >
                     {showPasswords.new ? (
                       <EyeOff className="w-4 h-4" />
@@ -456,53 +497,63 @@ const Settings = () => {
                   </button>
                 </div>
 
+                {/* Password Strength Meter */}
+                {passwordForm.newPassword && (
+                  <div className="mt-3 space-y-2 animate-[fadeIn_0.3s_ease-in-out]">
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full transition-all duration-500 ${passwordStrength.color}`}
+                          style={{ width: `${(passwordStrength.level / 3) * 100}%` }}
+                        />
+                      </div>
+                      {passwordStrength.label && (
+                        <span className={`text-xs font-semibold min-w-[60px] text-right ${
+                          passwordStrength.level === 1 ? "text-red-600 dark:text-red-400" :
+                          passwordStrength.level === 2 ? "text-amber-600 dark:text-amber-400" :
+                          "text-emerald-600 dark:text-emerald-400"
+                        }`}>
+                          {passwordStrength.label}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 {/* Password Requirements */}
                 {passwordForm.newPassword && (
-                  <div className="mt-3 p-3 rounded-lg bg-gray-50 space-y-2">
-                    <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
-                      Password Requirements
+                  <div className="mt-3 p-4 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 space-y-3 animate-[fadeIn_0.3s_ease-in-out]">
+                    <p className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                      Password must contain:
                     </p>
-                    <div className="grid grid-cols-2 gap-2 text-xs">
-                      <div
-                        className={`flex items-center gap-1.5 ${
-                          passwordValidation.minLength
-                            ? "text-emerald-600"
-                            : "text-gray-400"
-                        }`}
-                      >
-                        <CheckCircle2 className="w-3.5 h-3.5" />
-                        <span>At least 8 characters</span>
-                      </div>
-                      <div
-                        className={`flex items-center gap-1.5 ${
-                          passwordValidation.hasUppercase
-                            ? "text-emerald-600"
-                            : "text-gray-400"
-                        }`}
-                      >
-                        <CheckCircle2 className="w-3.5 h-3.5" />
-                        <span>One uppercase letter</span>
-                      </div>
-                      <div
-                        className={`flex items-center gap-1.5 ${
-                          passwordValidation.hasLowercase
-                            ? "text-emerald-600"
-                            : "text-gray-400"
-                        }`}
-                      >
-                        <CheckCircle2 className="w-3.5 h-3.5" />
-                        <span>One lowercase letter</span>
-                      </div>
-                      <div
-                        className={`flex items-center gap-1.5 ${
-                          passwordValidation.hasNumber
-                            ? "text-emerald-600"
-                            : "text-gray-400"
-                        }`}
-                      >
-                        <CheckCircle2 className="w-3.5 h-3.5" />
-                        <span>One number</span>
-                      </div>
+                    <div className="space-y-2">
+                      {[
+                        { key: "minLength", label: "At least 8 characters" },
+                        { key: "hasLowercase", label: "One lowercase letter (a-z)" },
+                        { key: "hasUppercase", label: "One uppercase letter (A-Z)" },
+                        { key: "hasNumber", label: "One number (0-9)" },
+                      ].map((requirement) => (
+                        <div key={requirement.key} className="flex items-center gap-2">
+                          <div className={`shrink-0 rounded-full p-0.5 transition-all duration-300 ${
+                            passwordValidation[requirement.key]
+                              ? "bg-emerald-500 scale-100"
+                              : "bg-gray-300 dark:bg-gray-600 scale-90"
+                          }`}>
+                            <CheckCircle2 className={`h-3 w-3 transition-all duration-300 ${
+                              passwordValidation[requirement.key]
+                                ? "text-white opacity-100"
+                                : "text-transparent opacity-0"
+                            }`} />
+                          </div>
+                          <span className={`text-xs transition-colors duration-300 ${
+                            passwordValidation[requirement.key]
+                              ? "text-emerald-700 dark:text-emerald-400 font-medium"
+                              : "text-gray-500 dark:text-gray-400"
+                          }`}>
+                            {requirement.label}
+                          </span>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}
@@ -510,23 +561,23 @@ const Settings = () => {
 
               {/* Confirm New Password */}
               <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
                   Confirm New Password
                 </label>
-                <div className="relative">
+                <div className="relative group">
                   <input
                     type={showPasswords.confirm ? "text" : "password"}
                     value={passwordForm.confirmNewPassword}
                     onChange={(e) =>
                       handlePasswordChange("confirmNewPassword", e.target.value)
                     }
-                    placeholder="Confirm your new password"
-                    className={`w-full px-4 py-3 pr-12 rounded-xl border outline-none transition-all ${
+                    placeholder="Re-enter your new password"
+                    className={`w-full px-4 py-3.5 pr-12 rounded-xl border-2 outline-none transition-all ${
                       passwordForm.confirmNewPassword
                         ? passwordValidation.passwordsMatch
-                          ? "border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200"
-                          : "border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-200"
-                        : "border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+                          ? "border-emerald-300 dark:border-emerald-700 bg-emerald-50/50 dark:bg-emerald-900/10 text-gray-900 dark:text-gray-100 focus:border-emerald-500 dark:focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/20 dark:focus:ring-emerald-400/20"
+                          : "border-red-300 dark:border-red-700 bg-red-50/50 dark:bg-red-900/10 text-gray-900 dark:text-gray-100 focus:border-red-500 dark:focus:border-red-400 focus:ring-4 focus:ring-red-500/20 dark:focus:ring-red-400/20"
+                        : "border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-gray-900 dark:focus:border-gray-300 focus:ring-4 focus:ring-gray-900/10 dark:focus:ring-gray-300/10 hover:border-gray-300 dark:hover:border-gray-500"
                     }`}
                   />
                   <button
@@ -537,7 +588,8 @@ const Settings = () => {
                         confirm: !prev.confirm,
                       }))
                     }
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all"
+                    aria-label={showPasswords.confirm ? "Hide password" : "Show password"}
                   >
                     {showPasswords.confirm ? (
                       <EyeOff className="w-4 h-4" />
@@ -546,42 +598,52 @@ const Settings = () => {
                     )}
                   </button>
                 </div>
-                {passwordForm.confirmNewPassword &&
-                  !passwordValidation.passwordsMatch && (
-                    <p className="text-xs text-red-500 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
-                      Passwords do not match
-                    </p>
-                  )}
+                {passwordForm.confirmNewPassword && (
+                  <div className="animate-[fadeIn_0.3s_ease-in-out]">
+                    {passwordValidation.passwordsMatch ? (
+                      <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+                        <CheckCircle2 className="w-4 h-4" />
+                        <span className="text-xs font-medium">Passwords match</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2 text-red-600 dark:text-red-400">
+                        <AlertCircle className="w-4 h-4" />
+                        <span className="text-xs font-medium">Passwords don't match</span>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
 
             {/* Footer */}
-            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100 bg-gray-50">
+            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200/50 dark:border-gray-700/50 bg-gray-50 dark:bg-gray-800">
               <button
+                type="button"
                 onClick={closeChangePasswordModal}
-                className="px-5 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-gray-700 hover:bg-white transition-colors"
+                className="px-5 py-2.5 rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 Cancel
               </button>
               <button
+                type="button"
                 onClick={handleChangePassword}
                 disabled={!isPasswordValid || passwordLoading}
-                className={`px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all flex items-center gap-2 ${
+                className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${
                   isPasswordValid && !passwordLoading
-                    ? "bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 shadow-lg hover:shadow-xl"
-                    : "bg-gray-300 cursor-not-allowed"
+                    ? "bg-gradient-to-r from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 text-white dark:text-gray-900 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
+                    : "bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed"
                 }`}
               >
                 {passwordLoading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    Changing...
+                    <span>Updating...</span>
                   </>
                 ) : (
                   <>
                     <ShieldCheck className="w-4 h-4" />
-                    Change Password
+                    <span>Change Password</span>
                   </>
                 )}
               </button>
