@@ -1,7 +1,8 @@
 package service.identity.utils;
 
-import jakarta.servlet.http.Cookie;
+import java.time.Duration;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import service.identity.configuration.CookieConfig;
@@ -13,33 +14,45 @@ public class CookieUtils {
 
   private final CookieConfig cookieConfig;
 
-  public Cookie createJwtCookie(String token) {
-    Cookie cookie = new Cookie("jwt", token);
-    cookie.setHttpOnly(true);
-    cookie.setSecure(cookieConfig.isSecure());
-    cookie.setPath("/");
-    cookie.setMaxAge(86400); // 24 hours (same as refresh token expiry)
-    cookie.setAttribute("SameSite", cookieConfig.getSameSite());
+  public ResponseCookie createJwtCookie(String token) {
+    ResponseCookie.ResponseCookieBuilder builder =
+        ResponseCookie.from("jwt", token)
+            .httpOnly(true)
+            .secure(cookieConfig.isSecure())
+            .path("/")
+            .maxAge(Duration.ofDays(1));
 
-    if (StringUtils.hasText(cookieConfig.getDomain())) {
-      cookie.setDomain(cookieConfig.getDomain());
+    String sameSite = cookieConfig.getSameSite();
+    if (StringUtils.hasText(sameSite)) {
+      builder.sameSite(sameSite);
     }
 
-    return cookie;
+    String domain = cookieConfig.getDomain();
+    if (StringUtils.hasText(domain) && !domain.isBlank()) {
+      builder.domain(domain);
+    }
+
+    return builder.build();
   }
 
-  public Cookie createExpiredJwtCookie() {
-    Cookie cookie = new Cookie("jwt", "");
-    cookie.setHttpOnly(true);
-    cookie.setSecure(cookieConfig.isSecure());
-    cookie.setPath("/");
-    cookie.setMaxAge(0);
-    cookie.setAttribute("SameSite", cookieConfig.getSameSite());
+  public ResponseCookie createExpiredJwtCookie() {
+    ResponseCookie.ResponseCookieBuilder builder =
+        ResponseCookie.from("jwt", "")
+            .httpOnly(true)
+            .secure(cookieConfig.isSecure())
+            .path("/")
+            .maxAge(0);
 
-    if (StringUtils.hasText(cookieConfig.getDomain())) {
-      cookie.setDomain(cookieConfig.getDomain());
+    String sameSite = cookieConfig.getSameSite();
+    if (StringUtils.hasText(sameSite)) {
+      builder.sameSite(sameSite);
     }
 
-    return cookie;
+    String domain = cookieConfig.getDomain();
+    if (StringUtils.hasText(domain) && !domain.isBlank()) {
+      builder.domain(domain);
+    }
+
+    return builder.build();
   }
 }

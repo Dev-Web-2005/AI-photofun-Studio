@@ -16,6 +16,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -150,8 +152,8 @@ public class AuthService {
 
       org.springframework.util.MultiValueMap<String, String> params =
           utils.generateParamGgRequest(code);
-      log.info("Sending token request with params: code={}, client_id={}, " +
-               "redirect_uri={}",
+      log.info("Sending token request with params: code={}, client_id={}, "
+                   + "redirect_uri={}",
                code.substring(0, Math.min(code.length(), 20)) + "...",
                params.getFirst("client_id"), params.getFirst("redirect_uri"));
 
@@ -188,8 +190,8 @@ public class AuthService {
           String accessToken = utils.generateToken(user);
           String refreshToken = utils.generateRefreshToken(user);
           log.info("JWT tokens generated");
-          Cookie cookie = cookieUtils.createJwtCookie(refreshToken);
-          response.addCookie(cookie);
+          ResponseCookie cookie = cookieUtils.createJwtCookie(refreshToken);
+          response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
           response.setHeader("X-Access-Token", accessToken);
           log.info("Cookie and header added to response");
           return true;
@@ -226,8 +228,8 @@ public class AuthService {
 
         String accessToken = utils.generateToken(saveUser);
         String refreshToken = utils.generateRefreshToken(saveUser);
-        Cookie cookie = cookieUtils.createJwtCookie(refreshToken);
-        response.addCookie(cookie);
+        ResponseCookie cookie = cookieUtils.createJwtCookie(refreshToken);
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         response.setHeader("X-Access-Token", accessToken);
         log.info("Cookie and header added for new user");
         return true;
