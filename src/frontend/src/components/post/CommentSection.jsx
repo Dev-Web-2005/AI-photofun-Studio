@@ -436,28 +436,28 @@ export default function CommentSection({ postId }) {
   }
 
   return (
-    <div className="mt-4 rounded-2xl border border-gray-200 bg-white">
-      <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
-        <h3 className="text-sm font-semibold text-gray-900">
+    <div className="mt-4 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+      <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-700 px-4 py-3">
+        <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
           Comments ({comments.length})
         </h3>
       </div>
 
       {error && (
-        <div className="mx-4 mt-3 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-600">
+        <div className="mx-4 mt-3 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 px-3 py-2 text-xs text-red-600 dark:text-red-400">
           Error loading comments: {error}
         </div>
       )}
 
       <div className="max-h-72 space-y-5 overflow-y-auto px-4 py-4 text-sm">
         {loading && (
-          <div className="flex justify-center py-6 text-gray-500">
+          <div className="flex justify-center py-6 text-gray-500 dark:text-gray-400">
             <Loader2 className="h-5 w-5 animate-spin" />
           </div>
         )}
 
         {!loading && !comments.length && !error && (
-          <div className="py-4 text-center text-sm text-gray-500">
+          <div className="py-4 text-center text-sm text-gray-500 dark:text-gray-400">
             No comments yet. Be the first!
           </div>
         )}
@@ -469,35 +469,75 @@ export default function CommentSection({ postId }) {
               key={comment.id}
               className={`flex gap-3 rounded-xl p-3 transition-all ${
                 comment.isNew
-                  ? "bg-green-50 border-2 border-green-200"
-                  : "bg-gray-50/70"
+                  ? "bg-green-50 dark:bg-green-900/20 border-2 border-green-200 dark:border-green-700"
+                  : "bg-gray-50/70 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700"
               }`}
             >
               <img
                 src={comment.user.avatar}
                 alt={comment.user.name}
-                className={`h-10 w-10 rounded-full object-cover ${
+                className={`h-10 w-10 rounded-full object-cover shrink-0 ${
                   comment.user.isPremium
-                    ? "ring-2 ring-yellow-400 ring-offset-2"
+                    ? "ring-2 ring-yellow-400 ring-offset-2 dark:ring-offset-gray-800"
                     : ""
                 }`}
               />
-              <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold text-gray-900">
-                    {comment.user.name}
-                  </span>
-                  {comment.user.isPremium && (
-                    <span className="rounded-full border border-yellow-200 bg-yellow-100 px-2 text-[10px] font-semibold text-yellow-700">
-                      PRO
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 justify-between">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                      {comment.user.name}
                     </span>
+                    {comment.user.isPremium && (
+                      <span className="rounded-full border border-yellow-200 dark:border-yellow-700 bg-yellow-100 dark:bg-yellow-900/50 px-2 text-[10px] font-semibold text-yellow-700 dark:text-yellow-300">
+                        PRO
+                      </span>
+                    )}
+                    {comment.isNew && (
+                      <span className="rounded-full bg-green-500 px-2 py-0.5 text-[10px] font-bold text-white">
+                        NEW
+                      </span>
+                    )}
+                    <span className="text-xs text-gray-500 dark:text-gray-400">{comment.time}</span>
+                  </div>
+                  
+                  {/* Three-dot menu inline with header */}
+                  {comment.userId === currentUser.id && (
+                    <div className="relative shrink-0">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setMenuOpenId(
+                            menuOpenId === comment.id ? null : comment.id
+                          )
+                        }
+                        className="rounded-full p-1.5 text-gray-400 dark:text-gray-500 transition hover:bg-gray-200 dark:hover:bg-gray-600 hover:text-gray-600 dark:hover:text-gray-300 cursor-pointer"
+                        aria-label="Comment options"
+                      >
+                        <MoreHorizontal className="h-4 w-4" />
+                      </button>
+                      {menuOpenId === comment.id && (
+                        <div className="absolute right-0 z-10 mt-1 w-32 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 shadow-lg">
+                          <button
+                            type="button"
+                            onClick={() => handleEditComment(comment)}
+                            className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer text-gray-700 dark:text-gray-200"
+                          >
+                            <Edit2 className="h-3 w-3" />
+                            Edit
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteComment(comment.id)}
+                            className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs text-red-600 dark:text-red-400 hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                            Delete
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   )}
-                  {comment.isNew && (
-                    <span className="rounded-full bg-green-500 px-2 py-0.5 text-[10px] font-bold text-white">
-                      NEW
-                    </span>
-                  )}
-                  <span className="text-xs text-gray-500">{comment.time}</span>
                 </div>
 
                 {editingCommentId === comment.id ? (
@@ -505,7 +545,7 @@ export default function CommentSection({ postId }) {
                     <textarea
                       value={editContent}
                       onChange={(e) => setEditContent(e.target.value)}
-                      className="w-full rounded-lg border border-gray-300 p-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-2 text-sm focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20"
                       rows={2}
                     />
                     <div className="mt-2 flex gap-2">
@@ -513,7 +553,7 @@ export default function CommentSection({ postId }) {
                         type="button"
                         onClick={() => handleSaveEdit(comment.id)}
                         disabled={isSubmitting}
-                        className="rounded-lg bg-blue-600 px-3 py-1 text-xs font-semibold text-white hover:bg-blue-700 disabled:opacity-50 cursor-pointer"
+                        className="rounded-lg bg-blue-600 dark:bg-blue-500 px-3 py-1 text-xs font-semibold text-white hover:bg-blue-700 dark:hover:bg-blue-600 disabled:opacity-50 cursor-pointer"
                       >
                         Save
                       </button>
@@ -523,59 +563,21 @@ export default function CommentSection({ postId }) {
                           setEditingCommentId(null);
                           setEditContent("");
                         }}
-                        className="rounded-lg bg-gray-300 px-3 py-1 text-xs font-semibold text-gray-700 hover:bg-gray-400 cursor-pointer"
+                        className="rounded-lg bg-gray-300 dark:bg-gray-600 px-3 py-1 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-400 dark:hover:bg-gray-500 cursor-pointer"
                       >
                         Cancel
                       </button>
                     </div>
                   </div>
                 ) : (
-                  <p className="mt-1 text-gray-700">{comment.content}</p>
-                )}
-
-                {comment.userId === currentUser.id && (
-                  <div className="mt-2 flex items-center gap-4 text-xs text-gray-500">
-                    <div className="relative">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setMenuOpenId(
-                            menuOpenId === comment.id ? null : comment.id
-                          )
-                        }
-                        className="rounded-full p-1 text-gray-400 transition hover:bg-gray-200 hover:text-gray-600 cursor-pointer"
-                      >
-                        <MoreHorizontal className="h-4 w-4" />
-                      </button>
-                      {menuOpenId === comment.id && (
-                        <div className="absolute left-0 z-10 mt-1 w-32 rounded-lg border border-gray-200 bg-white shadow-lg">
-                          <button
-                            type="button"
-                            onClick={() => handleEditComment(comment)}
-                            className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs hover:bg-gray-50 cursor-pointer"
-                          >
-                            <Edit2 className="h-3 w-3" />
-                            Edit
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleDeleteComment(comment.id)}
-                            className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs text-red-600 hover:bg-gray-50 cursor-pointer"
-                          >
-                            <Trash2 className="h-3 w-3" />
-                            Delete
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                  <p className="mt-1 text-gray-700 dark:text-gray-300">{comment.content}</p>
                 )}
               </div>
             </div>
           ))}
       </div>
 
-      <div className="border-t border-gray-100 px-4 py-3">
+      <div className="border-t border-gray-100 dark:border-gray-700 dark:border-gray-700 px-4 py-3">
         <div className="flex items-center gap-3">
           <img
             src={currentUser.avatar}
@@ -597,7 +599,7 @@ export default function CommentSection({ postId }) {
                 currentUser.id ? "Write a comment..." : "Login to comment"
               }
               disabled={!currentUser.id || isSubmitting}
-              className="w-full rounded-full border border-transparent bg-gray-100 py-2.5 pl-4 pr-16 text-sm text-gray-700 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400"
+              className="w-full rounded-full border border-transparent bg-gray-100 dark:bg-gray-700 py-2.5 pl-4 pr-16 text-sm text-gray-700 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-500 transition focus:border-blue-500 dark:focus:border-blue-400 focus:bg-white dark:focus:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:text-gray-400 dark:disabled:text-gray-500"
             />
             <div
               ref={emojiPickerRef}
