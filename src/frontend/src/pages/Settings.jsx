@@ -388,19 +388,16 @@ const Settings = () => {
           {/* Modal */}
           <div className="relative bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-3xl shadow-[0_20px_70px_-15px_rgba(0,0,0,0.4)] dark:shadow-[0_20px_70px_-15px_rgba(0,0,0,0.8)] border border-gray-200/50 dark:border-gray-700/50 w-full max-w-md overflow-hidden animate-[fadeIn_0.3s_ease-in-out]">
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200/50 dark:border-gray-700/50 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700">
-              <div className="flex items-center gap-3">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-gray-900 dark:bg-gray-100 rounded-xl opacity-20 blur-lg" />
-                  <span className="relative p-2.5 rounded-xl bg-gradient-to-br from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 text-white dark:text-gray-900 shadow-lg">
-                    <Lock className="w-5 h-5" />
-                  </span>
+            <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200 dark:border-gray-700">
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-2xl bg-gradient-to-br from-gray-900 to-gray-800 dark:from-gray-100 dark:to-gray-200 shadow-lg ring-4 ring-gray-900/10 dark:ring-gray-100/10">
+                  <Lock className="w-5 h-5 text-white dark:text-gray-900" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                  <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 tracking-tight">
                     Change Password
                   </h2>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
                     Update your account security
                   </p>
                 </div>
@@ -408,7 +405,7 @@ const Settings = () => {
               <button
                 type="button"
                 onClick={closeChangePasswordModal}
-                className="p-2 rounded-xl hover:bg-white/80 dark:hover:bg-gray-600/80 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-all hover:scale-110 active:scale-95"
+                className="p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-all duration-200 hover:rotate-90"
                 aria-label="Close modal"
               >
                 <X className="w-5 h-5" />
