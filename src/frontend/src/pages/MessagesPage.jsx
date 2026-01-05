@@ -1618,10 +1618,10 @@ const MessagesPage = () => {
                 conversations.map((chat) => (
                   <div
                     key={chat.id}
-                    className={`group/conv mx-2 mb-1 flex items-center gap-3 rounded-lg p-3 text-left transition-all duration-200 ${
+                    className={`group/conv mx-2 mb-1 flex items-center gap-3 rounded-lg p-3 text-left transition-all duration-200 border-l-2 ${
                       activeChat?.id === chat.id
-                        ? "bg-gray-900 shadow-sm"
-                        : "hover:bg-white hover:shadow-lg hover:scale-[1.02]"
+                        ? "bg-gray-900 shadow-sm border-l-amber-500"
+                        : "border-l-transparent hover:border-l-gray-400 hover:bg-white/80 hover:shadow-md"
                     }`}
                   >
                     <button
@@ -1645,16 +1645,16 @@ const MessagesPage = () => {
                             className={`truncate text-sm font-medium ${
                               activeChat?.id === chat.id
                                 ? "text-white"
-                                : "text-gray-900"
+                                : "text-gray-900 group-hover/conv:text-gray-900"
                             }`}
                           >
                             {chat.name}
                           </h3>
                           <span
-                            className={`text-xs ${
+                            className={`text-xs flex-shrink-0 ml-2 ${
                               activeChat?.id === chat.id
-                                ? "text-gray-400"
-                                : "text-gray-500"
+                                ? "text-gray-300"
+                                : "text-gray-500 group-hover/conv:text-gray-600"
                             }`}
                           >
                             {chat.time}
@@ -1665,11 +1665,11 @@ const MessagesPage = () => {
                             className={`max-w-[120px] truncate text-xs ${
                               chat.unread
                                 ? activeChat?.id === chat.id
-                                  ? "font-medium text-gray-300"
-                                  : "font-medium text-gray-700"
+                                  ? "font-medium text-gray-200"
+                                  : "font-medium text-gray-700 group-hover/conv:text-gray-800"
                                 : activeChat?.id === chat.id
-                                ? "text-gray-400"
-                                : "text-gray-500"
+                                ? "text-gray-300"
+                                : "text-gray-500 group-hover/conv:text-gray-600"
                             }`}
                           >
                             {chat.lastMessage}
@@ -1743,10 +1743,10 @@ const MessagesPage = () => {
                       setActiveChat(group);
                       setShowGroupInfo(false);
                     }}
-                    className={`mx-2 mb-1 flex items-center gap-3 rounded-lg p-3 text-left transition-all duration-200 w-[calc(100%-1rem)] ${
+                    className={`mx-2 mb-1 flex items-center gap-3 rounded-lg p-3 text-left transition-all duration-200 w-[calc(100%-1rem)] border-l-2 ${
                       activeChat?.id === group.id
-                        ? "bg-gray-900 shadow-sm"
-                        : "hover:bg-white hover:shadow-lg hover:scale-[1.02]"
+                        ? "bg-gray-900 shadow-sm border-l-amber-500"
+                        : "border-l-transparent hover:border-l-gray-400 hover:bg-white/80 hover:shadow-md"
                     }`}
                   >
                     <div className="relative">
@@ -1778,7 +1778,7 @@ const MessagesPage = () => {
                         </h3>
                         {group.isAdmin && (
                           <Crown
-                            className={`h-3.5 w-3.5 ${
+                            className={`h-3.5 w-3.5 flex-shrink-0 ${
                               activeChat?.id === group.id
                                 ? "text-amber-400"
                                 : "text-amber-500"
@@ -1789,7 +1789,7 @@ const MessagesPage = () => {
                       <p
                         className={`text-xs mt-0.5 ${
                           activeChat?.id === group.id
-                            ? "text-gray-400"
+                            ? "text-gray-300"
                             : "text-gray-500"
                         }`}
                       >
@@ -1817,10 +1817,10 @@ const MessagesPage = () => {
                     setActiveChat(group);
                     setShowGroupInfo(false);
                   }}
-                  className={`mx-2 mb-1 flex items-center gap-3 rounded-lg p-3 text-left transition-all duration-200 w-[calc(100%-1rem)] ${
+                  className={`mx-2 mb-1 flex items-center gap-3 rounded-lg p-3 text-left transition-all duration-200 w-[calc(100%-1rem)] border-l-2 ${
                     activeChat?.id === group.id
-                      ? "bg-gray-900 shadow-sm"
-                      : "hover:bg-white hover:shadow-lg hover:scale-[1.02]"
+                      ? "bg-gray-900 shadow-sm border-l-amber-500"
+                      : "border-l-transparent hover:border-l-gray-400 hover:bg-white/80 hover:shadow-md"
                   }`}
                 >
                   <div className="relative">
@@ -1855,7 +1855,7 @@ const MessagesPage = () => {
                       <p
                         className={`text-xs ${
                           activeChat?.id === group.id
-                            ? "text-gray-400"
+                            ? "text-gray-300"
                             : "text-gray-500"
                         }`}
                       >
