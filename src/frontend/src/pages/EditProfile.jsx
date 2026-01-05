@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Camera, ChevronLeft, Mail, Phone, Save, User, X } from "lucide-react";
 import { toast } from "../hooks/use-toast";
+import tokenManager from "../api/tokenManager";
+import axiosClient from "../api/axiosClient";
 
-const API_GATEWAY = import.meta.env.VITE_API_GATEWAY || "http://localhost:8888";
 const PROFILE_ENDPOINT = "/api/v1/profiles/my-profile";
 const UPDATE_PROFILE_ENDPOINT = "/api/v1/profiles/update";
 const CURRENT_USER_ENDPOINT = "/api/v1/identity/users/me";
@@ -41,26 +42,8 @@ const EditProfile = () => {
       setStatus({ error: "", success: "" });
 
       try {
-        const token = localStorage.getItem("token");
-        const headers = {
-          "Content-Type": "application/json",
-        };
-
-        if (token) {
-          headers.Authorization = `Bearer ${token}`;
-        }
-
-        const response = await fetch(`${API_GATEWAY}${PROFILE_ENDPOINT}`, {
-          method: "GET",
-          headers,
-          credentials: "include",
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || "Unable to load profile information");
-        }
+        const response = await axiosClient.get(PROFILE_ENDPOINT);
+        const data = response.data;
 
         const profile = data.result || data.data || data;
 
@@ -73,7 +56,7 @@ const EditProfile = () => {
           avatarFile: null,
         }));
       } catch (error) {
-        const msg = error.message || "Unable to load profile information";
+        const msg = error.response?.data?.message || error.message || "Unable to load profile information";
         setStatus({ error: msg, success: "" });
         toast.error(msg);
       } finally {
@@ -89,23 +72,10 @@ const EditProfile = () => {
 
     const fetchCurrentUser = async () => {
       try {
-        const token = localStorage.getItem("token");
-        if (!token) return;
+        if (!tokenManager.hasToken()) return;
 
-        const headers = {
-          Authorization: `Bearer ${token}`,
-        };
-
-        const response = await fetch(`${API_GATEWAY}${CURRENT_USER_ENDPOINT}`, {
-          method: "GET",
-          headers,
-          credentials: "include",
-        });
-
-        const data = await response.json();
-        if (!response.ok) {
-          throw new Error(data.message || "Unable to load account information");
-        }
+        const response = await axiosClient.get(CURRENT_USER_ENDPOINT);
+        const data = response.data;
 
         const rawUser =
           data.result?.data || data.result || data.data || data.user || data;
@@ -155,13 +125,6 @@ const EditProfile = () => {
     setLoading(true);
 
     try {
-      const token = localStorage.getItem("token");
-      const authHeaders = token
-        ? {
-          Authorization: `Bearer ${token}`,
-        }
-        : {};
-
       let nextAvatarUrl = formData.avatarUrl || DEFAULT_AVATAR;
       const hasNewAvatar = Boolean(formData.avatarFile);
 
@@ -169,22 +132,13 @@ const EditProfile = () => {
         const avatarData = new FormData();
         avatarData.append("file", formData.avatarFile);
 
-        const uploadResponse = await fetch(
-          `${API_GATEWAY}${UPLOAD_AVATAR_ENDPOINT}`,
-          {
-            method: "POST",
-            headers: authHeaders,
-            body: avatarData,
-            credentials: "include",
-          }
-        );
+        const uploadResponse = await axiosClient.post(UPLOAD_AVATAR_ENDPOINT, avatarData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
 
-        const uploadJson = await uploadResponse.json();
-        if (!uploadResponse.ok) {
-          throw new Error(
-            uploadJson.message || "Unable to update profile photo"
-          );
-        }
+        const uploadJson = uploadResponse.data;
 
         nextAvatarUrl =
           uploadJson.result?.avatarUrl ||
@@ -194,11 +148,6 @@ const EditProfile = () => {
           nextAvatarUrl;
       }
 
-      const headers = {
-        "Content-Type": "application/json",
-        ...authHeaders,
-      };
-
       const payload = {
         fullName: formData.fullName,
         phone: formData.phone,
@@ -207,18 +156,8 @@ const EditProfile = () => {
         verified: false,
       };
 
-      const response = await fetch(`${API_GATEWAY}${UPDATE_PROFILE_ENDPOINT}`, {
-        method: "PUT",
-        headers,
-        credentials: "include",
-        body: JSON.stringify(payload),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Unable to update profile");
-      }
+      const response = await axiosClient.put(UPDATE_PROFILE_ENDPOINT, payload);
+      const data = response.data;
 
       setFormData((prev) => ({
         ...prev,

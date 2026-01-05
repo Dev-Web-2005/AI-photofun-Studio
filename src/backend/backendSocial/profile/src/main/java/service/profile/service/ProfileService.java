@@ -29,7 +29,6 @@ import service.profile.mapper.ProfileMapper;
 import service.profile.repository.ProfileRepository;
 import service.profile.repository.http.MailClient;
 
-
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -55,6 +54,7 @@ public class ProfileService {
         .toList();
   }
 
+  @PreAuthorize("isAuthenticated()")
   public GetProfileResponse getById() {
     String userId =
         SecurityContextHolder.getContext().getAuthentication().getName();
@@ -107,6 +107,7 @@ public class ProfileService {
     }
   }
 
+  @PreAuthorize("isAuthenticated()")
   public boolean checkVerify() {
     String userId =
         SecurityContextHolder.getContext().getAuthentication().getName();

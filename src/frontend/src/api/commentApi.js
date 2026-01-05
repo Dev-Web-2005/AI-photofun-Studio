@@ -1,7 +1,6 @@
 import axios from "axios";
+import tokenManager from "./tokenManager";
 
-// Comment API URL: production dùng VITE_COMMENT_API_URL, local dùng proxy qua vite
-// Comment service routes: /comments (KHÔNG có /api/v1/ prefix)
 const COMMENT_API_BASE = import.meta.env.VITE_COMMENT_API_URL || "";
 const COMMENTS_BASE_URL = `${COMMENT_API_BASE}/comments`;
 
@@ -9,17 +8,13 @@ const commentAxios = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
 commentAxios.interceptors.request.use((config) => {
-  if (typeof window !== "undefined") {
-    const token =
-      localStorage.getItem("token") ||
-      localStorage.getItem("accessToken") ||
-      localStorage.getItem("authToken");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+  const token = tokenManager.getToken();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
