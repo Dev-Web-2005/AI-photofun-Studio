@@ -41,7 +41,11 @@ const formatRegistrationError = (error) => {
   }
 
   // Handle HTTP status codes
-  if (status === 429 || message?.toLowerCase().includes('rate limit') || message?.toLowerCase().includes('too many')) {
+  if (
+    status === 429 ||
+    message?.toLowerCase().includes("rate limit") ||
+    message?.toLowerCase().includes("too many")
+  ) {
     return "Too many registration attempts. Please wait a few minutes before trying again.";
   }
 
@@ -55,24 +59,24 @@ const formatRegistrationError = (error) => {
 
   if (status === 400) {
     // Try to extract meaningful message from 400 errors
-    if (message && !message.includes('code') && message.length < 200) {
+    if (message && !message.includes("code") && message.length < 200) {
       return message;
     }
     return "Invalid registration information. Please check your details and try again.";
   }
 
   // Handle network errors
-  if (error?.code === 'ERR_NETWORK' || message?.includes('Network Error')) {
+  if (error?.code === "ERR_NETWORK" || message?.includes("Network Error")) {
     return "Unable to connect to our servers. Please check your internet connection and try again.";
   }
 
   // Handle timeout errors
-  if (error?.code === 'ECONNABORTED' || message?.includes('timeout')) {
+  if (error?.code === "ECONNABORTED" || message?.includes("timeout")) {
     return "The request timed out. Please check your connection and try again.";
   }
 
   // If we have a clean, user-friendly message from the server, use it
-  if (message && typeof message === 'string' && message.length < 200) {
+  if (message && typeof message === "string" && message.length < 200) {
     // Filter out technical-looking messages
     const technicalPatterns = [
       /error\s*code/i,
@@ -80,11 +84,13 @@ const formatRegistrationError = (error) => {
       /stack\s*trace/i,
       /null\s*pointer/i,
       /undefined/i,
-      /^\{.*\}$/,  // JSON-like strings
-      /^\[.*\]$/,  // Array-like strings
+      /^\{.*\}$/, // JSON-like strings
+      /^\[.*\]$/, // Array-like strings
     ];
 
-    const isTechnical = technicalPatterns.some(pattern => pattern.test(message));
+    const isTechnical = technicalPatterns.some((pattern) =>
+      pattern.test(message)
+    );
 
     if (!isTechnical) {
       return message;
@@ -128,8 +134,10 @@ const RegisterPage = () => {
   const passwordStrength = useMemo(() => {
     const validCount = Object.values(passwordValidation).filter(Boolean).length;
     if (validCount === 0) return { level: 0, label: "", color: "" };
-    if (validCount <= 2) return { level: 1, label: "Weak", color: "bg-red-500" };
-    if (validCount === 3) return { level: 2, label: "Fair", color: "bg-amber-500" };
+    if (validCount <= 2)
+      return { level: 1, label: "Weak", color: "bg-red-500" };
+    if (validCount === 3)
+      return { level: 2, label: "Fair", color: "bg-amber-500" };
     return { level: 3, label: "Strong", color: "bg-emerald-500" };
   }, [passwordValidation]);
 
@@ -227,8 +235,6 @@ const RegisterPage = () => {
     window.location.href = googleAuthUrl;
   };
 
-
-
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-5 overflow-auto">
       <div className="w-full max-w-md mx-auto my-5">
@@ -265,7 +271,8 @@ const RegisterPage = () => {
           )}
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="mb-6 space-y-5">{/* Username */}
+          <form onSubmit={handleSubmit} className="mb-6 space-y-5">
+            {/* Username */}
             <div className="group">
               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 transition-colors">
                 Username
@@ -335,7 +342,11 @@ const RegisterPage = () => {
                   className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
                 </button>
               </div>
 
@@ -346,15 +357,21 @@ const RegisterPage = () => {
                     <div className="flex-1 h-1.5 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
                       <div
                         className={`h-full transition-all duration-500 ${passwordStrength.color}`}
-                        style={{ width: `${(passwordStrength.level / 3) * 100}%` }}
+                        style={{
+                          width: `${(passwordStrength.level / 3) * 100}%`,
+                        }}
                       />
                     </div>
                     {passwordStrength.label && (
-                      <span className={`text-xs font-semibold ${
-                        passwordStrength.level === 1 ? "text-red-600 dark:text-red-400" :
-                        passwordStrength.level === 2 ? "text-amber-600 dark:text-amber-400" :
-                        "text-emerald-600 dark:text-emerald-400"
-                      }`}>
+                      <span
+                        className={`text-xs font-semibold ${
+                          passwordStrength.level === 1
+                            ? "text-red-600 dark:text-red-400"
+                            : passwordStrength.level === 2
+                            ? "text-amber-600 dark:text-amber-400"
+                            : "text-emerald-600 dark:text-emerald-400"
+                        }`}
+                      >
                         {passwordStrength.label}
                       </span>
                     )}
@@ -371,27 +388,42 @@ const RegisterPage = () => {
                   <div className="space-y-2">
                     {[
                       { key: "minLength", label: "At least 8 characters" },
-                      { key: "hasLowercase", label: "One lowercase letter (a-z)" },
-                      { key: "hasUppercase", label: "One uppercase letter (A-Z)" },
+                      {
+                        key: "hasLowercase",
+                        label: "One lowercase letter (a-z)",
+                      },
+                      {
+                        key: "hasUppercase",
+                        label: "One uppercase letter (A-Z)",
+                      },
                       { key: "hasNumber", label: "One number (0-9)" },
                     ].map((requirement) => (
-                      <div key={requirement.key} className="flex items-center gap-2">
-                        <div className={`shrink-0 rounded-full p-0.5 transition-all duration-300 ${
-                          passwordValidation[requirement.key]
-                            ? "bg-emerald-500 scale-100"
-                            : "bg-gray-300 dark:bg-gray-600 scale-90"
-                        }`}>
-                          <Check className={`h-3 w-3 transition-all duration-300 ${
+                      <div
+                        key={requirement.key}
+                        className="flex items-center gap-2"
+                      >
+                        <div
+                          className={`shrink-0 rounded-full p-0.5 transition-all duration-300 ${
                             passwordValidation[requirement.key]
-                              ? "text-white opacity-100"
-                              : "text-transparent opacity-0"
-                          }`} />
+                              ? "bg-emerald-500 scale-100"
+                              : "bg-gray-300 dark:bg-gray-600 scale-90"
+                          }`}
+                        >
+                          <Check
+                            className={`h-3 w-3 transition-all duration-300 ${
+                              passwordValidation[requirement.key]
+                                ? "text-white opacity-100"
+                                : "text-transparent opacity-0"
+                            }`}
+                          />
                         </div>
-                        <span className={`text-xs transition-colors duration-300 ${
-                          passwordValidation[requirement.key]
-                            ? "text-emerald-700 dark:text-emerald-400 font-medium"
-                            : "text-gray-500 dark:text-gray-400"
-                        }`}>
+                        <span
+                          className={`text-xs transition-colors duration-300 ${
+                            passwordValidation[requirement.key]
+                              ? "text-emerald-700 dark:text-emerald-400 font-medium"
+                              : "text-gray-500 dark:text-gray-400"
+                          }`}
+                        >
                           {requirement.label}
                         </span>
                       </div>
@@ -420,9 +452,15 @@ const RegisterPage = () => {
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all"
-                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                  aria-label={
+                    showConfirmPassword ? "Hide password" : "Show password"
+                  }
                 >
-                  {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  {showConfirmPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
                 </button>
               </div>
 
@@ -432,12 +470,16 @@ const RegisterPage = () => {
                   {formData.password === formData.confirmpass ? (
                     <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
                       <Check className="h-4 w-4" />
-                      <span className="text-xs font-medium">Passwords match</span>
+                      <span className="text-xs font-medium">
+                        Passwords match
+                      </span>
                     </div>
                   ) : (
                     <div className="flex items-center gap-2 text-red-600 dark:text-red-400">
                       <X className="h-4 w-4" />
-                      <span className="text-xs font-medium">Passwords don't match</span>
+                      <span className="text-xs font-medium">
+                        Passwords don't match
+                      </span>
                     </div>
                   )}
                 </div>
@@ -457,8 +499,20 @@ const RegisterPage = () => {
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
                   <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      fill="none"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    />
                   </svg>
                   Creating account...
                 </span>
@@ -471,7 +525,9 @@ const RegisterPage = () => {
           {/* Divider */}
           <div className="flex items-center my-6 gap-4">
             <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent"></div>
-            <span className="text-sm text-gray-400 dark:text-gray-500 font-medium">Or continue with</span>
+            <span className="text-sm text-gray-400 dark:text-gray-500 font-medium">
+              Or continue with
+            </span>
             <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent"></div>
           </div>
 
@@ -502,8 +558,6 @@ const RegisterPage = () => {
               </svg>
               Google
             </button>
-
-
           </div>
 
           {/* Login Link */}
