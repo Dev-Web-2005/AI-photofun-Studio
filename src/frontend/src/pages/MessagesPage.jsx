@@ -1551,7 +1551,7 @@ const MessagesPage = () => {
                 <button
                   type="button"
                   onClick={() => setShowCreateGroup(true)}
-                  className="flex items-center gap-1.5 rounded-lg bg-gray-900 px-3 py-2 text-xs font-medium text-white hover:bg-black shadow-sm hover:shadow-md transition-all"
+                  className="flex items-center gap-1.5 rounded-lg bg-gray-900 px-3 py-2 text-xs font-medium text-white hover:bg-black shadow-sm hover:shadow-md transition-all cursor-pointer"
                   title="Create Group (Premium)"
                 >
                   <Users className="h-3.5 w-3.5" />
@@ -1573,7 +1573,7 @@ const MessagesPage = () => {
               <button
                 type="button"
                 onClick={() => setActiveTab("direct")}
-                className={`flex-1 py-2 px-3 rounded-md text-xs font-medium transition-all ${
+                className={`flex-1 py-2 px-3 rounded-md text-xs font-medium transition-all cursor-pointer ${
                   activeTab === "direct"
                     ? "bg-white text-gray-900 shadow-sm"
                     : "text-gray-600 hover:text-gray-900"
@@ -1584,7 +1584,7 @@ const MessagesPage = () => {
               <button
                 type="button"
                 onClick={() => setActiveTab("groups")}
-                className={`flex-1 py-2 px-3 rounded-md text-xs font-medium transition-all ${
+                className={`flex-1 py-2 px-3 rounded-md text-xs font-medium transition-all cursor-pointer ${
                   activeTab === "groups"
                     ? "bg-white text-gray-900 shadow-sm"
                     : "text-gray-600 hover:text-gray-900"
@@ -1595,7 +1595,7 @@ const MessagesPage = () => {
               <button
                 type="button"
                 onClick={() => setActiveTab("explore")}
-                className={`flex-1 py-2 px-3 rounded-md text-xs font-medium transition-all ${
+                className={`flex-1 py-2 px-3 rounded-md text-xs font-medium transition-all cursor-pointer ${
                   activeTab === "explore"
                     ? "bg-white text-gray-900 shadow-sm"
                     : "text-gray-600 hover:text-gray-900"
@@ -1627,7 +1627,7 @@ const MessagesPage = () => {
                     <button
                       type="button"
                       onClick={() => setActiveChat(chat)}
-                      className="flex items-center gap-3 flex-1 min-w-0"
+                      className="flex items-center gap-3 flex-1 min-w-0 cursor-pointer"
                     >
                       <div className="relative">
                         <img
@@ -1690,7 +1690,7 @@ const MessagesPage = () => {
                         handleDeleteConversation(chat.userId, chat.name);
                       }}
                       disabled={loadingAction}
-                      className={`p-1.5 rounded-lg opacity-0 group-hover/conv:opacity-100 transition-all disabled:opacity-50 ${
+                      className={`p-1.5 rounded-lg opacity-0 group-hover/conv:opacity-100 transition-all disabled:opacity-50 cursor-pointer ${
                         activeChat?.id === chat.id
                           ? "text-gray-400 hover:text-white hover:bg-white/10"
                           : "text-gray-400 hover:text-gray-700 hover:bg-gray-100"
@@ -1719,7 +1719,7 @@ const MessagesPage = () => {
                     <button
                       type="button"
                       onClick={() => setActiveTab("explore")}
-                      className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-all"
+                      className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-all cursor-pointer"
                     >
                       Explore Groups
                     </button>
@@ -1727,7 +1727,7 @@ const MessagesPage = () => {
                       <button
                         type="button"
                         onClick={() => setShowCreateGroup(true)}
-                        className="px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-black transition-all"
+                        className="px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-black transition-all cursor-pointer"
                       >
                         Create Group
                       </button>
@@ -1868,7 +1868,7 @@ const MessagesPage = () => {
                           handleRequestJoinGroup(group.groupId);
                         }}
                         disabled={loadingAction}
-                        className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium disabled:opacity-50 transition-all ${
+                        className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium disabled:opacity-50 transition-all cursor-pointer ${
                           activeChat?.id === group.id
                             ? "bg-white text-gray-900 hover:bg-gray-100"
                             : "bg-gray-900 text-white hover:bg-black"
@@ -1894,7 +1894,7 @@ const MessagesPage = () => {
               }
               className={`flex items-center gap-3 ${
                 activeChat.isGroup
-                  ? "cursor-pointer hover:bg-gray-50 -ml-2 pl-2 pr-3 py-1.5 rounded-lg transition-colors"
+                  ? "hover:bg-gray-50 -ml-2 pl-2 pr-3 py-1.5 rounded-lg transition-colors cursor-pointer"
                   : ""
               }`}
             >
@@ -1938,7 +1938,7 @@ const MessagesPage = () => {
                 type="button"
                 onClick={handleStartAudioCall}
                 disabled={!activeChat || activeChat.isGroup}
-                className="rounded-lg p-2 transition-colors hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="rounded-lg p-2 transition-colors hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 title={
                   activeChat?.isGroup
                     ? "Group calls not supported"
@@ -1951,7 +1951,7 @@ const MessagesPage = () => {
                 type="button"
                 onClick={handleStartVideoCall}
                 disabled={!activeChat || activeChat.isGroup}
-                className="rounded-lg p-2 transition-colors hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="rounded-lg p-2 transition-colors hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 title={
                   activeChat?.isGroup
                     ? "Group calls not supported"
@@ -1962,7 +1962,7 @@ const MessagesPage = () => {
               </button>
               <button
                 type="button"
-                className="rounded-lg p-2 transition-colors hover:bg-gray-100"
+                className="rounded-lg p-2 transition-colors hover:bg-gray-100 cursor-pointer"
               >
                 <MoreVertical className="h-5 w-5" />
               </button>
@@ -2130,7 +2130,7 @@ const MessagesPage = () => {
                     type="button"
                     onClick={() => imageInputRef.current?.click()}
                     disabled={uploadingImage || !socketConnected}
-                    className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                     title="Send image"
                   >
                     {uploadingImage ? (
@@ -2143,7 +2143,7 @@ const MessagesPage = () => {
                     type="button"
                     onClick={() => videoInputRef.current?.click()}
                     disabled={uploadingVideo || !socketConnected}
-                    className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                     title="Send video"
                   >
                     {uploadingVideo ? (
@@ -2165,7 +2165,7 @@ const MessagesPage = () => {
                     />
                     <button
                       type="button"
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-600"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-600 cursor-pointer"
                     >
                       <Smile className="h-4 w-4" />
                     </button>
@@ -2173,7 +2173,7 @@ const MessagesPage = () => {
                   <button
                     type="submit"
                     disabled={!inputMessage.trim() || !socketConnected}
-                    className="rounded-lg bg-gray-900 p-3 text-white hover:bg-black disabled:cursor-not-allowed disabled:opacity-50 transition-all"
+                    className="rounded-lg bg-gray-900 p-3 text-white hover:bg-black disabled:cursor-not-allowed disabled:opacity-50 transition-all cursor-pointer"
                   >
                     <Send className="h-5 w-5" />
                   </button>
@@ -2189,7 +2189,7 @@ const MessagesPage = () => {
                   <button
                     type="button"
                     onClick={() => setShowGroupInfo(false)}
-                    className="p-1 rounded-full hover:bg-gray-200"
+                    className="p-1 rounded-full hover:bg-gray-200 cursor-pointer"
                   >
                     <X className="h-4 w-4 text-gray-500" />
                   </button>
@@ -2266,7 +2266,7 @@ const MessagesPage = () => {
                         <button
                           type="button"
                           onClick={startEditGroup}
-                          className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                          className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer"
                         >
                           <Settings className="h-4 w-4" />
                           Edit Group
@@ -2297,7 +2297,7 @@ const MessagesPage = () => {
                               type="button"
                               onClick={handleUpdateGroup}
                               disabled={loadingAction || !editGroupName.trim()}
-                              className="flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg bg-gray-900 text-white text-sm font-medium hover:bg-black disabled:opacity-50 transition-all"
+                              className="flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg bg-gray-900 text-white text-sm font-medium hover:bg-black disabled:opacity-50 transition-all cursor-pointer"
                             >
                               {loadingAction ? (
                                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -2310,7 +2310,7 @@ const MessagesPage = () => {
                               type="button"
                               onClick={cancelEditGroup}
                               disabled={loadingAction}
-                              className="px-3 py-2 rounded-lg border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50 disabled:opacity-50 transition-all"
+                              className="px-3 py-2 rounded-lg border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50 disabled:opacity-50 transition-all cursor-pointer"
                             >
                               Cancel
                             </button>
@@ -2325,7 +2325,7 @@ const MessagesPage = () => {
                       type="button"
                       onClick={handleLeaveGroup}
                       disabled={loadingAction}
-                      className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg bg-red-50 border border-red-200 text-sm font-medium text-red-600 hover:bg-red-100 disabled:opacity-50"
+                      className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg bg-red-50 border border-red-200 text-sm font-medium text-red-600 hover:bg-red-100 disabled:opacity-50 cursor-pointer"
                     >
                       <LogOut className="h-4 w-4" />
                       Leave Group
@@ -2382,7 +2382,7 @@ const MessagesPage = () => {
                                   )
                                 }
                                 disabled={loadingAction}
-                                className="p-1.5 rounded-full text-red-500 hover:bg-red-50 disabled:opacity-50"
+                                className="p-1.5 rounded-full text-red-500 hover:bg-red-50 disabled:opacity-50 cursor-pointer"
                                 title="Remove member"
                               >
                                 <UserMinus className="h-4 w-4" />
@@ -2431,7 +2431,7 @@ const MessagesPage = () => {
                               onClick={() =>
                                 navigate(`/user/${request.userId}`)
                               }
-                              className="text-sm font-medium text-gray-900 truncate hover:text-blue-600 hover:underline"
+                              className="text-sm font-medium text-gray-900 truncate hover:text-blue-600 hover:underline cursor-pointer"
                               title="View profile"
                             >
                               {request.username || "User"}
@@ -2444,7 +2444,7 @@ const MessagesPage = () => {
                                 handleModifyRequest(request.userId, true)
                               }
                               disabled={loadingAction}
-                              className="p-1.5 rounded-full text-green-600 hover:bg-green-100 disabled:opacity-50"
+                              className="p-1.5 rounded-full text-green-600 hover:bg-green-100 disabled:opacity-50 cursor-pointer"
                               title="Accept"
                             >
                               <Check className="h-4 w-4" />
@@ -2455,7 +2455,7 @@ const MessagesPage = () => {
                                 handleModifyRequest(request.userId, false)
                               }
                               disabled={loadingAction}
-                              className="p-1.5 rounded-full text-red-500 hover:bg-red-100 disabled:opacity-50"
+                              className="p-1.5 rounded-full text-red-500 hover:bg-red-100 disabled:opacity-50 cursor-pointer"
                               title="Reject"
                             >
                               <XCircle className="h-4 w-4" />
@@ -2492,7 +2492,7 @@ const MessagesPage = () => {
                     setShowCreateGroup(false);
                     setNewGroupName("");
                   }}
-                  className="rounded-lg p-2 hover:bg-gray-100 transition-colors"
+                  className="rounded-lg p-2 hover:bg-gray-100 transition-colors cursor-pointer"
                 >
                   <X className="h-5 w-5 text-gray-500" />
                 </button>
@@ -2534,7 +2534,7 @@ const MessagesPage = () => {
                       setShowCreateGroup(false);
                       setNewGroupName("");
                     }}
-                    className="flex-1 rounded-lg border border-gray-200 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                    className="flex-1 rounded-lg border border-gray-200 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
                   >
                     Cancel
                   </button>
@@ -2542,7 +2542,7 @@ const MessagesPage = () => {
                     type="button"
                     onClick={handleCreateGroup}
                     disabled={!newGroupName.trim()}
-                    className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-gray-900 py-2.5 text-sm font-medium text-white hover:bg-black disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                    className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-gray-900 py-2.5 text-sm font-medium text-white hover:bg-black disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer"
                   >
                     <Users className="h-4 w-4" />
                     Create Group
