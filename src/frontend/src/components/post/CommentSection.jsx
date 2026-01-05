@@ -498,9 +498,11 @@ export default function CommentSection({ postId }) {
                         NEW
                       </span>
                     )}
-                    <span className="text-xs text-gray-500 dark:text-gray-400">{comment.time}</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      {comment.time}
+                    </span>
                   </div>
-                  
+
                   {/* Three-dot menu inline with header */}
                   {comment.userId === currentUser.id && (
                     <div className="relative shrink-0">
@@ -570,7 +572,9 @@ export default function CommentSection({ postId }) {
                     </div>
                   </div>
                 ) : (
-                  <p className="mt-1 text-gray-700 dark:text-gray-300">{comment.content}</p>
+                  <p className="mt-1 text-gray-700 dark:text-gray-300">
+                    {comment.content}
+                  </p>
                 )}
               </div>
             </div>
