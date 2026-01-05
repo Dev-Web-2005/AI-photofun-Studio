@@ -799,6 +799,40 @@ export const pollVideoTaskStatus = async (
     error: "Timeout waiting for task completion",
   };
 };
+
+/**
+ * Get user statistics (image count, video count)
+ * @param {string} userId - User ID to get stats for
+ * @returns {Promise<object>} - User stats
+ */
+export const getUserStats = async (userId) => {
+  if (!userId) {
+    userId = getUserId();
+  }
+  if (!userId) {
+    return { success: false, error: "User ID required" };
+  }
+  try {
+    const response = await aiClient.get(`/v1/stats/?user_id=${userId}`);
+    const data = response.data;
+    if (data.code === 1000 && data.result) {
+      return {
+        success: true,
+        result: data.result,
+      };
+    }
+    return {
+      success: false,
+      error: data.message || "Failed to get stats",
+    };
+  } catch (err) {
+    return {
+      success: false,
+      error: err.response?.data?.message || err.message,
+    };
+  }
+};
+
 export default {
   generateImage,
   removeBackground,
@@ -815,4 +849,5 @@ export default {
   generateVideoFromPrompt,
   generateVideoFromImage,
   pollVideoTaskStatus,
+  getUserStats,
 };

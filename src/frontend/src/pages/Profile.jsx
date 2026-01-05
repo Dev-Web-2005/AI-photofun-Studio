@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Calendar,
@@ -19,6 +19,7 @@ import PostList from "../components/post/PostList";
 import { usePosts } from "../hooks/usePosts";
 import { useProfile } from "../hooks/useProfile";
 import { userApi } from "../api/userApi";
+import aiApi from "../api/aiApi";
 import { toast } from "../hooks/use-toast";
 
 const DEFAULT_AVATAR = "https://placehold.co/128x128/111/fff?text=U";
@@ -50,7 +51,7 @@ const PROFILE_DEFAULTS = {
   created: "November 12, 2025",
 };
 
-const profileStats = [{ label: "Images Created", value: "128" }];
+// profileStats will be fetched from Stats API
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -59,6 +60,8 @@ const Profile = () => {
   const [verifyMessage, setVerifyMessage] = useState("");
   const [showEmail, setShowEmail] = useState(false);
   const [showPhone, setShowPhone] = useState(false);
+  const [stats, setStats] = useState({ image_count: 0, video_count: 0 });
+  const [statsLoading, setStatsLoading] = useState(true);
   const {
     profile,
     currentUser,
@@ -78,6 +81,26 @@ const Profile = () => {
   useEffect(() => {
     fetchProfile();
   }, [fetchProfile]);
+
+  // Fetch stats from API
+  const fetchStats = useCallback(async () => {
+    if (!currentUser?.id) return;
+    try {
+      setStatsLoading(true);
+      const response = await aiApi.getUserStats(currentUser.id);
+      if (response?.result) {
+        setStats(response.result);
+      }
+    } catch (error) {
+      console.error("Failed to fetch stats:", error);
+    } finally {
+      setStatsLoading(false);
+    }
+  }, [currentUser?.id]);
+
+  useEffect(() => {
+    fetchStats();
+  }, [fetchStats]);
 
   // Gọi API kiểm tra trạng thái xác minh email
   useEffect(() => {
@@ -131,11 +154,11 @@ const Profile = () => {
       : PROFILE_DEFAULTS.created,
     isPremium: Boolean(
       profile?.isPremium ||
-        profile?.premium ||
-        profile?.premiumOneMonth ||
-        profile?.premiumSixMonths ||
-        currentUser?.premiumOneMonth ||
-        currentUser?.premiumSixMonths
+      profile?.premium ||
+      profile?.premiumOneMonth ||
+      profile?.premiumSixMonths ||
+      currentUser?.premiumOneMonth ||
+      currentUser?.premiumSixMonths
     ),
     premiumOneMonth: Boolean(
       profile?.premiumOneMonth || currentUser?.premiumOneMonth
@@ -179,11 +202,10 @@ const Profile = () => {
         </div>
       )}
       <section
-        className={`bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm relative overflow-hidden ${
-          displayProfile.isPremium
-            ? "border-2 border-transparent bg-gradient-to-r from-yellow-50 via-orange-50 to-pink-50"
-            : ""
-        }`}
+        className={`bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm relative overflow-hidden ${displayProfile.isPremium
+          ? "border-2 border-transparent bg-gradient-to-r from-yellow-50 via-orange-50 to-pink-50"
+          : ""
+          }`}
       >
         {/* Premium Background Decoration */}
         {displayProfile.isPremium && (
@@ -205,18 +227,16 @@ const Profile = () => {
               />
             )}
             <div
-              className={`relative ${
-                displayProfile.isPremium
-                  ? "p-1 bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 rounded-full"
-                  : ""
-              }`}
+              className={`relative ${displayProfile.isPremium
+                ? "p-1 bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 rounded-full"
+                : ""
+                }`}
             >
               <img
                 src={displayProfile.avatarUrl}
                 alt={`${displayProfile.fullName} avatar`}
-                className={`w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg ${
-                  displayProfile.isPremium ? "animate-pulse-glow" : ""
-                }`}
+                className={`w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg ${displayProfile.isPremium ? "animate-pulse-glow" : ""
+                  }`}
               />
             </div>
             {/* Premium Crown Badge */}
@@ -235,11 +255,10 @@ const Profile = () => {
               <div>
                 <div className="flex items-center gap-3 flex-wrap">
                   <h1
-                    className={`text-3xl font-bold ${
-                      displayProfile.isPremium
-                        ? "bg-gradient-to-r from-yellow-500 via-orange-500 to-pink-500 bg-clip-text text-transparent"
-                        : ""
-                    }`}
+                    className={`text-3xl font-bold ${displayProfile.isPremium
+                      ? "bg-gradient-to-r from-yellow-500 via-orange-500 to-pink-500 bg-clip-text text-transparent"
+                      : ""
+                      }`}
                   >
                     {displayProfile.fullName}
                   </h1>
@@ -256,15 +275,23 @@ const Profile = () => {
                 </p>
               </div>
 
-              <div className="grid grid-cols-3 gap-4">
-                {profileStats.map((stat) => (
-                  <div key={stat.label} className="bg-gray-50 rounded-xl p-4">
-                    <p className="text-xs text-gray-500 uppercase font-semibold tracking-wide">
-                      {stat.label}
-                    </p>
-                    <p className="text-2xl font-bold mt-2">{stat.value}</p>
-                  </div>
-                ))}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-gray-50 rounded-xl p-4">
+                  <p className="text-xs text-gray-500 uppercase font-semibold tracking-wide">
+                    Images Created
+                  </p>
+                  <p className="text-2xl font-bold mt-2">
+                    {statsLoading ? "..." : stats.image_count}
+                  </p>
+                </div>
+                <div className="bg-gray-50 rounded-xl p-4">
+                  <p className="text-xs text-gray-500 uppercase font-semibold tracking-wide">
+                    Videos Created
+                  </p>
+                  <p className="text-2xl font-bold mt-2">
+                    {statsLoading ? "..." : stats.video_count}
+                  </p>
+                </div>
               </div>
 
               <div className="flex flex-wrap gap-3">
@@ -306,11 +333,10 @@ const Profile = () => {
                   {/* Verified badge for email - after email value */}
                   {isEmailField && (
                     <span
-                      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${
-                        emailVerified
-                          ? "bg-green-100 text-green-700"
-                          : "bg-red-100 text-red-700"
-                      }`}
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${emailVerified
+                        ? "bg-green-100 text-green-700"
+                        : "bg-red-100 text-red-700"
+                        }`}
                     >
                       {emailVerified ? (
                         <>
@@ -364,11 +390,10 @@ const Profile = () => {
                     </button>
                     {verifyMessage && (
                       <p
-                        className={`text-sm ${
-                          verifyMessage.includes("sent")
-                            ? "text-green-600"
-                            : "text-red-600"
-                        }`}
+                        className={`text-sm ${verifyMessage.includes("sent")
+                          ? "text-green-600"
+                          : "text-red-600"
+                          }`}
                       >
                         {verifyMessage}
                       </p>
