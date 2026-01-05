@@ -1912,7 +1912,9 @@ const MessagesPage = () => {
           className={`${
             !showMobileSidebar ? "flex" : "hidden"
           } md:flex flex-1 flex-col bg-white md:relative ${
-            !showMobileSidebar ? "fixed inset-0 z-50 md:static md:z-auto" : ""
+            !showMobileSidebar
+              ? "fixed inset-0 z-[9999] md:static md:z-auto"
+              : ""
           }`}
         >
           <div className="flex h-14 md:h-16 items-center justify-between border-b border-gray-200 px-3 md:px-6 bg-white relative z-10">
