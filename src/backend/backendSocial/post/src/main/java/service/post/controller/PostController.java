@@ -41,15 +41,17 @@ public class PostController {
   }
 
   @PostMapping("/create-video")
-  HttpResponse<CreatePostResponse> createVideoPost(@RequestPart("caption") String caption,
-                                                    @RequestPart("prompt") String prompt,
-                                                   @RequestPart("videoUrl") String videoUrl) {
-      CreateVideoPostRequest request = CreateVideoPostRequest.builder()
-              .caption(caption)
-              .prompt(prompt)
-              .videoUrl(videoUrl)
-              .build();
-      service.post.DTOs.response.CreatePostResponse createPostResponse = postService.uploadVideo(request);
+  HttpResponse<CreatePostResponse>
+  createVideoPost(@RequestPart("caption") String caption,
+                  @RequestPart("prompt") String prompt,
+                  @RequestPart("videoUrl") String videoUrl) {
+    CreateVideoPostRequest request = CreateVideoPostRequest.builder()
+                                         .caption(caption)
+                                         .prompt(prompt)
+                                         .videoUrl(videoUrl)
+                                         .build();
+    service.post.DTOs.response.CreatePostResponse createPostResponse =
+        postService.uploadVideo(request);
     return HttpResponse.<CreatePostResponse>builder()
         .code(1000)
         .result(createPostResponse)
@@ -73,6 +75,27 @@ public class PostController {
         .code(1000)
         .result(postService.getAllByUserId(page - 1, size))
         .message("User posts retrieved successfully")
+        .build();
+  }
+
+  @GetMapping("/user/{userId}")
+  HttpResponse<PageResponse<GetPostResponse>>
+  getPostsByUserId(@PathVariable String userId,
+                   @RequestParam(defaultValue = "1") int page,
+                   @RequestParam(defaultValue = "10") int size) {
+    return HttpResponse.<PageResponse<GetPostResponse>>builder()
+        .code(1000)
+        .result(postService.getPostsByUserId(userId, page - 1, size))
+        .message("User posts retrieved successfully")
+        .build();
+  }
+
+  @GetMapping("/user/{userId}/count")
+  HttpResponse<Long> getPostCountByUserId(@PathVariable String userId) {
+    return HttpResponse.<Long>builder()
+        .code(1000)
+        .result(postService.getPostCountByUserId(userId))
+        .message("Post count retrieved successfully")
         .build();
   }
 

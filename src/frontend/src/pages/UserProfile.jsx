@@ -31,6 +31,10 @@ const UserProfile = () => {
 
   const [profile, setProfile] = useState(null);
   const [posts, setPosts] = useState([]);
+  const [postCount, setPostCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loadingPosts, setLoadingPosts] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isFollowing, setIsFollowing] = useState(false);
@@ -46,6 +50,15 @@ const UserProfile = () => {
         // Fetch user info
         const userResponse = await userApi.getUserById(userId);
         const userData = userResponse?.data?.result || userResponse?.data;
+
+        // Fetch post count
+        let postsCount = 0;
+        try {
+          const countResponse = await postApi.getPostCountByUserId(userId);
+          postsCount = countResponse?.data?.result || 0;
+        } catch (countError) {
+          console.error("Failed to fetch post count", countError);
+        }
 
         setProfile({
           id: userData?.id || userId,
@@ -65,22 +78,15 @@ const UserProfile = () => {
           premiumSixMonths: Boolean(userData?.premiumSixMonths),
           followersCount: userData?.followersCount || 0,
           followingCount: userData?.followingCount || 0,
-          postsCount: userData?.postsCount || 0,
+          postsCount: postsCount,
         });
 
-        // Fetch user posts
-        try {
-          const postsResponse = await postApi.getPostsByUserId(userId);
-          const postsData =
-            postsResponse?.data?.result?.data ||
-            postsResponse?.data?.result ||
-            postsResponse?.data ||
-            [];
-          setPosts(Array.isArray(postsData) ? postsData : []);
-        } catch (postError) {
-          console.error("Failed to fetch user posts", postError);
-          setPosts([]);
-        }
+        setPostCount(postsCount);
+
+        setPostCount(postsCount);
+
+        // Fetch user posts - first page
+        await fetchUserPosts(1);
       } catch (fetchError) {
         console.error("Failed to fetch user profile", fetchError);
         setError("Unable to load user information");
@@ -91,6 +97,33 @@ const UserProfile = () => {
 
     fetchUserProfile();
   }, [userId]);
+
+  const fetchUserPosts = async (page) => {
+    if (!userId) return;
+    
+    setLoadingPosts(true);
+    try {
+      const postsResponse = await postApi.getPostsByUserId(userId, { page, size: 12 });
+      const result = postsResponse?.data?.result;
+      const postsData = result?.elements || [];
+      
+      setPosts(postsData);
+      setTotalPages(result?.totalPages || 1);
+      setCurrentPage(page);
+    } catch (postError) {
+      console.error("Failed to fetch user posts", postError);
+      setPosts([]);
+    } finally {
+      setLoadingPosts(false);
+    }
+  };
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages && newPage !== currentPage) {
+      fetchUserPosts(newPage);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   const handleFollow = () => {
     setIsFollowing((prev) => !prev);
@@ -319,30 +352,89 @@ const UserProfile = () => {
 
       {/* User Posts */}
       <section className="bg-white border border-gray-200 rounded-2xl p-6">
-        <h2 className="text-lg font-bold mb-4">Posts ({posts.length})</h2>
-        {posts.length === 0 ? (
+        <h2 className="text-lg font-bold mb-4">Posts ({postCount})</h2>
+        {loadingPosts ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="w-8 h-8 border-4 border-gray-200 dark:border-gray-600 border-t-black dark:border-t-white rounded-full animate-spin" />
+          </div>
+        ) : posts.length === 0 ? (
           <div className="py-8 text-center text-sm text-gray-500">
             This user hasn't posted anything yet.
           </div>
         ) : (
-          <PostList
-            posts={posts.map((post) => ({
-              ...post,
-              user: profile.fullName,
-              avatar: profile.avatarUrl,
-            }))}
-            userCache={{
-              [userId]: {
-                name: profile.fullName,
+          <>
+            <PostList
+              posts={posts.map((post) => ({
+                ...post,
+                user: profile.fullName,
                 avatar: profile.avatarUrl,
-                isPremium: profile.isPremium,
-                premiumOneMonth: profile.premiumOneMonth,
-                premiumSixMonths: profile.premiumSixMonths,
-              },
-            }}
-            onLikePost={() => {}}
-            onNavigateAiTools={() => navigate("/ai-tools")}
-          />
+              }))}
+              userCache={{
+                [userId]: {
+                  name: profile.fullName,
+                  avatar: profile.avatarUrl,
+                  isPremium: profile.isPremium,
+                  premiumOneMonth: profile.premiumOneMonth,
+                  premiumSixMonths: profile.premiumSixMonths,
+                },
+              }}
+              onLikePost={() => {}}
+              onNavigateAiTools={() => navigate("/ai-tools")}
+            />
+            
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-2 mt-6 pt-6 border-t">
+                <button
+                  type="button"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 text-sm font-medium rounded-lg border disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                >
+                  Previous
+                </button>
+                
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                    let pageNum;
+                    if (totalPages <= 5) {
+                      pageNum = i + 1;
+                    } else if (currentPage <= 3) {
+                      pageNum = i + 1;
+                    } else if (currentPage >= totalPages - 2) {
+                      pageNum = totalPages - 4 + i;
+                    } else {
+                      pageNum = currentPage - 2 + i;
+                    }
+                    
+                    return (
+                      <button
+                        key={pageNum}
+                        type="button"
+                        onClick={() => handlePageChange(pageNum)}
+                        className={`w-10 h-10 text-sm font-medium rounded-lg ${
+                          currentPage === pageNum
+                            ? 'bg-black text-white'
+                            : 'border hover:bg-gray-50'
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  })}
+                </div>
+                
+                <button
+                  type="button"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2 text-sm font-medium rounded-lg border disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </>
         )}
       </section>
     </div>
