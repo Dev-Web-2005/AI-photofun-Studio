@@ -45,7 +45,8 @@ const Settings = () => {
       hasUppercase: /[A-Z]/.test(newPassword),
       hasLowercase: /[a-z]/.test(newPassword),
       hasNumber: /\d/.test(newPassword),
-      passwordsMatch: newPassword === confirmNewPassword && confirmNewPassword !== "",
+      passwordsMatch:
+        newPassword === confirmNewPassword && confirmNewPassword !== "",
     };
   }, [passwordForm.newPassword, passwordForm.confirmNewPassword]);
 
@@ -53,13 +54,28 @@ const Settings = () => {
   const passwordStrength = useMemo(() => {
     const { newPassword } = passwordForm;
     if (!newPassword) return { level: 0, label: "", color: "" };
-    
-    const validCount = [passwordValidation.minLength, passwordValidation.hasUppercase, passwordValidation.hasLowercase, passwordValidation.hasNumber].filter(Boolean).length;
-    
+
+    const validCount = [
+      passwordValidation.minLength,
+      passwordValidation.hasUppercase,
+      passwordValidation.hasLowercase,
+      passwordValidation.hasNumber,
+    ].filter(Boolean).length;
+
     if (validCount === 0) return { level: 0, label: "", color: "" };
-    if (validCount <= 2) return { level: 1, label: "Weak", color: "bg-red-500 dark:bg-red-400" };
-    if (validCount === 3) return { level: 2, label: "Fair", color: "bg-amber-500 dark:bg-amber-400" };
-    return { level: 3, label: "Strong", color: "bg-emerald-500 dark:bg-emerald-400" };
+    if (validCount <= 2)
+      return { level: 1, label: "Weak", color: "bg-red-500 dark:bg-red-400" };
+    if (validCount === 3)
+      return {
+        level: 2,
+        label: "Fair",
+        color: "bg-amber-500 dark:bg-amber-400",
+      };
+    return {
+      level: 3,
+      label: "Strong",
+      color: "bg-emerald-500 dark:bg-emerald-400",
+    };
   }, [passwordForm.newPassword, passwordValidation]);
 
   const isPasswordValid = useMemo(() => {
@@ -95,7 +111,11 @@ const Settings = () => {
 
       if (response.data?.result) {
         setPasswordSuccess(true);
-        setPasswordForm({ oldPassword: "", newPassword: "", confirmNewPassword: "" });
+        setPasswordForm({
+          oldPassword: "",
+          newPassword: "",
+          confirmNewPassword: "",
+        });
         setTimeout(() => {
           setIsChangePasswordOpen(false);
           setPasswordSuccess(false);
@@ -116,7 +136,11 @@ const Settings = () => {
 
   const closeChangePasswordModal = () => {
     setIsChangePasswordOpen(false);
-    setPasswordForm({ oldPassword: "", newPassword: "", confirmNewPassword: "" });
+    setPasswordForm({
+      oldPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
+    });
     setPasswordError("");
     setPasswordSuccess(false);
     setShowPasswords({ old: false, new: false, confirm: false });
@@ -455,7 +479,9 @@ const Settings = () => {
                       setShowPasswords((prev) => ({ ...prev, old: !prev.old }))
                     }
                     className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all"
-                    aria-label={showPasswords.old ? "Hide password" : "Show password"}
+                    aria-label={
+                      showPasswords.old ? "Hide password" : "Show password"
+                    }
                   >
                     {showPasswords.old ? (
                       <EyeOff className="w-4 h-4" />
@@ -487,7 +513,9 @@ const Settings = () => {
                       setShowPasswords((prev) => ({ ...prev, new: !prev.new }))
                     }
                     className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all"
-                    aria-label={showPasswords.new ? "Hide password" : "Show password"}
+                    aria-label={
+                      showPasswords.new ? "Hide password" : "Show password"
+                    }
                   >
                     {showPasswords.new ? (
                       <EyeOff className="w-4 h-4" />
@@ -504,15 +532,21 @@ const Settings = () => {
                       <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
                         <div
                           className={`h-full transition-all duration-500 ${passwordStrength.color}`}
-                          style={{ width: `${(passwordStrength.level / 3) * 100}%` }}
+                          style={{
+                            width: `${(passwordStrength.level / 3) * 100}%`,
+                          }}
                         />
                       </div>
                       {passwordStrength.label && (
-                        <span className={`text-xs font-semibold min-w-[60px] text-right ${
-                          passwordStrength.level === 1 ? "text-red-600 dark:text-red-400" :
-                          passwordStrength.level === 2 ? "text-amber-600 dark:text-amber-400" :
-                          "text-emerald-600 dark:text-emerald-400"
-                        }`}>
+                        <span
+                          className={`text-xs font-semibold min-w-[60px] text-right ${
+                            passwordStrength.level === 1
+                              ? "text-red-600 dark:text-red-400"
+                              : passwordStrength.level === 2
+                              ? "text-amber-600 dark:text-amber-400"
+                              : "text-emerald-600 dark:text-emerald-400"
+                          }`}
+                        >
                           {passwordStrength.label}
                         </span>
                       )}
@@ -529,27 +563,42 @@ const Settings = () => {
                     <div className="space-y-2">
                       {[
                         { key: "minLength", label: "At least 8 characters" },
-                        { key: "hasLowercase", label: "One lowercase letter (a-z)" },
-                        { key: "hasUppercase", label: "One uppercase letter (A-Z)" },
+                        {
+                          key: "hasLowercase",
+                          label: "One lowercase letter (a-z)",
+                        },
+                        {
+                          key: "hasUppercase",
+                          label: "One uppercase letter (A-Z)",
+                        },
                         { key: "hasNumber", label: "One number (0-9)" },
                       ].map((requirement) => (
-                        <div key={requirement.key} className="flex items-center gap-2">
-                          <div className={`shrink-0 rounded-full p-0.5 transition-all duration-300 ${
-                            passwordValidation[requirement.key]
-                              ? "bg-emerald-500 scale-100"
-                              : "bg-gray-300 dark:bg-gray-600 scale-90"
-                          }`}>
-                            <CheckCircle2 className={`h-3 w-3 transition-all duration-300 ${
+                        <div
+                          key={requirement.key}
+                          className="flex items-center gap-2"
+                        >
+                          <div
+                            className={`shrink-0 rounded-full p-0.5 transition-all duration-300 ${
                               passwordValidation[requirement.key]
-                                ? "text-white opacity-100"
-                                : "text-transparent opacity-0"
-                            }`} />
+                                ? "bg-emerald-500 scale-100"
+                                : "bg-gray-300 dark:bg-gray-600 scale-90"
+                            }`}
+                          >
+                            <CheckCircle2
+                              className={`h-3 w-3 transition-all duration-300 ${
+                                passwordValidation[requirement.key]
+                                  ? "text-white opacity-100"
+                                  : "text-transparent opacity-0"
+                              }`}
+                            />
                           </div>
-                          <span className={`text-xs transition-colors duration-300 ${
-                            passwordValidation[requirement.key]
-                              ? "text-emerald-700 dark:text-emerald-400 font-medium"
-                              : "text-gray-500 dark:text-gray-400"
-                          }`}>
+                          <span
+                            className={`text-xs transition-colors duration-300 ${
+                              passwordValidation[requirement.key]
+                                ? "text-emerald-700 dark:text-emerald-400 font-medium"
+                                : "text-gray-500 dark:text-gray-400"
+                            }`}
+                          >
                             {requirement.label}
                           </span>
                         </div>
@@ -589,7 +638,9 @@ const Settings = () => {
                       }))
                     }
                     className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all"
-                    aria-label={showPasswords.confirm ? "Hide password" : "Show password"}
+                    aria-label={
+                      showPasswords.confirm ? "Hide password" : "Show password"
+                    }
                   >
                     {showPasswords.confirm ? (
                       <EyeOff className="w-4 h-4" />
@@ -603,12 +654,16 @@ const Settings = () => {
                     {passwordValidation.passwordsMatch ? (
                       <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
                         <CheckCircle2 className="w-4 h-4" />
-                        <span className="text-xs font-medium">Passwords match</span>
+                        <span className="text-xs font-medium">
+                          Passwords match
+                        </span>
                       </div>
                     ) : (
                       <div className="flex items-center gap-2 text-red-600 dark:text-red-400">
                         <AlertCircle className="w-4 h-4" />
-                        <span className="text-xs font-medium">Passwords don't match</span>
+                        <span className="text-xs font-medium">
+                          Passwords don't match
+                        </span>
                       </div>
                     )}
                   </div>
