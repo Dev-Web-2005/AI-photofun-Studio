@@ -1868,7 +1868,11 @@ const MessagesPage = () => {
                           handleRequestJoinGroup(group.groupId);
                         }}
                         disabled={loadingAction}
-                        className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gray-900 text-white text-xs font-medium hover:bg-black disabled:opacity-50 transition-all"
+                        className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium disabled:opacity-50 transition-all ${
+                          activeChat?.id === group.id
+                            ? "bg-white text-gray-900 hover:bg-gray-100"
+                            : "bg-gray-900 text-white hover:bg-black"
+                        }`}
                       >
                         <UserPlus className="h-3 w-3" />
                         Join
