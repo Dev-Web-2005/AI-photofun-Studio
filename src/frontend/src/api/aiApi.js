@@ -833,6 +833,46 @@ export const getUserStats = async (userId) => {
   }
 };
 
+/**
+ * Get user's image gallery
+ * @param {string} userId - User ID
+ * @returns {Promise<object>} - List of images
+ */
+export const getImageGallery = async (userId) => {
+  if (!userId) userId = getUserId();
+  if (!userId) return { success: false, error: "User ID required" };
+  try {
+    const response = await aiClient.get(`/v1/gallery/?user_id=${userId}`);
+    const data = response.data;
+    if (data.code === 1000) {
+      return { success: true, result: data.result };
+    }
+    return { success: false, error: data.message };
+  } catch (err) {
+    return { success: false, error: err.response?.data?.message || err.message };
+  }
+};
+
+/**
+ * Get user's video gallery
+ * @param {string} userId - User ID
+ * @returns {Promise<object>} - List of videos
+ */
+export const getVideoGallery = async (userId) => {
+  if (!userId) userId = getUserId();
+  if (!userId) return { success: false, error: "User ID required" };
+  try {
+    const response = await aiClient.get(`/v1/video-gallery/?user_id=${userId}`);
+    const data = response.data;
+    if (data.code === 1000) {
+      return { success: true, result: data.result };
+    }
+    return { success: false, error: data.message };
+  } catch (err) {
+    return { success: false, error: err.response?.data?.message || err.message };
+  }
+};
+
 export default {
   generateImage,
   removeBackground,
@@ -850,4 +890,6 @@ export default {
   generateVideoFromImage,
   pollVideoTaskStatus,
   getUserStats,
+  getImageGallery,
+  getVideoGallery,
 };

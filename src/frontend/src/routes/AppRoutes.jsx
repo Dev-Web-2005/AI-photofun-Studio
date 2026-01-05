@@ -35,6 +35,7 @@ import { useAuth } from "../hooks/useAuth";
 import VerifyEmailPage from "../pages/VerifyEmailPage";
 import GoogleLoadingPage from "../pages/GoogleLoadingPage";
 import FailurePage from "../pages/FailurePage";
+import Gallery from "../pages/Gallery";
 
 const RequireAuth = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -125,6 +126,7 @@ function AppRoutes() {
         <Route path="/payment-fail" element={<PaymentFail />} />
         <Route path="/pricing" element={<PricingPage />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/gallery" element={<Gallery />} />
       </Route>
 
       <Route
