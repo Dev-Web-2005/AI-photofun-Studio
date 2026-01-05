@@ -107,6 +107,22 @@ export const AuthProvider = ({ children }) => {
     initializeAuth();
   }, [hydrateUser]);
 
+  // Listen for auth-logout event from axiosClient when token refresh fails
+  useEffect(() => {
+    const handleAuthLogout = () => {
+      console.log("Auth logout event received - clearing session");
+      localStorage.removeItem("user");
+      setUser(null);
+      setIsAuthenticated(false);
+      setError("");
+    };
+
+    window.addEventListener("auth-logout", handleAuthLogout);
+    return () => {
+      window.removeEventListener("auth-logout", handleAuthLogout);
+    };
+  }, []);
+
   const login = useCallback(
     async (username, password) => {
       // Don't use global loading state here as it causes full-screen LoadingScreen
