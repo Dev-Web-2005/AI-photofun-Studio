@@ -154,12 +154,13 @@ export const pollTaskStatus = async (
   maxAttempts = 60,
   interval = 3000
 ) => {
-  const sessionId = getSessionId();
+  // Use actual user ID for gallery saving, fall back to session ID
+  const userId = getUserId() || getSessionId();
 
   for (let i = 1; i <= maxAttempts; i++) {
     try {
       const response = await aiClient.get(
-        `/${endpoint}/status/${taskId}/?user_id=${sessionId}`
+        `/${endpoint}/status/${taskId}/?user_id=${userId}`
       );
       const data = response.data;
       const status = data.result?.status;
