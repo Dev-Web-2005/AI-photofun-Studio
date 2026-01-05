@@ -282,6 +282,35 @@ class ImageGalleryService:
             if self.connection:
                 self.connection.rollback()
             raise ImageGalleryError(f"Failed to delete image: {str(e)}")
+
+    def count_user_images(self, user_id: str) -> int:
+        """
+        Count total images for a user (non-deleted only)
+        
+        Args:
+            user_id: User identifier
+            
+        Returns:
+            Number of images
+        """
+        try:
+            conn = self._get_connection()
+            cursor = conn.cursor()
+            
+            query = """
+                SELECT COUNT(*) FROM image_gallery
+                WHERE user_id = %s AND deleted_at IS NULL
+            """
+            
+            cursor.execute(query, (user_id,))
+            result = cursor.fetchone()
+            cursor.close()
+            
+            return result[0] if result else 0
+        
+        except psycopg2.Error as e:
+            logger.error(f"Database error: {str(e)}")
+            raise ImageGalleryError(f"Failed to count images: {str(e)}")
     
     def close(self):
         """Close database connection"""

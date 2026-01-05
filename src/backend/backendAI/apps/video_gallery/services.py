@@ -299,6 +299,24 @@ class VideoGalleryService:
         finally:
             conn.close()
 
+    def count_user_videos(self, user_id: str) -> int:
+        """Count total videos for a user (non-deleted only)"""
+        conn = self._get_connection()
+        try:
+            with conn.cursor() as cursor:
+                query = """
+                    SELECT COUNT(*) FROM video_gallery
+                    WHERE user_id = %s AND deleted_at IS NULL
+                """
+                cursor.execute(query, (user_id,))
+                result = cursor.fetchone()
+            return result[0] if result else 0
+        except psycopg2.Error as exc:
+            logger.error("Database error: %s", str(exc))
+            raise VideoGalleryError(f"Failed to count videos: {str(exc)}")
+        finally:
+            conn.close()
+
     def close(self):
         return
 
