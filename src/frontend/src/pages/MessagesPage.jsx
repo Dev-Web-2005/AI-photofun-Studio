@@ -1618,10 +1618,10 @@ const MessagesPage = () => {
                 conversations.map((chat) => (
                   <div
                     key={chat.id}
-                    className={`group/conv mx-2 mb-1 flex items-center gap-3 rounded-lg p-3 text-left transition-all ${
+                    className={`group/conv mx-2 mb-1 flex items-center gap-3 rounded-lg p-3 text-left transition-all duration-200 ${
                       activeChat?.id === chat.id
                         ? "bg-gray-900 shadow-sm"
-                        : "hover:bg-white"
+                        : "hover:bg-white hover:shadow-lg hover:scale-[1.02]"
                     }`}
                   >
                     <button
@@ -1633,7 +1633,7 @@ const MessagesPage = () => {
                         <img
                           src={chat.avatar}
                           alt={chat.name}
-                          className="h-11 w-11 rounded-full object-cover ring-2 ring-transparent group-hover/conv:ring-gray-200 transition-all"
+                          className="h-11 w-11 rounded-full object-cover ring-2 ring-transparent group-hover/conv:ring-gray-300 transition-all duration-200"
                         />
                         {chat.isOnline && (
                           <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-white bg-emerald-500"></span>
@@ -1743,10 +1743,10 @@ const MessagesPage = () => {
                       setActiveChat(group);
                       setShowGroupInfo(false);
                     }}
-                    className={`mx-2 mb-1 flex items-center gap-3 rounded-lg p-3 text-left transition-all w-[calc(100%-1rem)] ${
+                    className={`mx-2 mb-1 flex items-center gap-3 rounded-lg p-3 text-left transition-all duration-200 w-[calc(100%-1rem)] ${
                       activeChat?.id === group.id
                         ? "bg-gray-900 shadow-sm"
-                        : "hover:bg-white"
+                        : "hover:bg-white hover:shadow-lg hover:scale-[1.02]"
                     }`}
                   >
                     <div className="relative">
@@ -1817,10 +1817,10 @@ const MessagesPage = () => {
                     setActiveChat(group);
                     setShowGroupInfo(false);
                   }}
-                  className={`mx-2 mb-1 flex items-center gap-3 rounded-lg p-3 text-left transition-all w-[calc(100%-1rem)] ${
+                  className={`mx-2 mb-1 flex items-center gap-3 rounded-lg p-3 text-left transition-all duration-200 w-[calc(100%-1rem)] ${
                     activeChat?.id === group.id
                       ? "bg-gray-900 shadow-sm"
-                      : "hover:bg-white"
+                      : "hover:bg-white hover:shadow-lg hover:scale-[1.02]"
                   }`}
                 >
                   <div className="relative">
