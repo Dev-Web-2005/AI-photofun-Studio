@@ -107,7 +107,31 @@ const UserProfile = () => {
       const result = postsResponse?.data?.result;
       const postsData = result?.elements || [];
       
-      setPosts(postsData);
+      // Normalize posts data to match expected format
+      const normalizedPosts = postsData.map((post, index) => {
+        const DEFAULT_PROMPT = "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e";
+        const promptValue = typeof post.prompt === "string" ? post.prompt.trim() : "";
+        const isDefaultPrompt = promptValue === DEFAULT_PROMPT;
+        
+        return {
+          id: post.postId || post.id || `post-${index}`,
+          backendId: post.postId || post.id,
+          user: profile?.fullName || "User",
+          avatar: profile?.avatarUrl || "https://placehold.co/40x40/111/fff?text=U",
+          time: post.createdAt ? new Date(post.createdAt).toLocaleString() : "Just now",
+          content: post.caption || post.description || "",
+          image: post.imageUrl || null,
+          video: post.videoUrl || null,
+          likes: post.likes || 0,
+          comments: post.comments || 0,
+          liked: false,
+          hasPrompt: Boolean(promptValue) && !isDefaultPrompt,
+          prompt: isDefaultPrompt ? "" : promptValue,
+          userId: userId,
+        };
+      });
+      
+      setPosts(normalizedPosts);
       setTotalPages(result?.totalPages || 1);
       setCurrentPage(page);
     } catch (postError) {
@@ -364,11 +388,7 @@ const UserProfile = () => {
         ) : (
           <>
             <PostList
-              posts={posts.map((post) => ({
-                ...post,
-                user: profile.fullName,
-                avatar: profile.avatarUrl,
-              }))}
+              posts={posts}
               userCache={{
                 [userId]: {
                   name: profile.fullName,
