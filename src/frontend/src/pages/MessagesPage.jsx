@@ -1540,10 +1540,10 @@ const MessagesPage = () => {
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-6rem)] md:min-h-[calc(100vh-6rem)] min-h-screen">
-      <div className="flex h-screen md:h-[calc(100vh-8rem)] w-full bg-white overflow-hidden md:rounded-2xl md:border border-gray-200 md:shadow-lg">
+      <div className="flex h-screen md:h-[calc(100vh-8rem)] w-full bg-white overflow-hidden md:rounded-2xl md:border border-gray-200 md:shadow-lg relative">
         {/* Offline Warning Banner */}
         {!socketConnected && (
-          <div className="absolute top-0 left-0 right-0 bg-gray-900 text-white px-4 py-2 text-center text-xs md:text-sm font-medium z-10 border-b border-gray-700">
+          <div className="absolute top-0 left-0 right-0 bg-gray-900 text-white px-4 py-2 text-center text-xs md:text-sm font-medium z-[60] border-b border-gray-700">
             ⚠ Chat server offline - You can only view old messages, cannot send
             new ones
           </div>
@@ -1907,19 +1907,22 @@ const MessagesPage = () => {
           </div>
         </div>
 
-        {/* Chat Area - Hidden on mobile when sidebar is active, always visible on desktop */}
+        {/* Chat Area - Full screen on mobile when chat is active, prevents hamburger overlap */}
         <div
           className={`${
             !showMobileSidebar ? "flex" : "hidden"
-          } md:flex flex-1 flex-col bg-white`}
+          } md:flex flex-1 flex-col bg-white md:relative ${
+            !showMobileSidebar ? "fixed inset-0 z-50 md:static md:z-auto" : ""
+          }`}
         >
-          <div className="flex h-14 md:h-16 items-center justify-between border-b border-gray-200 px-3 md:px-6 bg-white">
+          <div className="flex h-14 md:h-16 items-center justify-between border-b border-gray-200 px-3 md:px-6 bg-white relative z-10">
             <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
-              {/* Mobile back button */}
+              {/* Mobile back button - prominent and touch-optimized */}
               <button
                 type="button"
                 onClick={handleMobileBack}
-                className="md:hidden p-2 -ml-2 rounded-lg hover:bg-gray-100 cursor-pointer"
+                className="md:hidden p-2.5 -ml-2 rounded-lg hover:bg-gray-100 active:bg-gray-200 cursor-pointer transition-colors"
+                aria-label="Back to conversations"
               >
                 <ArrowLeft className="h-5 w-5 text-gray-700" />
               </button>
