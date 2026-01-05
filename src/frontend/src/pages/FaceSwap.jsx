@@ -91,9 +91,10 @@ const FaceSwap = () => {
   };
 
   const dropClass = (type) =>
-    `border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-colors ${dragState[type]
-      ? "border-blue-300 bg-blue-50"
-      : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+    `border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-colors ${
+      dragState[type]
+        ? "border-blue-300 bg-blue-50"
+        : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
     }`;
 
   return (
@@ -109,7 +110,6 @@ const FaceSwap = () => {
         <h1 className="text-lg md:text-xl font-bold flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-purple-500" /> Face Swap
         </h1>
-
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -237,27 +237,29 @@ const FaceSwap = () => {
             <button
               type="button"
               onClick={toggleFaceCorrection}
-              className={`relative inline-flex items-center h-7 w-12 rounded-full transition-colors ${faceCorrection ? "bg-emerald-500" : "bg-gray-300"
-                }`}
+              className={`relative inline-flex items-center h-7 w-12 rounded-full transition-colors ${
+                faceCorrection ? "bg-emerald-500" : "bg-gray-300"
+              }`}
             >
               <span
-                className={`inline-block h-5 w-5 bg-white rounded-full transform transition-transform ${faceCorrection ? "translate-x-5" : "translate-x-1"
-                  }`}
+                className={`inline-block h-5 w-5 bg-white rounded-full transform transition-transform ${
+                  faceCorrection ? "translate-x-5" : "translate-x-1"
+                }`}
               />
             </button>
           </div>
         </section>
 
-        <section className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm flex flex-col">
-          <h2 className="text-lg font-bold mb-4">Result</h2>
+        <section className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-sm flex flex-col">
+          <h2 className="text-lg font-bold mb-4 dark:text-gray-200">Result</h2>
           {processing ? (
-            <div className="flex-1 flex items-center justify-center">
+            <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900 rounded-xl">
               <div className="text-center">
-                <div className="w-16 h-16 border-4 border-gray-200 border-t-black rounded-full animate-spin mx-auto mb-4" />
-                <p className="text-gray-700 font-semibold">Swapping faces...</p>
-                <p className="text-sm text-gray-500">
-                  Please wait a moment
+                <div className="w-16 h-16 border-4 border-gray-200 dark:border-gray-600 border-t-black dark:border-t-white rounded-full animate-spin mx-auto mb-4" />
+                <p className="text-gray-700 dark:text-gray-200 font-semibold">
+                  Swapping faces...
                 </p>
+                <p className="text-sm text-gray-500">Please wait a moment</p>
               </div>
             </div>
           ) : resultData ? (

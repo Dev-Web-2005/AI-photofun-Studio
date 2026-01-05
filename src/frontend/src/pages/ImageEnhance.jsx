@@ -102,8 +102,14 @@ const ImageEnhance = () => {
 
       let apiImageUrl;
       try {
-        const uploadResult = await communicationApi.uploadChatImage(uploadedFile);
-        apiImageUrl = uploadResult?.result?.image || uploadResult?.result?.url || uploadResult?.url || uploadResult?.image;
+        const uploadResult = await communicationApi.uploadChatImage(
+          uploadedFile
+        );
+        apiImageUrl =
+          uploadResult?.result?.image ||
+          uploadResult?.result?.url ||
+          uploadResult?.url ||
+          uploadResult?.image;
 
         if (!apiImageUrl) {
           throw new Error("No URL received from server");
@@ -153,12 +159,14 @@ const ImageEnhance = () => {
       }
 
       // Step 4: Display result
-      const enhancedImageUrl = pollResult.imageUrl || pollResult.data?.uploaded_urls?.[0];
+      const enhancedImageUrl =
+        pollResult.imageUrl || pollResult.data?.uploaded_urls?.[0];
 
       const stats = {
         time: "Processing complete",
         size: upscale === "4x" ? "4x Enhanced" : "2x Enhanced",
-        quality: faceCorrection || noiseReduction ? "+45% Quality" : "+40% Quality",
+        quality:
+          faceCorrection || noiseReduction ? "+45% Quality" : "+40% Quality",
       };
 
       setResult({
@@ -166,7 +174,6 @@ const ImageEnhance = () => {
         after: enhancedImageUrl || uploadedImage,
         stats,
       });
-
     } catch (err) {
       console.error("Enhance error:", err);
       toast.error(`Error: ${err.message}. Please try again.`);
@@ -246,10 +253,11 @@ const ImageEnhance = () => {
           <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
             <h2 className="text-lg font-bold mb-4">Upload Original Image</h2>
             <div
-              className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-colors ${dragOver
-                ? "border-blue-300 bg-blue-50"
-                : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
-                }`}
+              className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-colors ${
+                dragOver
+                  ? "border-blue-300 bg-blue-50"
+                  : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+              }`}
               onDragOver={(event) => {
                 event.preventDefault();
                 setDragOver(true);
@@ -309,16 +317,18 @@ const ImageEnhance = () => {
                   key={factor}
                   type="button"
                   onClick={() => toggleUpscale(factor)}
-                  className={`w-full text-left p-4 border-2 rounded-2xl flex items-center gap-3 transition-colors ${upscale === factor
-                    ? "border-black bg-gray-50"
-                    : "border-gray-200 hover:border-gray-300"
-                    }`}
+                  className={`w-full text-left p-4 border-2 rounded-2xl flex items-center gap-3 transition-colors ${
+                    upscale === factor
+                      ? "border-black bg-gray-50"
+                      : "border-gray-200 hover:border-gray-300"
+                  }`}
                 >
                   <span
-                    className={`w-5 h-5 rounded-full border-2 ${upscale === factor
-                      ? "border-black bg-black"
-                      : "border-gray-400"
-                      }`}
+                    className={`w-5 h-5 rounded-full border-2 ${
+                      upscale === factor
+                        ? "border-black bg-black"
+                        : "border-gray-400"
+                    }`}
                   />
                   <span className="font-semibold">{factor} Upscale</span>
                 </button>
@@ -353,12 +363,14 @@ const ImageEnhance = () => {
                 <button
                   type="button"
                   onClick={option.toggle}
-                  className={`relative inline-flex items-center h-7 w-12 rounded-full transition-colors ${option.value ? "bg-emerald-500" : "bg-gray-300"
-                    }`}
+                  className={`relative inline-flex items-center h-7 w-12 rounded-full transition-colors ${
+                    option.value ? "bg-emerald-500" : "bg-gray-300"
+                  }`}
                 >
                   <span
-                    className={`inline-block h-5 w-5 bg-white rounded-full transform transition-transform ${option.value ? "translate-x-5" : "translate-x-1"
-                      }`}
+                    className={`inline-block h-5 w-5 bg-white rounded-full transform transition-transform ${
+                      option.value ? "translate-x-5" : "translate-x-1"
+                    }`}
                   />
                 </button>
               </div>
@@ -375,13 +387,17 @@ const ImageEnhance = () => {
         </section>
 
         <section className="space-y-6">
-          <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-            <h2 className="text-lg font-bold mb-4">Enhanced Result</h2>
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-sm">
+            <h2 className="text-lg font-bold mb-4 dark:text-gray-200">
+              Enhanced Result
+            </h2>
             {processing && (
-              <div className="aspect-square bg-gray-50 rounded-2xl flex items-center justify-center">
+              <div className="aspect-square bg-gray-50 dark:bg-gray-900 rounded-2xl flex items-center justify-center">
                 <div className="text-center">
-                  <div className="w-16 h-16 border-4 border-gray-200 border-t-black rounded-full animate-spin mx-auto mb-4" />
-                  <p className="text-gray-700 font-semibold">Processing...</p>
+                  <div className="w-16 h-16 border-4 border-gray-200 dark:border-gray-600 border-t-black dark:border-t-white rounded-full animate-spin mx-auto mb-4" />
+                  <p className="text-gray-700 dark:text-gray-200 font-semibold">
+                    Processing...
+                  </p>
                   <p className="text-sm text-gray-500">
                     {processingStatus || "Please wait..."}
                   </p>
@@ -530,7 +546,9 @@ const ImageEnhance = () => {
           autoOpen={true}
           hideComposer={true}
           initialImageUrl={result?.after}
-          initialPrompt={`✨ Enhanced with AI Image Enhance\n\nUpscale: ${upscale}${faceCorrection ? "\nFace Correction: On" : ""}${noiseReduction ? "\nNoise Reduction: On" : ""}`}
+          initialPrompt={`✨ Enhanced with AI Image Enhance\n\nUpscale: ${upscale}${
+            faceCorrection ? "\nFace Correction: On" : ""
+          }${noiseReduction ? "\nNoise Reduction: On" : ""}`}
           onClose={() => setShowShareModal(false)}
         />
       )}
