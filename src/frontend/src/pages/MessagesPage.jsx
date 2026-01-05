@@ -1618,10 +1618,10 @@ const MessagesPage = () => {
                 conversations.map((chat) => (
                   <div
                     key={chat.id}
-                    className={`group/conv mx-2 mb-2 flex items-center gap-3 rounded-xl p-3 text-left transition-colors ${
+                    className={`group/conv mx-2 mb-1 flex items-center gap-3 rounded-lg p-3 text-left transition-all ${
                       activeChat?.id === chat.id
-                        ? "bg-blue-50"
-                        : "hover:bg-gray-100"
+                        ? "bg-gray-900 shadow-sm"
+                        : "hover:bg-white"
                     }`}
                   >
                     <button
@@ -1633,24 +1633,30 @@ const MessagesPage = () => {
                         <img
                           src={chat.avatar}
                           alt={chat.name}
-                          className="h-12 w-12 rounded-full object-cover"
+                          className="h-11 w-11 rounded-full object-cover ring-2 ring-transparent group-hover/conv:ring-gray-200 transition-all"
                         />
                         {chat.isOnline && (
-                          <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-green-500"></span>
+                          <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-white bg-emerald-500"></span>
                         )}
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="flex items-baseline justify-between">
                           <h3
-                            className={`truncate text-sm font-semibold ${
+                            className={`truncate text-sm font-medium ${
                               activeChat?.id === chat.id
-                                ? "text-blue-700"
+                                ? "text-white"
                                 : "text-gray-900"
                             }`}
                           >
                             {chat.name}
                           </h3>
-                          <span className="text-xs text-gray-400">
+                          <span
+                            className={`text-xs ${
+                              activeChat?.id === chat.id
+                                ? "text-gray-400"
+                                : "text-gray-500"
+                            }`}
+                          >
                             {chat.time}
                           </span>
                         </div>
@@ -1658,14 +1664,18 @@ const MessagesPage = () => {
                           <p
                             className={`max-w-[120px] truncate text-xs ${
                               chat.unread
-                                ? "font-bold text-gray-900"
+                                ? activeChat?.id === chat.id
+                                  ? "font-medium text-gray-300"
+                                  : "font-medium text-gray-700"
+                                : activeChat?.id === chat.id
+                                ? "text-gray-400"
                                 : "text-gray-500"
                             }`}
                           >
                             {chat.lastMessage}
                           </p>
                           {chat.unread > 0 && (
-                            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white">
+                            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-[10px] font-semibold text-white">
                               {chat.unread}
                             </span>
                           )}
@@ -1695,25 +1705,34 @@ const MessagesPage = () => {
             ) : activeTab === "groups" ? (
               // My Groups Tab (joined groups)
               groups.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-gray-500">
-                  <Users className="h-12 w-12 mb-3 text-gray-300" />
-                  <p className="text-sm">Haven't joined any groups</p>
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab("explore")}
-                    className="mt-3 text-sm text-purple-600 hover:underline"
-                  >
-                    🔍 Explore Groups
-                  </button>
-                  {isPremium && (
+                <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+                  <div className="p-4 bg-gray-100 rounded-2xl mb-4">
+                    <Users className="h-10 w-10 text-gray-400" />
+                  </div>
+                  <p className="text-sm font-medium text-gray-900 mb-1">
+                    No groups yet
+                  </p>
+                  <p className="text-xs text-gray-500 mb-4">
+                    Join or create groups to connect
+                  </p>
+                  <div className="flex flex-col gap-2 w-full max-w-[200px]">
                     <button
                       type="button"
-                      onClick={() => setShowCreateGroup(true)}
-                      className="mt-2 text-sm text-blue-600 hover:underline"
+                      onClick={() => setActiveTab("explore")}
+                      className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-all"
                     >
-                      Or create a new group
+                      Explore Groups
                     </button>
-                  )}
+                    {isPremium && (
+                      <button
+                        type="button"
+                        onClick={() => setShowCreateGroup(true)}
+                        className="px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-black transition-all"
+                      >
+                        Create Group
+                      </button>
+                    )}
+                  </div>
                 </div>
               ) : (
                 groups.map((group) => (
@@ -1724,38 +1743,56 @@ const MessagesPage = () => {
                       setActiveChat(group);
                       setShowGroupInfo(false);
                     }}
-                    className={`mx-2 mb-2 flex items-center gap-3 rounded-xl p-3 text-left transition-colors w-[calc(100%-1rem)] ${
+                    className={`mx-2 mb-1 flex items-center gap-3 rounded-lg p-3 text-left transition-all w-[calc(100%-1rem)] ${
                       activeChat?.id === group.id
-                        ? "bg-blue-50"
-                        : "hover:bg-gray-100"
+                        ? "bg-gray-900 shadow-sm"
+                        : "hover:bg-white"
                     }`}
                   >
                     <div className="relative">
                       <img
                         src={group.avatar}
                         alt={group.name}
-                        className="h-12 w-12 rounded-full object-cover"
+                        className="h-11 w-11 rounded-full object-cover ring-2 ring-transparent hover:ring-gray-200 transition-all"
                       />
-                      <span className="absolute bottom-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600 text-white border-2 border-white">
+                      <span
+                        className={`absolute bottom-0 right-0 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white ${
+                          activeChat?.id === group.id
+                            ? "bg-white text-gray-900"
+                            : "bg-gray-900 text-white"
+                        }`}
+                      >
                         <Users className="h-2.5 w-2.5" />
                       </span>
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
                         <h3
-                          className={`truncate text-sm font-semibold ${
+                          className={`truncate text-sm font-medium ${
                             activeChat?.id === group.id
-                              ? "text-blue-700"
+                              ? "text-white"
                               : "text-gray-900"
                           }`}
                         >
                           {group.name}
                         </h3>
                         {group.isAdmin && (
-                          <Crown className="h-3.5 w-3.5 text-yellow-500" />
+                          <Crown
+                            className={`h-3.5 w-3.5 ${
+                              activeChat?.id === group.id
+                                ? "text-amber-400"
+                                : "text-amber-500"
+                            }`}
+                          />
                         )}
                       </div>
-                      <p className="text-xs text-gray-500 mt-0.5">
+                      <p
+                        className={`text-xs mt-0.5 ${
+                          activeChat?.id === group.id
+                            ? "text-gray-400"
+                            : "text-gray-500"
+                        }`}
+                      >
                         {group.memberCount} members
                       </p>
                     </div>
@@ -1780,28 +1817,34 @@ const MessagesPage = () => {
                     setActiveChat(group);
                     setShowGroupInfo(false);
                   }}
-                  className={`mx-2 mb-2 flex items-center gap-3 rounded-xl p-3 text-left transition-colors w-[calc(100%-1rem)] ${
+                  className={`mx-2 mb-1 flex items-center gap-3 rounded-lg p-3 text-left transition-all w-[calc(100%-1rem)] ${
                     activeChat?.id === group.id
-                      ? "bg-purple-50"
-                      : "hover:bg-gray-100"
+                      ? "bg-gray-900 shadow-sm"
+                      : "hover:bg-white"
                   }`}
                 >
                   <div className="relative">
                     <img
                       src={group.avatar}
                       alt={group.name}
-                      className="h-12 w-12 rounded-full object-cover"
+                      className="h-11 w-11 rounded-full object-cover ring-2 ring-transparent hover:ring-gray-200 transition-all"
                     />
-                    <span className="absolute bottom-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-purple-500 text-white border-2 border-white">
+                    <span
+                      className={`absolute bottom-0 right-0 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white ${
+                        activeChat?.id === group.id
+                          ? "bg-white text-gray-900"
+                          : "bg-gray-900 text-white"
+                      }`}
+                    >
                       <Users className="h-2.5 w-2.5" />
                     </span>
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
                       <h3
-                        className={`truncate text-sm font-semibold ${
+                        className={`truncate text-sm font-medium ${
                           activeChat?.id === group.id
-                            ? "text-purple-700"
+                            ? "text-white"
                             : "text-gray-900"
                         }`}
                       >
@@ -1809,7 +1852,13 @@ const MessagesPage = () => {
                       </h3>
                     </div>
                     <div className="mt-0.5 flex items-center justify-between">
-                      <p className="text-xs text-gray-500">
+                      <p
+                        className={`text-xs ${
+                          activeChat?.id === group.id
+                            ? "text-gray-400"
+                            : "text-gray-500"
+                        }`}
+                      >
                         {group.memberCount} members
                       </p>
                       <button
@@ -1819,7 +1868,7 @@ const MessagesPage = () => {
                           handleRequestJoinGroup(group.groupId);
                         }}
                         disabled={loadingAction}
-                        className="flex items-center gap-1 px-2 py-1 rounded-full bg-purple-600 text-white text-xs font-medium hover:bg-purple-700 disabled:opacity-50"
+                        className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gray-900 text-white text-xs font-medium hover:bg-black disabled:opacity-50 transition-all"
                       >
                         <UserPlus className="h-3 w-3" />
                         Join
@@ -2228,7 +2277,7 @@ const MessagesPage = () => {
                             value={editGroupName}
                             onChange={(e) => setEditGroupName(e.target.value)}
                             placeholder="Group name"
-                            className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                            className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 transition-all"
                           />
                           <textarea
                             value={editGroupDescription}
@@ -2237,14 +2286,14 @@ const MessagesPage = () => {
                             }
                             placeholder="Group description (optional)"
                             rows={2}
-                            className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 resize-none"
+                            className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 resize-none transition-all"
                           />
                           <div className="flex gap-2">
                             <button
                               type="button"
                               onClick={handleUpdateGroup}
                               disabled={loadingAction || !editGroupName.trim()}
-                              className="flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
+                              className="flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg bg-gray-900 text-white text-sm font-medium hover:bg-black disabled:opacity-50 transition-all"
                             >
                               {loadingAction ? (
                                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -2257,7 +2306,7 @@ const MessagesPage = () => {
                               type="button"
                               onClick={cancelEditGroup}
                               disabled={loadingAction}
-                              className="px-3 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 disabled:opacity-50"
+                              className="px-3 py-2 rounded-lg border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50 disabled:opacity-50 transition-all"
                             >
                               Cancel
                             </button>
@@ -2313,7 +2362,7 @@ const MessagesPage = () => {
                               </p>
                               {(member.userId === activeChat.adminId ||
                                 member.id === activeChat.adminId) && (
-                                <Crown className="h-3.5 w-3.5 text-yellow-500" />
+                                <Crown className="h-3.5 w-3.5 text-amber-500" />
                               )}
                             </div>
                           </div>
