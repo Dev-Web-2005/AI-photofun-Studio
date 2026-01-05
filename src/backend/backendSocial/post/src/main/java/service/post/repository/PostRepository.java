@@ -13,6 +13,8 @@ import service.post.entity.Post;
 public interface PostRepository extends JpaRepository<Post, String> {
   Page<Post> findAllByUserId(String userId, Pageable pageable);
 
+  Long countByUserId(String userId);
+
   @Modifying
     @Query(
             value = "UPDATE posts SET likes = GREATEST(0, likes + :number) WHERE post_id = :postId",

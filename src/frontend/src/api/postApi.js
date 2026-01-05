@@ -7,6 +7,7 @@ const CREATE_VIDEO_POST_ENDPOINT = "/api/v1/posts/create-video";
 const LIKE_POST_ENDPOINT = "/api/v1/identity/users/click-like";
 const CHECK_LIKED_POSTS_ENDPOINT = "/api/v1/identity/users/check-liked-posts";
 const POSTS_BY_USER_ENDPOINT = "/api/v1/posts/user";
+const POST_COUNT_BY_USER_ENDPOINT = "/api/v1/posts/user";
 
 export const postApi = {
   getFeed: ({ page = 1, size = 20 } = {}) =>
@@ -19,6 +20,9 @@ export const postApi = {
     axiosClient.get(
       `${POSTS_BY_USER_ENDPOINT}/${userId}?page=${page}&size=${size}`
     ),
+
+  getPostCountByUserId: (userId) =>
+    axiosClient.get(`${POST_COUNT_BY_USER_ENDPOINT}/${userId}/count`),
 
   createPost: (formData) =>
     axiosClient.post(CREATE_POST_ENDPOINT, formData, {
@@ -39,4 +43,3 @@ export const postApi = {
   checkLikedPosts: (postIds = []) =>
     axiosClient.post(CHECK_LIKED_POSTS_ENDPOINT, postIds),
 };
-

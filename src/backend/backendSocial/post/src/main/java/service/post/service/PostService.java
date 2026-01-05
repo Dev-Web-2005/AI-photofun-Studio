@@ -122,6 +122,31 @@ public class PostService {
         .build();
   }
 
+  public PageResponse<GetPostResponse> getPostsByUserId(String userId, int page,
+                                                        int size) {
+    Sort sort = Sort.by("createdAt").descending();
+    Pageable pageable = PageRequest.of(page, size, sort);
+    Page<Post> posts = postRepository.findAllByUserId(userId, pageable);
+    List<Post> postList = posts.getContent();
+    List<GetPostResponse> getPostResponses = new ArrayList<>();
+    for (Post post : postList) {
+      GetPostResponse getPostResponse = postMapper.toGetPostResponse(post);
+      getPostResponse.setCreatedAt(
+          utils.convertInstantToString(post.getCreatedAt()));
+      getPostResponses.add(getPostResponse);
+    }
+    return PageResponse.<GetPostResponse>builder()
+        .totalElements(posts.getTotalElements())
+        .totalPages(posts.getTotalPages())
+        .currentPage(posts.getNumber())
+        .elements(getPostResponses)
+        .build();
+  }
+
+  public Long getPostCountByUserId(String userId) {
+    return postRepository.countByUserId(userId);
+  }
+
   public PageResponse<GetPostResponse> getAll(int page, int size) {
     Sort sort = Sort.by("createdAt").descending();
     Pageable pageable = PageRequest.of(page, size, sort);
@@ -183,7 +208,6 @@ public class PostService {
     }
   }
 
-
   @Transactional
   public void updateCommentCount(String postId, int number) {
     lock.lock();
@@ -220,40 +244,41 @@ public class PostService {
   }
 
   @PreAuthorize("isAuthenticated()")
-  public CreatePostResponse uploadVideo(CreateVideoPostRequest request){
-      String uuid = UUID.randomUUID().toString();
-      String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-      CreatePostResponse createVideoPostResponse;
-      try {
-          HttpResponse<UploadVideoResponse> uploadFileResponse =
-                  fileClient.uploadVideoFile(uuid, request.getVideoUrl());
-          if (uploadFileResponse.getCode() != 1000) {
-              log.error("File service returned error code while uploading image: {}",
-                      uploadFileResponse.getCode());
-              throw new AppException(ErrorCode.DONT_CREATE_POST);
-          }
-          String videoUrl = uploadFileResponse.getResult().getVideo();
-          Post post = Post.builder()
-                  // a post match a file
-                  .postId(uuid)
-                  .userId(userId)
-                  .caption(request.getCaption())
-                  .videoUrl(videoUrl)
-                  .prompt(request.getPrompt())
-                  .build();
-          Post savePost = postRepository.save(post);
-          if (savePost == null) {
-              log.error("Error while saving post to database");
-              throw new AppException(ErrorCode.DONT_CREATE_POST);
-          }
-
-          createVideoPostResponse = postMapper.toCreatePostResponse(savePost);
-      } catch (Exception e) {
-          log.error("Error while uploading image to file service: {}",
-                  e.getMessage());
-          throw new AppException(ErrorCode.DONT_CREATE_POST);
+  public CreatePostResponse uploadVideo(CreateVideoPostRequest request) {
+    String uuid = UUID.randomUUID().toString();
+    String userId =
+        SecurityContextHolder.getContext().getAuthentication().getName();
+    CreatePostResponse createVideoPostResponse;
+    try {
+      HttpResponse<UploadVideoResponse> uploadFileResponse =
+          fileClient.uploadVideoFile(uuid, request.getVideoUrl());
+      if (uploadFileResponse.getCode() != 1000) {
+        log.error("File service returned error code while uploading image: {}",
+                  uploadFileResponse.getCode());
+        throw new AppException(ErrorCode.DONT_CREATE_POST);
+      }
+      String videoUrl = uploadFileResponse.getResult().getVideo();
+      Post post = Post.builder()
+                      // a post match a file
+                      .postId(uuid)
+                      .userId(userId)
+                      .caption(request.getCaption())
+                      .videoUrl(videoUrl)
+                      .prompt(request.getPrompt())
+                      .build();
+      Post savePost = postRepository.save(post);
+      if (savePost == null) {
+        log.error("Error while saving post to database");
+        throw new AppException(ErrorCode.DONT_CREATE_POST);
       }
 
-      return createVideoPostResponse;
+      createVideoPostResponse = postMapper.toCreatePostResponse(savePost);
+    } catch (Exception e) {
+      log.error("Error while uploading image to file service: {}",
+                e.getMessage());
+      throw new AppException(ErrorCode.DONT_CREATE_POST);
+    }
+
+    return createVideoPostResponse;
   }
 }
