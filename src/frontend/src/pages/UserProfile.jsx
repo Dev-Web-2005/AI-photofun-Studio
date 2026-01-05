@@ -19,8 +19,8 @@ const DEFAULT_AVATAR = "https://placehold.co/128x128/111/fff?text=U";
 
 // Utility function to mask email
 const maskEmail = (email) => {
-  if (!email || !email.includes('@')) return email;
-  const [local, domain] = email.split('@');
+  if (!email || !email.includes("@")) return email;
+  const [local, domain] = email.split("@");
   if (local.length <= 2) return `${local[0]}***@${domain}`;
   return `${local[0]}${local[1]}***@${domain}`;
 };
@@ -57,9 +57,9 @@ const UserProfile = () => {
           createdAt: userData?.createdAt,
           isPremium: Boolean(
             userData?.isPremium ||
-            userData?.premium ||
-            userData?.premiumOneMonth ||
-            userData?.premiumSixMonths
+              userData?.premium ||
+              userData?.premiumOneMonth ||
+              userData?.premiumSixMonths
           ),
           premiumOneMonth: Boolean(userData?.premiumOneMonth),
           premiumSixMonths: Boolean(userData?.premiumSixMonths),
@@ -117,7 +117,7 @@ const UserProfile = () => {
     return (
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-center py-20">
-          <div className="w-10 h-10 border-4 border-gray-200 border-t-black rounded-full animate-spin" />
+          <div className="w-10 h-10 border-4 border-gray-200 dark:border-gray-600 border-t-black dark:border-t-white rounded-full animate-spin" />
         </div>
       </div>
     );
@@ -153,10 +153,11 @@ const UserProfile = () => {
 
       {/* Profile Header */}
       <section
-        className={`bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm relative overflow-hidden ${profile.isPremium
+        className={`bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm relative overflow-hidden ${
+          profile.isPremium
             ? "border-2 border-transparent bg-gradient-to-r from-yellow-50 via-orange-50 to-pink-50"
             : ""
-          }`}
+        }`}
       >
         {/* Premium Background Decoration */}
         {profile.isPremium && (
@@ -178,16 +179,18 @@ const UserProfile = () => {
               />
             )}
             <div
-              className={`relative ${profile.isPremium
+              className={`relative ${
+                profile.isPremium
                   ? "p-1 bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 rounded-full"
                   : ""
-                }`}
+              }`}
             >
               <img
                 src={profile.avatarUrl}
                 alt={`${profile.fullName} avatar`}
-                className={`w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg ${profile.isPremium ? "animate-pulse-glow" : ""
-                  }`}
+                className={`w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg ${
+                  profile.isPremium ? "animate-pulse-glow" : ""
+                }`}
               />
             </div>
             {/* Premium Crown Badge */}
@@ -206,10 +209,11 @@ const UserProfile = () => {
               <div>
                 <div className="flex items-center gap-3 flex-wrap">
                   <h1
-                    className={`text-3xl font-bold ${profile.isPremium
+                    className={`text-3xl font-bold ${
+                      profile.isPremium
                         ? "bg-gradient-to-r from-yellow-500 via-orange-500 to-pink-500 bg-clip-text text-transparent"
                         : ""
-                      }`}
+                    }`}
                   >
                     {profile.fullName}
                   </h1>
@@ -256,10 +260,11 @@ const UserProfile = () => {
                 <button
                   type="button"
                   onClick={handleFollow}
-                  className={`px-6 py-2.5 rounded-lg font-semibold flex items-center gap-2 transition-colors ${isFollowing
+                  className={`px-6 py-2.5 rounded-lg font-semibold flex items-center gap-2 transition-colors ${
+                    isFollowing
                       ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
                       : "bg-black text-white hover:bg-gray-900"
-                    }`}
+                  }`}
                 >
                   {isFollowing ? (
                     <>
@@ -301,7 +306,11 @@ const UserProfile = () => {
               <Calendar className="w-5 h-5 text-gray-600" />
               <span className="text-sm font-medium text-gray-800">
                 Joined{" "}
-                {new Date(profile.createdAt).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' })}
+                {new Date(profile.createdAt).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
               </span>
             </div>
           )}
@@ -331,7 +340,7 @@ const UserProfile = () => {
                 premiumSixMonths: profile.premiumSixMonths,
               },
             }}
-            onLikePost={() => { }}
+            onLikePost={() => {}}
             onNavigateAiTools={() => navigate("/ai-tools")}
           />
         )}

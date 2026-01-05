@@ -150,12 +150,19 @@ const BackgroundTools = () => {
       setProcessingStatus("Uploading image...");
 
       let apiImageUrl;
-      const fileToUpload = origFileRef.current || dataUrlToFile(origData, "image.png");
+      const fileToUpload =
+        origFileRef.current || dataUrlToFile(origData, "image.png");
 
       try {
-        const uploadResult = await communicationApi.uploadChatImage(fileToUpload);
+        const uploadResult = await communicationApi.uploadChatImage(
+          fileToUpload
+        );
         // Response format: { result: { image: "..." } } or { result: { url: "..." } }
-        apiImageUrl = uploadResult?.result?.image || uploadResult?.result?.url || uploadResult?.url || uploadResult?.image;
+        apiImageUrl =
+          uploadResult?.result?.image ||
+          uploadResult?.result?.url ||
+          uploadResult?.url ||
+          uploadResult?.image;
 
         if (!apiImageUrl) {
           console.error("Upload response:", uploadResult);
@@ -175,7 +182,9 @@ const BackgroundTools = () => {
       const result = await removeBackground(apiImageUrl);
 
       if (!result.success) {
-        setError(result.error || "Unable to remove background. Please try again.");
+        setError(
+          result.error || "Unable to remove background. Please try again."
+        );
         setProcessing(false);
         return;
       }
@@ -270,7 +279,6 @@ const BackgroundTools = () => {
         <h1 className="text-lg md:text-xl font-bold flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-purple-500" /> Background Tools
         </h1>
-
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -280,10 +288,11 @@ const BackgroundTools = () => {
             <div
               onDrop={(event) => onDrop(event, "orig")}
               onDragOver={(event) => event.preventDefault()}
-              className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-colors ${origData
-                ? "border-blue-200 bg-blue-50"
-                : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
-                }`}
+              className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-colors ${
+                origData
+                  ? "border-blue-200 bg-blue-50"
+                  : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+              }`}
               onClick={() => origInputRef.current?.click()}
             >
               <Image className="w-12 h-12 mx-auto mb-3 text-gray-400" />
@@ -339,10 +348,11 @@ const BackgroundTools = () => {
                   key={card.id}
                   type="button"
                   onClick={() => setOption(card.id)}
-                  className={`w-full text-left p-4 border-2 rounded-2xl transition-colors ${option === card.id
-                    ? "border-black bg-gray-50"
-                    : "border-gray-200 hover:border-gray-300"
-                    }`}
+                  className={`w-full text-left p-4 border-2 rounded-2xl transition-colors ${
+                    option === card.id
+                      ? "border-black bg-gray-50"
+                      : "border-gray-200 hover:border-gray-300"
+                  }`}
                 >
                   <p className="font-semibold">{card.title}</p>
                   <p className="text-xs text-gray-600">{card.subtitle}</p>
@@ -357,7 +367,9 @@ const BackgroundTools = () => {
                     onChange={(event) => setColor(event.target.value)}
                     className="w-16 h-10 border rounded-lg"
                   />
-                  <span className="text-sm text-gray-600">Choose background color</span>
+                  <span className="text-sm text-gray-600">
+                    Choose background color
+                  </span>
                 </div>
               )}
 
@@ -366,10 +378,11 @@ const BackgroundTools = () => {
                   <div
                     onDrop={(event) => onDrop(event, "bg")}
                     onDragOver={(event) => event.preventDefault()}
-                    className={`border-2 border-dashed rounded-xl p-4 text-center cursor-pointer transition-colors ${bgData
-                      ? "border-blue-200 bg-blue-50"
-                      : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
-                      }`}
+                    className={`border-2 border-dashed rounded-xl p-4 text-center cursor-pointer transition-colors ${
+                      bgData
+                        ? "border-blue-200 bg-blue-50"
+                        : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+                    }`}
                     onClick={() => bgInputRef.current?.click()}
                   >
                     <p className="text-sm text-gray-600 mb-2">
@@ -419,13 +432,15 @@ const BackgroundTools = () => {
           </div>
         </section>
 
-        <section className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm flex flex-col">
-          <h2 className="text-lg font-bold mb-4">Result</h2>
-          <div className="relative aspect-[4/3] rounded-xl bg-gray-50 flex items-center justify-center overflow-hidden">
+        <section className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-sm flex flex-col">
+          <h2 className="text-lg font-bold mb-4 dark:text-gray-200">Result</h2>
+          <div className="relative aspect-[4/3] rounded-xl bg-gray-50 dark:bg-gray-900 flex items-center justify-center overflow-hidden">
             {processing ? (
               <div className="text-center space-y-2">
-                <div className="w-16 h-16 border-4 border-gray-200 border-t-black rounded-full animate-spin mx-auto" />
-                <p className="text-gray-600 font-medium">Processing...</p>
+                <div className="w-16 h-16 border-4 border-gray-200 dark:border-gray-600 border-t-black dark:border-t-white rounded-full animate-spin mx-auto" />
+                <p className="text-gray-600 dark:text-gray-300 font-medium">
+                  Processing...
+                </p>
                 <p className="text-xs text-gray-500">
                   {processingStatus || "Please wait a moment"}
                 </p>
@@ -494,7 +509,9 @@ const BackgroundTools = () => {
           <div className="mt-6 bg-blue-50 border border-blue-200 rounded-2xl p-4 text-sm text-blue-900">
             <p className="font-semibold">Tips</p>
             <ul className="list-disc list-inside mt-2 space-y-1">
-              <li>High contrast subjects help remove background more accurately</li>
+              <li>
+                High contrast subjects help remove background more accurately
+              </li>
               <li>Color background option processes fastest</li>
               <li>Image background option may take longer</li>
             </ul>

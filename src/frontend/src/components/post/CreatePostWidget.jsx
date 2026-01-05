@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Image, Video, Sparkles, X, Loader2 } from "lucide-react";
+import { useToast } from "../../hooks/use-toast";
 
 const DEFAULT_AVATAR = "https://placehold.co/40x40/111/fff?text=U";
 
@@ -19,6 +20,7 @@ export default function CreatePostWidget({
   onClose = null,
   hideComposer = false,
 }) {
+  const { toast } = useToast();
   const [showModal, setShowModal] = useState(false);
   const [caption, setCaption] = useState("");
   const [prompt, setPrompt] = useState("");
@@ -181,6 +183,13 @@ export default function CreatePostWidget({
           video: videoFile,
           videoUrl: !videoFile && videoPreview ? videoPreview : undefined,
         });
+
+        // Show success notification for video post
+        toast({
+          variant: "success",
+          title: "Video posted successfully! 🎬",
+          description: "Your video has been shared with the community.",
+        });
       } else {
         // Create image post - pass imageUrl if no file (from AI tools)
         await onCreatePost({
@@ -188,6 +197,13 @@ export default function CreatePostWidget({
           prompt: finalPrompt,
           image: imageFile,
           imageUrl: !imageFile && imagePreview ? imagePreview : undefined,
+        });
+
+        // Show success notification for image post
+        toast({
+          variant: "success",
+          title: "Post created successfully! ✨",
+          description: "Your creation has been shared with the community.",
         });
       }
       handleClose();
@@ -197,6 +213,13 @@ export default function CreatePostWidget({
         submitError?.message ||
         "Unable to create post";
       setError(message);
+
+      // Show error notification
+      toast({
+        variant: "destructive",
+        title: "Failed to create post",
+        description: message,
+      });
     } finally {
       setSubmitting(false);
     }

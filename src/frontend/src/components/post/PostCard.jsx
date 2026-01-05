@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import CommentSection from "./CommentSection";
 import ImageLightbox from "../common/ImageLightbox";
+import PromptDisplaySection from "./PromptDisplaySection";
 
 export default function PostCard({
   post,
@@ -157,14 +158,10 @@ export default function PostCard({
           )}
 
           {post.hasPrompt && (
-            <div className="mt-4 bg-gray-50 border border-gray-200 rounded-xl p-3">
-              <div className="flex items-center gap-2 text-xs font-semibold text-gray-700">
-                <Sparkles className="w-4 h-4 text-purple-500" /> AI Prompt
-              </div>
-              <p className="mt-2 text-xs text-gray-600 font-mono leading-relaxed">
-                {post.prompt}
-              </p>
-            </div>
+            <PromptDisplaySection
+              prompt={post.prompt}
+              toolType={post.video ? "prompt-to-video" : "text-to-image"}
+            />
           )}
 
           <div className="flex items-center gap-6 mt-4">

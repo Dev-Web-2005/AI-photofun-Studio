@@ -139,7 +139,9 @@ const StyleTransfer = () => {
 
   const handleTransfer = async () => {
     if (!canTransfer) {
-      toast.warning("Please upload an image and select a style before applying.");
+      toast.warning(
+        "Please upload an image and select a style before applying."
+      );
       return;
     }
     setProcessing(true);
@@ -153,8 +155,14 @@ const StyleTransfer = () => {
 
       let apiImageUrl;
       try {
-        const uploadResult = await communicationApi.uploadChatImage(uploadedFile);
-        apiImageUrl = uploadResult?.result?.image || uploadResult?.result?.url || uploadResult?.url || uploadResult?.image;
+        const uploadResult = await communicationApi.uploadChatImage(
+          uploadedFile
+        );
+        apiImageUrl =
+          uploadResult?.result?.image ||
+          uploadResult?.result?.url ||
+          uploadResult?.url ||
+          uploadResult?.image;
 
         if (!apiImageUrl) {
           throw new Error("No URL received from server");
@@ -185,7 +193,9 @@ const StyleTransfer = () => {
         abstract: "Transform this into an abstract art style",
       };
 
-      const prompt = stylePrompts[selectedStyle] || `Transform this into ${selectedStyle} style`;
+      const prompt =
+        stylePrompts[selectedStyle] ||
+        `Transform this into ${selectedStyle} style`;
 
       setProcessingStatus("Sending style transfer request...");
       const reimagineResult = await reimagineImage({
@@ -220,7 +230,8 @@ const StyleTransfer = () => {
         if (!pollResult.success) {
           throw new Error(pollResult.error || "Processing failed");
         }
-        resultImageUrl = pollResult.imageUrl || pollResult.data?.uploaded_urls?.[0];
+        resultImageUrl =
+          pollResult.imageUrl || pollResult.data?.uploaded_urls?.[0];
       }
 
       setResult({
@@ -272,7 +283,6 @@ const StyleTransfer = () => {
         <h1 className="text-lg md:text-xl font-bold flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-purple-500" /> Style Transfer
         </h1>
-
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -280,10 +290,11 @@ const StyleTransfer = () => {
           <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
             <h2 className="text-lg font-bold mb-4">Upload Original Image</h2>
             <div
-              className={`border-2 border-dashed rounded-2xl p-6 h-64 flex items-center justify-center text-center cursor-pointer transition-colors ${dragOver
-                ? "border-blue-300 bg-blue-50"
-                : "border-gray-300 hover:border-gray-400"
-                }`}
+              className={`border-2 border-dashed rounded-2xl p-6 h-64 flex items-center justify-center text-center cursor-pointer transition-colors ${
+                dragOver
+                  ? "border-blue-300 bg-blue-50"
+                  : "border-gray-300 hover:border-gray-400"
+              }`}
               onDragOver={(event) => {
                 event.preventDefault();
                 setDragOver(true);
@@ -361,8 +372,9 @@ const StyleTransfer = () => {
             >
               <span className="text-lg font-bold">Advanced Settings</span>
               <Wand2
-                className={`w-5 h-5 transition-transform ${advancedOpen ? "rotate-45" : "rotate-0"
-                  }`}
+                className={`w-5 h-5 transition-transform ${
+                  advancedOpen ? "rotate-45" : "rotate-0"
+                }`}
               />
             </button>
             {advancedOpen && (
@@ -413,10 +425,11 @@ const StyleTransfer = () => {
                 key={style.id}
                 type="button"
                 onClick={() => setSelectedStyle(style.id)}
-                className={`w-full relative overflow-hidden rounded-2xl border-2 h-24 text-left transition-all ${selectedStyle === style.id
-                  ? "border-black shadow-[0_0_0_2px_white,0_0_0_4px_black]"
-                  : "border-gray-200 hover:border-gray-400"
-                  }`}
+                className={`w-full relative overflow-hidden rounded-2xl border-2 h-24 text-left transition-all ${
+                  selectedStyle === style.id
+                    ? "border-black shadow-[0_0_0_2px_white,0_0_0_4px_black]"
+                    : "border-gray-200 hover:border-gray-400"
+                }`}
               >
                 <img
                   src={style.thumbnail}
@@ -433,12 +446,14 @@ const StyleTransfer = () => {
         </section>
 
         <section className="space-y-6">
-          <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-            <h2 className="text-lg font-bold mb-4">Result Preview</h2>
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-sm">
+            <h2 className="text-lg font-bold mb-4 dark:text-gray-200">
+              Result Preview
+            </h2>
             {processing ? (
-              <div className="aspect-square bg-gray-50 rounded-2xl flex flex-col items-center justify-center text-center">
-                <div className="w-16 h-16 border-4 border-gray-200 border-t-black rounded-full animate-spin mb-4" />
-                <p className="font-semibold text-gray-700">
+              <div className="aspect-square bg-gray-50 dark:bg-gray-900 rounded-2xl flex flex-col items-center justify-center text-center">
+                <div className="w-16 h-16 border-4 border-gray-200 dark:border-gray-600 border-t-black dark:border-t-white rounded-full animate-spin mb-4" />
+                <p className="font-semibold text-gray-700 dark:text-gray-200">
                   Applying style transfer...
                 </p>
                 <p className="text-sm text-gray-500">
@@ -546,7 +561,8 @@ const StyleTransfer = () => {
                     No preview yet
                   </p>
                   <p className="text-sm text-gray-500">
-                    Upload an image + select a style, then click Apply to see the result.
+                    Upload an image + select a style, then click Apply to see
+                    the result.
                   </p>
                 </div>
               </div>
