@@ -169,6 +169,136 @@ class VideoGalleryService:
         finally:
             conn.close()
 
+    def get_user_videos(
+        self,
+        user_id: str,
+        limit: int = 50,
+        offset: int = 0,
+    ) -> list[Dict[str, Any]]:
+        """Get user's video gallery (non-deleted only)"""
+        conn = self._get_connection()
+        try:
+            with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+                query = """
+                    SELECT video_id, user_id, video_url, prompt, intent, model, task_id, status, metadata, created_at
+                    FROM video_gallery
+                    WHERE user_id = %s AND deleted_at IS NULL
+                    ORDER BY created_at DESC
+                    LIMIT %s OFFSET %s
+                """
+                cursor.execute(query, (user_id, limit, offset))
+                results = cursor.fetchall()
+            return [dict(row) for row in results]
+        except psycopg2.Error as exc:
+            logger.error("Database error: %s", str(exc))
+            raise VideoGalleryError(f"Failed to fetch videos: {str(exc)}")
+        finally:
+            conn.close()
+
+    def get_video_by_id(self, video_id: str) -> Optional[Dict[str, Any]]:
+        """Get video by ID"""
+        conn = self._get_connection()
+        try:
+            with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+                query = """
+                    SELECT video_id, user_id, video_url, prompt, intent, model, task_id, status, metadata, created_at, deleted_at
+                    FROM video_gallery
+                    WHERE video_id = %s
+                """
+                cursor.execute(query, (str(video_id),))
+                result = cursor.fetchone()
+            return dict(result) if result else None
+        except psycopg2.Error as exc:
+            logger.error("Database error: %s", str(exc))
+            raise VideoGalleryError(f"Failed to fetch video: {str(exc)}")
+        finally:
+            conn.close()
+
+    def get_deleted_videos(
+        self,
+        user_id: str,
+        limit: int = 50,
+        offset: int = 0,
+    ) -> list[Dict[str, Any]]:
+        """Get user's deleted videos"""
+        conn = self._get_connection()
+        try:
+            with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+                query = """
+                    SELECT video_id, user_id, video_url, prompt, intent, model, task_id, status, metadata, created_at, deleted_at
+                    FROM video_gallery
+                    WHERE user_id = %s AND deleted_at IS NOT NULL
+                    ORDER BY deleted_at DESC
+                    LIMIT %s OFFSET %s
+                """
+                cursor.execute(query, (user_id, limit, offset))
+                results = cursor.fetchall()
+            return [dict(row) for row in results]
+        except psycopg2.Error as exc:
+            logger.error("Database error: %s", str(exc))
+            raise VideoGalleryError(f"Failed to fetch deleted videos: {str(exc)}")
+        finally:
+            conn.close()
+
+    def soft_delete_video(self, video_id: str) -> bool:
+        """Soft delete a video"""
+        conn = self._get_connection()
+        try:
+            with conn.cursor() as cursor:
+                query = """
+                    UPDATE video_gallery
+                    SET deleted_at = CURRENT_TIMESTAMP
+                    WHERE video_id = %s AND deleted_at IS NULL
+                """
+                cursor.execute(query, (str(video_id),))
+                rows_affected = cursor.rowcount
+            conn.commit()
+            return rows_affected > 0
+        except psycopg2.Error as exc:
+            logger.error("Database error: %s", str(exc))
+            conn.rollback()
+            raise VideoGalleryError(f"Failed to delete video: {str(exc)}")
+        finally:
+            conn.close()
+
+    def restore_video(self, video_id: str) -> bool:
+        """Restore a soft-deleted video"""
+        conn = self._get_connection()
+        try:
+            with conn.cursor() as cursor:
+                query = """
+                    UPDATE video_gallery
+                    SET deleted_at = NULL
+                    WHERE video_id = %s AND deleted_at IS NOT NULL
+                """
+                cursor.execute(query, (str(video_id),))
+                rows_affected = cursor.rowcount
+            conn.commit()
+            return rows_affected > 0
+        except psycopg2.Error as exc:
+            logger.error("Database error: %s", str(exc))
+            conn.rollback()
+            raise VideoGalleryError(f"Failed to restore video: {str(exc)}")
+        finally:
+            conn.close()
+
+    def permanent_delete_video(self, video_id: str) -> bool:
+        """Permanently delete a video"""
+        conn = self._get_connection()
+        try:
+            with conn.cursor() as cursor:
+                query = "DELETE FROM video_gallery WHERE video_id = %s"
+                cursor.execute(query, (str(video_id),))
+                rows_affected = cursor.rowcount
+            conn.commit()
+            return rows_affected > 0
+        except psycopg2.Error as exc:
+            logger.error("Database error: %s", str(exc))
+            conn.rollback()
+            raise VideoGalleryError(f"Failed to permanently delete video: {str(exc)}")
+        finally:
+            conn.close()
+
     def close(self):
         return
 
