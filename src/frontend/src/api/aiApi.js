@@ -112,7 +112,7 @@ aiClient.interceptors.response.use(
 );
 
 // Get the authenticated user ID from JWT token or localStorage
-const getUserId = () => {
+export const getUserId = () => {
   // First, try to get from cached user data
   const cachedUser = localStorage.getItem("user");
   if (cachedUser) {
@@ -154,12 +154,12 @@ export const pollTaskStatus = async (
   maxAttempts = 60,
   interval = 3000
 ) => {
-  const sessionId = getSessionId();
+  const userId = getUserId(); // FIX: Dùng getUserId() thay vì getSessionId()
 
   for (let i = 1; i <= maxAttempts; i++) {
     try {
       const response = await aiClient.get(
-        `/${endpoint}/status/${taskId}/?user_id=${sessionId}`
+        `/${endpoint}/status/${taskId}/?user_id=${userId}`
       );
       const data = response.data;
       const status = data.result?.status;

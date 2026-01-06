@@ -33,6 +33,7 @@ import { userApi } from "../api/userApi";
 import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import VideoCallModal from "../components/common/VideoCallModal";
 import IncomingCallModal from "../components/common/IncomingCallModal";
+import { useToast } from "../components/common/Toast";
 import { stopCall } from "../api/call-video";
 
 // For ngrok: use backend ngrok URL directly
@@ -46,6 +47,7 @@ const MessagesPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const toast = useToast();
 
   // Share to group from AI tools
   const shareToGroup = location.state?.shareToGroup;
@@ -384,8 +386,8 @@ const MessagesPage = () => {
               const userData = userRes?.data?.result;
               const isPremium = Boolean(
                 userData?.isPremium ||
-                  userData?.premiumOneMonth ||
-                  userData?.premiumSixMonths
+                userData?.premiumOneMonth ||
+                userData?.premiumSixMonths
               );
               return {
                 id: senderId,
@@ -479,9 +481,9 @@ const MessagesPage = () => {
             msg.timestamp ||
             (msg.createdAt
               ? new Date(msg.createdAt).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })
+                hour: "2-digit",
+                minute: "2-digit",
+              })
               : ""),
           isImage: msgIsImage,
           isVideo: msgIsVideo,
@@ -694,8 +696,8 @@ const MessagesPage = () => {
             const userData = userRes?.data?.result;
             const isPremium = Boolean(
               userData?.isPremium ||
-                userData?.premiumOneMonth ||
-                userData?.premiumSixMonths
+              userData?.premiumOneMonth ||
+              userData?.premiumSixMonths
             );
             senderInfo = {
               username: userData?.username || userData?.fullName || "User",
@@ -1269,7 +1271,7 @@ const MessagesPage = () => {
     try {
       const response = await communicationApi.createGroup(newGroupName);
 
-      alert(`Group "${newGroupName}" created successfully!`);
+      toast.success(`Group "${newGroupName}" created successfully!`);
       setShowCreateGroup(false);
       setNewGroupName("");
 
@@ -1281,7 +1283,7 @@ const MessagesPage = () => {
       const errorMsg =
         error.response?.data?.message ||
         "Unable to create group. Please try again!";
-      alert(errorMsg);
+      toast.error(errorMsg);
     }
   };
 
@@ -1301,7 +1303,7 @@ const MessagesPage = () => {
       formData.append("file", file);
 
       await communicationApi.uploadGroupAvatar(activeChat.groupId, formData);
-      alert("Group avatar updated!");
+      toast.success("Group avatar updated!");
 
       // Refresh groups to get new avatar
       fetchMyGroups();
@@ -1319,7 +1321,7 @@ const MessagesPage = () => {
       const errorMsg =
         error.response?.data?.message ||
         "Unable to upload image. Please try again!";
-      alert(errorMsg);
+      toast.error(errorMsg);
     } finally {
       setLoadingAction(false);
       // Reset input
@@ -1340,7 +1342,7 @@ const MessagesPage = () => {
         description: editGroupDescription.trim(),
       });
 
-      alert("Group info updated!");
+      toast.success("Group info updated!");
 
       // Update local state
       setActiveChat((prev) => ({
@@ -1360,7 +1362,7 @@ const MessagesPage = () => {
       const errorMsg =
         error.response?.data?.message ||
         "Unable to update group. Please try again!";
-      alert(errorMsg);
+      toast.error(errorMsg);
     } finally {
       setLoadingAction(false);
     }
@@ -1393,7 +1395,7 @@ const MessagesPage = () => {
     setLoadingAction(true);
     try {
       await communicationApi.deleteConversation(userId);
-      alert("Conversation deleted!");
+      toast.success("Conversation deleted!");
 
       // Refresh conversations list
       fetchConversations();
@@ -1408,7 +1410,7 @@ const MessagesPage = () => {
       const errorMsg =
         error.response?.data?.message ||
         "Unable to delete conversation. Please try again!";
-      alert(errorMsg);
+      toast.error(errorMsg);
     } finally {
       setLoadingAction(false);
     }
@@ -1419,7 +1421,7 @@ const MessagesPage = () => {
     setLoadingAction(true);
     try {
       await communicationApi.requestJoinGroup(groupId);
-      alert("Join request sent!");
+      toast.success("Join request sent!");
       // Refresh both lists - group moves from explore to my groups after approval
       fetchExploreGroups();
     } catch (error) {
@@ -1427,7 +1429,7 @@ const MessagesPage = () => {
       const errorMsg =
         error.response?.data?.message ||
         "Unable to send request. Please try again!";
-      alert(errorMsg);
+      toast.error(errorMsg);
     } finally {
       setLoadingAction(false);
     }
@@ -1442,7 +1444,7 @@ const MessagesPage = () => {
     setLoadingAction(true);
     try {
       await communicationApi.leaveGroup(activeChat.groupId);
-      alert("Left the group!");
+      toast.success("Left the group!");
       setShowGroupInfo(false);
       setActiveChat(null);
       // Refresh both lists - group moves from my groups to explore
@@ -1453,7 +1455,7 @@ const MessagesPage = () => {
       const errorMsg =
         error.response?.data?.message ||
         "Unable to leave group. Please try again!";
-      alert(errorMsg);
+      toast.error(errorMsg);
     } finally {
       setLoadingAction(false);
     }
@@ -1473,7 +1475,7 @@ const MessagesPage = () => {
     setLoadingAction(true);
     try {
       await communicationApi.removeMember(activeChat.groupId, memberId);
-      alert(`Removed ${memberName} from the group!`);
+      toast.success(`Removed ${memberName} from the group!`);
       fetchGroupMembers(activeChat.groupId);
       fetchMyGroups();
     } catch (error) {
@@ -1481,7 +1483,7 @@ const MessagesPage = () => {
       const errorMsg =
         error.response?.data?.message ||
         "Unable to remove member. Please try again!";
-      alert(errorMsg);
+      toast.error(errorMsg);
     } finally {
       setLoadingAction(false);
     }
@@ -1498,7 +1500,7 @@ const MessagesPage = () => {
         activeChat.groupId,
         accept
       );
-      alert(accept ? "Request accepted!" : "Request rejected!");
+      toast.success(accept ? "Request accepted!" : "Request rejected!");
       // Refresh pending requests and members
       fetchPendingRequests(activeChat.groupId);
       fetchGroupMembers(activeChat.groupId);
@@ -1508,7 +1510,7 @@ const MessagesPage = () => {
       const errorMsg =
         error.response?.data?.message ||
         "Unable to process request. Please try again!";
-      alert(errorMsg);
+      toast.error(errorMsg);
     } finally {
       setLoadingAction(false);
     }
@@ -1578,9 +1580,8 @@ const MessagesPage = () => {
 
         {/* Sidebar - Hidden on mobile when chat is active, always visible on desktop */}
         <div
-          className={`${
-            showMobileSidebar ? "flex" : "hidden"
-          } md:flex w-full md:w-80 flex-col border-r border-gray-200 bg-gray-50`}
+          className={`${showMobileSidebar ? "flex" : "hidden"
+            } md:flex w-full md:w-80 flex-col border-r border-gray-200 bg-gray-50`}
         >
           <div className="border-b border-gray-200 p-4 md:p-5 bg-white">
             <div className="flex items-center justify-between mb-3 md:mb-4">
@@ -1589,9 +1590,8 @@ const MessagesPage = () => {
                   Messages
                 </h1>
                 <div
-                  className={`h-1.5 w-1.5 rounded-full ${
-                    socketConnected ? "bg-emerald-500" : "bg-gray-400"
-                  }`}
+                  className={`h-1.5 w-1.5 rounded-full ${socketConnected ? "bg-emerald-500" : "bg-gray-400"
+                    }`}
                   title={socketConnected ? "Connected" : "Disconnected"}
                 />
               </div>
@@ -1622,33 +1622,30 @@ const MessagesPage = () => {
               <button
                 type="button"
                 onClick={() => setActiveTab("direct")}
-                className={`flex-1 py-1.5 md:py-2 px-2 md:px-3 rounded-md text-xs font-medium transition-all cursor-pointer ${
-                  activeTab === "direct"
-                    ? "bg-white text-gray-900 shadow-sm"
-                    : "text-gray-600 hover:text-gray-900"
-                }`}
+                className={`flex-1 py-1.5 md:py-2 px-2 md:px-3 rounded-md text-xs font-medium transition-all cursor-pointer ${activeTab === "direct"
+                  ? "bg-white text-gray-900 shadow-sm"
+                  : "text-gray-600 hover:text-gray-900"
+                  }`}
               >
                 Direct
               </button>
               <button
                 type="button"
                 onClick={() => setActiveTab("groups")}
-                className={`flex-1 py-1.5 md:py-2 px-2 md:px-3 rounded-md text-xs font-medium transition-all cursor-pointer ${
-                  activeTab === "groups"
-                    ? "bg-white text-gray-900 shadow-sm"
-                    : "text-gray-600 hover:text-gray-900"
-                }`}
+                className={`flex-1 py-1.5 md:py-2 px-2 md:px-3 rounded-md text-xs font-medium transition-all cursor-pointer ${activeTab === "groups"
+                  ? "bg-white text-gray-900 shadow-sm"
+                  : "text-gray-600 hover:text-gray-900"
+                  }`}
               >
                 Groups
               </button>
               <button
                 type="button"
                 onClick={() => setActiveTab("explore")}
-                className={`flex-1 py-1.5 md:py-2 px-2 md:px-3 rounded-md text-xs font-medium transition-all cursor-pointer ${
-                  activeTab === "explore"
-                    ? "bg-white text-gray-900 shadow-sm"
-                    : "text-gray-600 hover:text-gray-900"
-                }`}
+                className={`flex-1 py-1.5 md:py-2 px-2 md:px-3 rounded-md text-xs font-medium transition-all cursor-pointer ${activeTab === "explore"
+                  ? "bg-white text-gray-900 shadow-sm"
+                  : "text-gray-600 hover:text-gray-900"
+                  }`}
               >
                 Explore
               </button>
@@ -1667,11 +1664,10 @@ const MessagesPage = () => {
                 conversations.map((chat) => (
                   <div
                     key={chat.id}
-                    className={`group/conv mx-2 mb-1 flex items-center gap-2 md:gap-3 rounded-lg p-2.5 md:p-3 text-left transition-all duration-200 border-l-2 ${
-                      activeChat?.id === chat.id
-                        ? "bg-gray-900 shadow-sm border-l-amber-500"
-                        : "border-l-transparent hover:border-l-gray-400 hover:bg-white/80 hover:shadow-md active:bg-white/90"
-                    }`}
+                    className={`group/conv mx-2 mb-1 flex items-center gap-2 md:gap-3 rounded-lg p-2.5 md:p-3 text-left transition-all duration-200 border-l-2 ${activeChat?.id === chat.id
+                      ? "bg-gray-900 shadow-sm border-l-amber-500"
+                      : "border-l-transparent hover:border-l-gray-400 hover:bg-white/80 hover:shadow-md active:bg-white/90"
+                      }`}
                   >
                     <button
                       type="button"
@@ -1691,35 +1687,32 @@ const MessagesPage = () => {
                       <div className="min-w-0 flex-1">
                         <div className="flex items-baseline justify-between">
                           <h3
-                            className={`truncate text-sm font-medium ${
-                              activeChat?.id === chat.id
-                                ? "text-white"
-                                : "text-gray-900 group-hover/conv:text-gray-900"
-                            }`}
+                            className={`truncate text-sm font-medium ${activeChat?.id === chat.id
+                              ? "text-white"
+                              : "text-gray-900 group-hover/conv:text-gray-900"
+                              }`}
                           >
                             {chat.name}
                           </h3>
                           <span
-                            className={`text-xs flex-shrink-0 ml-2 ${
-                              activeChat?.id === chat.id
-                                ? "text-gray-300"
-                                : "text-gray-500 group-hover/conv:text-gray-600"
-                            }`}
+                            className={`text-xs flex-shrink-0 ml-2 ${activeChat?.id === chat.id
+                              ? "text-gray-300"
+                              : "text-gray-500 group-hover/conv:text-gray-600"
+                              }`}
                           >
                             {chat.time}
                           </span>
                         </div>
                         <div className="mt-0.5 flex items-center justify-between">
                           <p
-                            className={`max-w-[120px] truncate text-xs ${
-                              chat.unread
-                                ? activeChat?.id === chat.id
-                                  ? "font-medium text-gray-200"
-                                  : "font-medium text-gray-700 group-hover/conv:text-gray-800"
-                                : activeChat?.id === chat.id
+                            className={`max-w-[120px] truncate text-xs ${chat.unread
+                              ? activeChat?.id === chat.id
+                                ? "font-medium text-gray-200"
+                                : "font-medium text-gray-700 group-hover/conv:text-gray-800"
+                              : activeChat?.id === chat.id
                                 ? "text-gray-300"
                                 : "text-gray-500 group-hover/conv:text-gray-600"
-                            }`}
+                              }`}
                           >
                             {chat.lastMessage}
                           </p>
@@ -1739,11 +1732,10 @@ const MessagesPage = () => {
                         handleDeleteConversation(chat.userId, chat.name);
                       }}
                       disabled={loadingAction}
-                      className={`p-1.5 rounded-lg opacity-0 group-hover/conv:opacity-100 transition-all disabled:opacity-50 cursor-pointer ${
-                        activeChat?.id === chat.id
-                          ? "text-gray-400 hover:text-white hover:bg-white/10"
-                          : "text-gray-400 hover:text-gray-700 hover:bg-gray-100"
-                      }`}
+                      className={`p-1.5 rounded-lg opacity-0 group-hover/conv:opacity-100 transition-all disabled:opacity-50 cursor-pointer ${activeChat?.id === chat.id
+                        ? "text-gray-400 hover:text-white hover:bg-white/10"
+                        : "text-gray-400 hover:text-gray-700 hover:bg-gray-100"
+                        }`}
                       title="Delete conversation"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
@@ -1792,11 +1784,10 @@ const MessagesPage = () => {
                       handleMobileChatSelect(group);
                       setShowGroupInfo(false);
                     }}
-                    className={`mx-2 mb-1 flex items-center gap-2 md:gap-3 rounded-lg p-2.5 md:p-3 text-left transition-all duration-200 w-[calc(100%-1rem)] border-l-2 active:bg-white/90 ${
-                      activeChat?.id === group.id
-                        ? "bg-gray-900 shadow-sm border-l-amber-500"
-                        : "border-l-transparent hover:border-l-gray-400 hover:bg-white/80 hover:shadow-md"
-                    }`}
+                    className={`mx-2 mb-1 flex items-center gap-2 md:gap-3 rounded-lg p-2.5 md:p-3 text-left transition-all duration-200 w-[calc(100%-1rem)] border-l-2 active:bg-white/90 ${activeChat?.id === group.id
+                      ? "bg-gray-900 shadow-sm border-l-amber-500"
+                      : "border-l-transparent hover:border-l-gray-400 hover:bg-white/80 hover:shadow-md"
+                      }`}
                   >
                     <div className="relative">
                       <img
@@ -1805,11 +1796,10 @@ const MessagesPage = () => {
                         className="h-11 w-11 rounded-full object-cover ring-2 ring-transparent hover:ring-gray-200 transition-all"
                       />
                       <span
-                        className={`absolute bottom-0 right-0 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white ${
-                          activeChat?.id === group.id
-                            ? "bg-white text-gray-900"
-                            : "bg-gray-900 text-white"
-                        }`}
+                        className={`absolute bottom-0 right-0 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white ${activeChat?.id === group.id
+                          ? "bg-white text-gray-900"
+                          : "bg-gray-900 text-white"
+                          }`}
                       >
                         <Users className="h-2.5 w-2.5" />
                       </span>
@@ -1817,30 +1807,27 @@ const MessagesPage = () => {
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
                         <h3
-                          className={`truncate text-sm font-medium ${
-                            activeChat?.id === group.id
-                              ? "text-white"
-                              : "text-gray-900"
-                          }`}
+                          className={`truncate text-sm font-medium ${activeChat?.id === group.id
+                            ? "text-white"
+                            : "text-gray-900"
+                            }`}
                         >
                           {group.name}
                         </h3>
                         {group.isAdmin && (
                           <Crown
-                            className={`h-3.5 w-3.5 flex-shrink-0 ${
-                              activeChat?.id === group.id
-                                ? "text-amber-400"
-                                : "text-amber-500"
-                            }`}
+                            className={`h-3.5 w-3.5 flex-shrink-0 ${activeChat?.id === group.id
+                              ? "text-amber-400"
+                              : "text-amber-500"
+                              }`}
                           />
                         )}
                       </div>
                       <p
-                        className={`text-xs mt-0.5 ${
-                          activeChat?.id === group.id
-                            ? "text-gray-300"
-                            : "text-gray-500"
-                        }`}
+                        className={`text-xs mt-0.5 ${activeChat?.id === group.id
+                          ? "text-gray-300"
+                          : "text-gray-500"
+                          }`}
                       >
                         {group.memberCount} members
                       </p>
@@ -1849,100 +1836,93 @@ const MessagesPage = () => {
                 ))
               )
             ) : // Explore Tab (all groups - not joined)
-            exploreGroups.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-gray-500">
-                <Users className="h-12 w-12 mb-3 text-gray-300" />
-                <p className="text-sm">No new groups to explore</p>
-                <p className="text-xs text-gray-400 mt-1">
-                  You've joined all groups!
-                </p>
-              </div>
-            ) : (
-              exploreGroups.map((group) => (
-                <button
-                  type="button"
-                  key={group.id}
-                  onClick={() => {
-                    handleMobileChatSelect(group);
-                    setShowGroupInfo(false);
-                  }}
-                  className={`mx-2 mb-1 flex items-center gap-2 md:gap-3 rounded-lg p-2.5 md:p-3 text-left transition-all duration-200 w-[calc(100%-1rem)] border-l-2 active:bg-white/90 ${
-                    activeChat?.id === group.id
+              exploreGroups.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-gray-500">
+                  <Users className="h-12 w-12 mb-3 text-gray-300" />
+                  <p className="text-sm">No new groups to explore</p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    You've joined all groups!
+                  </p>
+                </div>
+              ) : (
+                exploreGroups.map((group) => (
+                  <button
+                    type="button"
+                    key={group.id}
+                    onClick={() => {
+                      handleMobileChatSelect(group);
+                      setShowGroupInfo(false);
+                    }}
+                    className={`mx-2 mb-1 flex items-center gap-2 md:gap-3 rounded-lg p-2.5 md:p-3 text-left transition-all duration-200 w-[calc(100%-1rem)] border-l-2 active:bg-white/90 ${activeChat?.id === group.id
                       ? "bg-gray-900 shadow-sm border-l-amber-500"
                       : "border-l-transparent hover:border-l-gray-400 hover:bg-white/80 hover:shadow-md"
-                  }`}
-                >
-                  <div className="relative">
-                    <img
-                      src={group.avatar}
-                      alt={group.name}
-                      className="h-11 w-11 rounded-full object-cover ring-2 ring-transparent hover:ring-gray-200 transition-all"
-                    />
-                    <span
-                      className={`absolute bottom-0 right-0 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white ${
-                        activeChat?.id === group.id
+                      }`}
+                  >
+                    <div className="relative">
+                      <img
+                        src={group.avatar}
+                        alt={group.name}
+                        className="h-11 w-11 rounded-full object-cover ring-2 ring-transparent hover:ring-gray-200 transition-all"
+                      />
+                      <span
+                        className={`absolute bottom-0 right-0 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white ${activeChat?.id === group.id
                           ? "bg-white text-gray-900"
                           : "bg-gray-900 text-white"
-                      }`}
-                    >
-                      <Users className="h-2.5 w-2.5" />
-                    </span>
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <h3
-                        className={`truncate text-sm font-medium ${
-                          activeChat?.id === group.id
+                          }`}
+                      >
+                        <Users className="h-2.5 w-2.5" />
+                      </span>
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <h3
+                          className={`truncate text-sm font-medium ${activeChat?.id === group.id
                             ? "text-white"
                             : "text-gray-900"
-                        }`}
-                      >
-                        {group.name}
-                      </h3>
-                    </div>
-                    <div className="mt-0.5 flex items-center justify-between">
-                      <p
-                        className={`text-xs ${
-                          activeChat?.id === group.id
+                            }`}
+                        >
+                          {group.name}
+                        </h3>
+                      </div>
+                      <div className="mt-0.5 flex items-center justify-between">
+                        <p
+                          className={`text-xs ${activeChat?.id === group.id
                             ? "text-gray-300"
                             : "text-gray-500"
-                        }`}
-                      >
-                        {group.memberCount} members
-                      </p>
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRequestJoinGroup(group.groupId);
-                        }}
-                        disabled={loadingAction}
-                        className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium disabled:opacity-50 transition-all cursor-pointer ${
-                          activeChat?.id === group.id
+                            }`}
+                        >
+                          {group.memberCount} members
+                        </p>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRequestJoinGroup(group.groupId);
+                          }}
+                          disabled={loadingAction}
+                          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium disabled:opacity-50 transition-all cursor-pointer ${activeChat?.id === group.id
                             ? "bg-white text-gray-900 hover:bg-gray-100"
                             : "bg-gray-900 text-white hover:bg-black"
-                        }`}
-                      >
-                        <UserPlus className="h-3 w-3" />
-                        Join
-                      </button>
+                            }`}
+                        >
+                          <UserPlus className="h-3 w-3" />
+                          Join
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                </button>
-              ))
-            )}
+                  </button>
+                ))
+              )}
           </div>
         </div>
 
         {/* Chat Area - Full screen on mobile when chat is active, prevents hamburger overlap */}
         <div
-          className={`${
-            !showMobileSidebar ? "flex" : "hidden"
-          } md:flex flex-1 flex-col bg-white md:relative ${
-            !showMobileSidebar
+          className={`${!showMobileSidebar ? "flex" : "hidden"
+            } md:flex flex-1 flex-col bg-white md:relative ${!showMobileSidebar
               ? "fixed inset-0 z-[9999] md:static md:z-auto"
               : ""
-          }`}
+            }`}
         >
           <div className="flex h-14 md:h-16 items-center justify-between border-b border-gray-200 px-3 md:px-6 bg-white relative z-10">
             <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
@@ -1961,11 +1941,10 @@ const MessagesPage = () => {
                 onClick={() =>
                   activeChat.isGroup && setShowGroupInfo(!showGroupInfo)
                 }
-                className={`flex items-center gap-2 md:gap-3 min-w-0 ${
-                  activeChat.isGroup
-                    ? "hover:bg-gray-50 -ml-2 pl-2 pr-2 md:pr-3 py-1.5 rounded-lg transition-colors cursor-pointer"
-                    : ""
-                }`}
+                className={`flex items-center gap-2 md:gap-3 min-w-0 ${activeChat.isGroup
+                  ? "hover:bg-gray-50 -ml-2 pl-2 pr-2 md:pr-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+                  : ""
+                  }`}
               >
                 <div className="relative flex-shrink-0">
                   <img
@@ -1990,15 +1969,14 @@ const MessagesPage = () => {
                     {activeChat.isGroup
                       ? `${activeChat.memberCount} members`
                       : activeChat.isOnline
-                      ? "Active now"
-                      : "Recently active"}
+                        ? "Active now"
+                        : "Recently active"}
                   </p>
                 </div>
                 {activeChat.isGroup && (
                   <ChevronRight
-                    className={`hidden md:block h-4 w-4 text-gray-400 transition-transform flex-shrink-0 ${
-                      showGroupInfo ? "rotate-90" : ""
-                    }`}
+                    className={`hidden md:block h-4 w-4 text-gray-400 transition-transform flex-shrink-0 ${showGroupInfo ? "rotate-90" : ""
+                      }`}
                   />
                 )}
               </button>
@@ -2042,9 +2020,8 @@ const MessagesPage = () => {
           <div className="flex flex-1 overflow-hidden">
             {/* Messages Area */}
             <div
-              className={`flex-1 flex flex-col ${
-                showGroupInfo ? "md:border-r border-gray-100" : ""
-              }`}
+              className={`flex-1 flex flex-col ${showGroupInfo ? "md:border-r border-gray-100" : ""
+                }`}
             >
               <div className="flex-1 space-y-3 md:space-y-4 overflow-y-auto bg-white p-3 md:p-4">
                 {messages.length === 0 ? (
@@ -2057,11 +2034,10 @@ const MessagesPage = () => {
                   messages.map((message) => (
                     <div
                       key={message.id}
-                      className={`flex ${
-                        message.sender === "me"
-                          ? "justify-end"
-                          : "justify-start"
-                      }`}
+                      className={`flex ${message.sender === "me"
+                        ? "justify-end"
+                        : "justify-start"
+                        }`}
                     >
                       {message.sender === "other" && (
                         <button
@@ -2073,11 +2049,10 @@ const MessagesPage = () => {
                             if (targetUserId) navigate(`/user/${targetUserId}`);
                           }}
                           className="mr-2 self-end focus:outline-none rounded-full transition-transform hover:scale-110 relative group/avatar"
-                          title={`Xem profile ${
-                            activeChat.isGroup
-                              ? message.senderName
-                              : activeChat.name
-                          }`}
+                          title={`Xem profile ${activeChat.isGroup
+                            ? message.senderName
+                            : activeChat.name
+                            }`}
                         >
                           {/* Premium Avatar Frame */}
                           {activeChat.isGroup && message.senderIsPremium && (
@@ -2087,17 +2062,16 @@ const MessagesPage = () => {
                             />
                           )}
                           <div
-                            className={`relative ${
-                              activeChat.isGroup && message.senderIsPremium
-                                ? "p-0.5 bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 rounded-full"
-                                : ""
-                            }`}
+                            className={`relative ${activeChat.isGroup && message.senderIsPremium
+                              ? "p-0.5 bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 rounded-full"
+                              : ""
+                              }`}
                           >
                             <img
                               src={
                                 activeChat.isGroup
                                   ? message.senderAvatar ||
-                                    `https://i.pravatar.cc/150?u=${message.senderId}`
+                                  `https://i.pravatar.cc/150?u=${message.senderId}`
                                   : activeChat.avatar
                               }
                               alt={
@@ -2105,11 +2079,10 @@ const MessagesPage = () => {
                                   ? message.senderName
                                   : activeChat.name
                               }
-                              className={`h-8 w-8 rounded-full object-cover cursor-pointer ${
-                                activeChat.isGroup && message.senderIsPremium
-                                  ? "ring-1 ring-white"
-                                  : ""
-                              }`}
+                              className={`h-8 w-8 rounded-full object-cover cursor-pointer ${activeChat.isGroup && message.senderIsPremium
+                                ? "ring-1 ring-white"
+                                : ""
+                                }`}
                             />
                           </div>
                           {/* Premium Crown Badge */}
@@ -2121,19 +2094,17 @@ const MessagesPage = () => {
                         </button>
                       )}
                       <div
-                        className={`group relative max-w-[70%] rounded-xl px-4 py-2.5 text-sm ${
-                          message.sender === "me"
-                            ? "rounded-br-sm bg-gray-900 text-white shadow-sm"
-                            : "rounded-bl-sm bg-gray-100 text-gray-800 border border-gray-200"
-                        }`}
+                        className={`group relative max-w-[70%] rounded-xl px-4 py-2.5 text-sm ${message.sender === "me"
+                          ? "rounded-br-sm bg-gray-900 text-white shadow-sm"
+                          : "rounded-bl-sm bg-gray-100 text-gray-800 border border-gray-200"
+                          }`}
                       >
                         {activeChat.isGroup && message.sender === "other" && (
                           <p
-                            className={`text-xs font-medium mb-1 ${
-                              message.senderIsPremium
-                                ? "text-amber-600"
-                                : "text-gray-600"
-                            }`}
+                            className={`text-xs font-medium mb-1 ${message.senderIsPremium
+                              ? "text-amber-600"
+                              : "text-gray-600"
+                              }`}
                           >
                             {message.senderName}
                             {message.senderIsPremium && " ✨"}
@@ -2159,9 +2130,8 @@ const MessagesPage = () => {
                           message.text
                         )}
                         <span
-                          className={`pointer-events-none absolute bottom-full mb-1 text-[10px] text-gray-400 opacity-0 transition-opacity group-hover:opacity-100 ${
-                            message.sender === "me" ? "right-0" : "left-0"
-                          }`}
+                          className={`pointer-events-none absolute bottom-full mb-1 text-[10px] text-gray-400 opacity-0 transition-opacity group-hover:opacity-100 ${message.sender === "me" ? "right-0" : "left-0"
+                            }`}
                         >
                           {message.time}
                         </span>
@@ -2246,11 +2216,10 @@ const MessagesPage = () => {
                         type="button"
                         onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                         disabled={!socketConnected}
-                        className={`p-1.5 rounded-full transition-all duration-200 cursor-pointer hidden md:flex ${
-                          showEmojiPicker
-                            ? "bg-gray-900 text-white scale-110"
-                            : "text-gray-400 hover:bg-gray-100 hover:text-gray-600"
-                        } disabled:opacity-50 disabled:cursor-not-allowed`}
+                        className={`p-1.5 rounded-full transition-all duration-200 cursor-pointer hidden md:flex ${showEmojiPicker
+                          ? "bg-gray-900 text-white scale-110"
+                          : "text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+                          } disabled:opacity-50 disabled:cursor-not-allowed`}
                         aria-label="Add emoji"
                       >
                         <Smile className="h-4 w-4" />
@@ -2334,9 +2303,8 @@ const MessagesPage = () => {
                       <img
                         src={activeChat.avatar}
                         alt={activeChat.name}
-                        className={`h-20 w-20 rounded-full object-cover ${
-                          isCurrentUserAdmin ? "cursor-pointer" : ""
-                        }`}
+                        className={`h-20 w-20 rounded-full object-cover ${isCurrentUserAdmin ? "cursor-pointer" : ""
+                          }`}
                         onClick={() => {
                           if (isCurrentUserAdmin && avatarInputRef.current) {
                             avatarInputRef.current.click();
@@ -2490,8 +2458,8 @@ const MessagesPage = () => {
                                 </p>
                                 {(member.userId === activeChat.adminId ||
                                   member.id === activeChat.adminId) && (
-                                  <Crown className="h-3.5 w-3.5 text-amber-500" />
-                                )}
+                                    <Crown className="h-3.5 w-3.5 text-amber-500" />
+                                  )}
                               </div>
                             </div>
                             {isCurrentUserAdmin &&

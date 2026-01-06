@@ -1,11 +1,15 @@
 import React from 'react';
 import AppRoutes from './routes/AppRoutes';
-import './App.css'; 
+import { ToastProvider } from './components/common/Toast';
+import './App.css';
+
 function App() {
   return (
-    <div className="App">
-      <AppRoutes />
-    </div>
+    <ToastProvider>
+      <div className="App">
+        <AppRoutes />
+      </div>
+    </ToastProvider>
   );
 }
 
