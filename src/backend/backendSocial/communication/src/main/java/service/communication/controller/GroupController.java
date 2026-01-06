@@ -144,4 +144,15 @@ public class GroupController {
         .message("Member removed successfully")
         .build();
   }
+
+  @GetMapping("/{groupId}/member-count")
+  HttpResponse<Integer>
+  getMemberCount(@PathVariable("groupId") String groupId) {
+    int count = groupService.getMemberCount(groupId);
+    return HttpResponse.<Integer>builder()
+        .code(1000)
+        .message("Get member count successfully")
+        .result(count)
+        .build();
+  }
 }

@@ -390,17 +390,18 @@ public class GroupService {
     }
   }
 
-  /**
-   * Generate a unique group ID from userId and group name
-   * Format: SHA-256 hash of (userId + ":" + groupName)
-   */
+  public int getMemberCount(String groupId) {
+    Group group = groupRepository.findById(groupId).orElseThrow(
+        () -> new AppException(ErrorCode.GROUP_NOT_FOUND));
+    return group.getMemberIds().size();
+  }
+
   private String generateGroupId(String userId, String groupName) {
     try {
       String input = userId + ":" + groupName;
       MessageDigest digest = MessageDigest.getInstance("SHA-256");
       byte[] hash = digest.digest(input.getBytes(StandardCharsets.UTF_8));
 
-      // Convert to hex string
       StringBuilder hexString = new StringBuilder();
       for (byte b : hash) {
         String hex = Integer.toHexString(0xff & b);
