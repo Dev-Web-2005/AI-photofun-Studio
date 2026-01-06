@@ -3,6 +3,12 @@ import axiosClient from "./axiosClient";
 const GALLERY_BASE = "/api/v1/ai/gallery";
 
 export const galleryApi = {
+  // Count total images for a user (including deleted)
+  getImageCount: (userId) =>
+    axiosClient.get(`${GALLERY_BASE}/count`, {
+      params: { user_id: userId },
+    }),
+
   // Get all images for the current user
   getImages: (userId) =>
     axiosClient.get(`${GALLERY_BASE}`, {

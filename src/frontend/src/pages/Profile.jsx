@@ -19,6 +19,7 @@ import PostList from "../components/post/PostList";
 import { usePosts } from "../hooks/usePosts";
 import { useProfile } from "../hooks/useProfile";
 import { userApi } from "../api/userApi";
+import { galleryApi } from "../api/galleryApi";
 import { toast } from "../hooks/use-toast";
 
 const DEFAULT_AVATAR = "https://placehold.co/128x128/111/fff?text=U";
@@ -50,8 +51,6 @@ const PROFILE_DEFAULTS = {
   created: "November 12, 2025",
 };
 
-const profileStats = [{ label: "Images Created", value: "128" }];
-
 const Profile = () => {
   const navigate = useNavigate();
   const [emailVerified, setEmailVerified] = useState(false);
@@ -59,6 +58,7 @@ const Profile = () => {
   const [verifyMessage, setVerifyMessage] = useState("");
   const [showEmail, setShowEmail] = useState(false);
   const [showPhone, setShowPhone] = useState(false);
+  const [imageCount, setImageCount] = useState(0);
   const {
     profile,
     currentUser,
@@ -78,6 +78,22 @@ const Profile = () => {
   useEffect(() => {
     fetchProfile();
   }, [fetchProfile]);
+
+  // Fetch image count for user
+  useEffect(() => {
+    const fetchImageCount = async () => {
+      if (!currentUser?.id) return;
+      try {
+        const response = await galleryApi.getImageCount(currentUser.id);
+        const count = response?.data?.result?.count ?? 0;
+        setImageCount(count);
+      } catch (error) {
+        console.error("Failed to fetch image count:", error);
+        setImageCount(0);
+      }
+    };
+    fetchImageCount();
+  }, [currentUser?.id]);
 
   // Gọi API kiểm tra trạng thái xác minh email
   useEffect(() => {
@@ -255,19 +271,14 @@ const Profile = () => {
               </div>
 
               <div className="grid grid-cols-3 gap-3">
-                {profileStats.map((stat) => (
-                  <div
-                    key={stat.label}
-                    className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700/50 dark:to-gray-800/50 rounded-2xl p-4 border border-gray-200/50 dark:border-gray-600/50 hover:shadow-lg transition-all duration-300 hover:scale-105"
-                  >
-                    <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold tracking-wider">
-                      {stat.label}
-                    </p>
-                    <p className="text-2xl md:text-3xl font-bold mt-2 text-gray-900 dark:text-gray-100">
-                      {stat.value}
-                    </p>
-                  </div>
-                ))}
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700/50 dark:to-gray-800/50 rounded-2xl p-4 border border-gray-200/50 dark:border-gray-600/50 hover:shadow-lg transition-all duration-300 hover:scale-105">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold tracking-wider">
+                    Images Created
+                  </p>
+                  <p className="text-2xl md:text-3xl font-bold mt-2 text-gray-900 dark:text-gray-100">
+                    {imageCount}
+                  </p>
+                </div>
               </div>
 
               <div className="flex flex-wrap gap-3">
