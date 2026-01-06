@@ -89,14 +89,25 @@ jobs:
     if: needs.detect-changes.outputs.backendSocial == 'true'
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Upload code to server
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "src/backend/backendSocial/*"
+          target: "/home/${{ secrets.SSH_USERNAME }}/projects/backendSocial/"
+          rm: true
+
       - name: "Deploy Backend Social via SSH"
         env:
-          BRANCH: "test"
-
           GOOGLE_REDIRECT_FRONTEND: ${{ vars.GOOGLE_REDIRECT_FRONTEND }}
           GOOGLE_REDIRECT_FRONTEND_FAILURE: ${{ vars.GOOGLE_REDIRECT_FRONTEND_FAILURE }}
           CORS_ORIGINS: ${{ vars.CORS_ORIGINS }}
-
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
 
         uses: appleboy/ssh-action@v0.1.6
@@ -106,23 +117,18 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE }}
           port: ${{ secrets.SSH_PORT }}
           command_timeout: 50m
-          envs: BRANCH,GOOGLE_CLIENT_SECRET,CORS_ORIGINS,GOOGLE_REDIRECT_FRONTEND,GOOGLE_REDIRECT_FRONTEND_FAILURE
+          envs: GOOGLE_CLIENT_SECRET,CORS_ORIGINS,GOOGLE_REDIRECT_FRONTEND,GOOGLE_REDIRECT_FRONTEND_FAILURE
           script: |
-            WORKSPACE="/home/$USER/AI-photofun-Studio"
-            if [ -d "$WORKSPACE" ]; then
-              cd $WORKSPACE
-              git fetch origin
-              git reset --hard origin/$BRANCH
-              git clean -fd
-            else
-              cd /home/$USER
-              git clone https://github.com/Dev-Web-2005/AI-photofun-Studio.git
-              cd AI-photofun-Studio
-              git checkout $BRANCH
+            USER=$(whoami)
+            WORKSPACE="/home/$USER/projects/backendSocial/src/backend/backendSocial"
+
+            if [ ! -d "$WORKSPACE" ]; then
+              echo "ERROR: Backend Social directory not found at $WORKSPACE"
+              exit 1
             fi
 
-            echo "Deploying backendSocial..."
-            cd $WORKSPACE/src/backend/backendSocial
+            cd $WORKSPACE
+            echo "Current directory: $(pwd)"
 
             cat > .env << EOF
             GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET
@@ -150,10 +156,22 @@ jobs:
     if: needs.detect-changes.outputs.backendAI == 'true'
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Upload code to server
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "src/backend/backendAI/*"
+          target: "/home/${{ secrets.SSH_USERNAME }}/projects/backendAI/"
+          rm: true
+
       - name: "Deploy Backend AI via SSH"
         env:
-          BRANCH: "test"
-
           CORS_ORIGINS: ${{ vars.CORS_ORIGINS }}
           DEBUG: ${{ vars.DEBUG }}
           GPU_DEVICE_ID: ${{ vars.GPU_DEVICE_ID }}
@@ -165,7 +183,6 @@ jobs:
           USE_TZ: ${{ vars.USE_TZ }}
           MODELSTUDIO_API_BASE: ${{ vars.MODELSTUDIO_API_BASE }}
           FREEPIK_API_KEY: ${{ secrets.FREEPIK_API_KEY }}
-
           GEMINI_API_KEYS: ${{ secrets.GEMINI_API_KEYS }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           SUPABASE_DB_HOST: ${{ secrets.SUPABASE_DB_HOST }}
@@ -191,23 +208,19 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE }}
           port: ${{ secrets.SSH_PORT }}
           command_timeout: 50m
-          envs: BRANCH,DEBUG,MONGO_DB_NAME,MONGO_URI,SECRET_KEY,GEMINI_API_KEYS,OPENAI_API_KEY,FREEPIK_API_KEY,SUPABASE_DB_HOST,SUPABASE_DB_NAME,SUPABASE_DB_PASSWORD,SUPABASE_DB_PORT,SUPABASE_DB_SSLMODE,SUPABASE_DB_USER,MODELSTUDIO_API_BASE,MODELSTUDIO_API_KEY,JWT_SECRET_KEY,JWT_ALGORITHM,JWT_ISSUER,JWT_AUDIENCE,TOKEN_SERVICE_URL,TOKEN_API_KEY_1,TOKEN_API_KEY_2,TOKEN_SERVICE_TIMEOUT,CORS_ORIGINS,TIME_ZONE,USE_TZ,USE_GPU,GPU_DEVICE_ID
+          envs: DEBUG,MONGO_DB_NAME,MONGO_URI,SECRET_KEY,GEMINI_API_KEYS,OPENAI_API_KEY,FREEPIK_API_KEY,SUPABASE_DB_HOST,SUPABASE_DB_NAME,SUPABASE_DB_PASSWORD,SUPABASE_DB_PORT,SUPABASE_DB_SSLMODE,SUPABASE_DB_USER,MODELSTUDIO_API_BASE,MODELSTUDIO_API_KEY,JWT_SECRET_KEY,JWT_ALGORITHM,JWT_ISSUER,JWT_AUDIENCE,TOKEN_SERVICE_URL,TOKEN_API_KEY_1,TOKEN_API_KEY_2,TOKEN_SERVICE_TIMEOUT,CORS_ORIGINS,TIME_ZONE,USE_TZ,USE_GPU,GPU_DEVICE_ID
           script: |
-            WORKSPACE="/home/$USER/AI-photofun-Studio"
-            if [ -d "$WORKSPACE" ]; then
-              cd $WORKSPACE
-              git fetch origin
-              git reset --hard origin/$BRANCH
-              git clean -fd
-            else
-              cd /home/$USER
-              git clone https://github.com/Dev-Web-2005/AI-photofun-Studio.git
-              cd AI-photofun-Studio
-              git checkout $BRANCH
+            USER=$(whoami)
+            WORKSPACE="/home/$USER/projects/backendAI/src/backend/backendAI"
+
+            if [ ! -d "$WORKSPACE" ]; then
+              echo "ERROR: Backend AI directory not found at $WORKSPACE"
+              exit 1
             fi
 
-            echo "Deploying backendAI..."
-            cd $WORKSPACE/src/backend/backendAI
+            cd $WORKSPACE
+            echo "Current directory: $(pwd)"
+
             cat > .env << EOF
             DJANGO_SECRET_KEY=$SECRET_KEY
             DJANGO_DEBUG=$DEBUG
@@ -238,7 +251,6 @@ jobs:
             TOKEN_API_KEY_2=$TOKEN_API_KEY_2
             TOKEN_SERVICE_TIMEOUT=$TOKEN_SERVICE_TIMEOUT
             EOF
-
 
             sudo docker-compose down || true
             sudo docker-compose up -d --build --force-recreate
