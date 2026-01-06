@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "apps.style_transfer",
     "apps.reimagine",
     "apps.image_expand",
+    "apps.video_gallery",
 ]
 
 MIDDLEWARE = [
