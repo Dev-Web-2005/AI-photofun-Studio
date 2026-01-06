@@ -298,8 +298,8 @@ jobs:
 
   deploy-frontend:
     name: "Deploy Frontend"
-    needs: [detect-changes, test-frontend]
-    if: needs.detect-changes.outputs.frontend == 'true' && needs.test-frontend.result == 'success'
+    needs: test-frontend
+    if: needs.test-frontend.result == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
