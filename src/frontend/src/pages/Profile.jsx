@@ -61,6 +61,8 @@ const Profile = () => {
   const [showPhone, setShowPhone] = useState(false);
   const [imageCount, setImageCount] = useState(0);
   const [videoCount, setVideoCount] = useState(0);
+  const [resending, setResending] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
   const {
     profile,
     currentUser,
@@ -129,13 +131,18 @@ const Profile = () => {
     checkEmailVerification();
   }, []);
 
-  // Hàm gửi email xác minh
+  useEffect(() => {
+    if (resendCooldown > 0) {
+      const timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [resendCooldown]);
+
   const handleSendVerification = async () => {
     setVerifying(true);
     setVerifyMessage("");
     try {
       await userApi.sendVerification();
-      // Chuyển hướng sang trang xác minh email sau khi gửi thành công
       navigate("/verify-email");
     } catch (error) {
       console.error("Failed to send verification email:", error);
@@ -143,6 +150,25 @@ const Profile = () => {
       setVerifyMessage(msg);
       toast.error(msg);
       setVerifying(false);
+    }
+  };
+
+  const handleResendVerification = async () => {
+    if (resendCooldown > 0 || resending) return;
+    setResending(true);
+    setVerifyMessage("");
+    try {
+      await userApi.resendVerification();
+      setVerifyMessage("Verification email sent! Check your inbox.");
+      toast.success("Verification email sent! Check your inbox.");
+      setResendCooldown(60);
+    } catch (error) {
+      console.error("Failed to resend verification email:", error);
+      const msg = error?.response?.data?.message || "Unable to resend verification email. Please try again later.";
+      setVerifyMessage(msg);
+      toast.error(msg);
+    } finally {
+      setResending(false);
     }
   };
 
@@ -412,6 +438,23 @@ const Profile = () => {
                         {verifyMessage}
                       </p>
                     )}
+                    <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                      <span>Didn't receive the email?</span>
+                      <button
+                        type="button"
+                        onClick={handleResendVerification}
+                        disabled={resending || resendCooldown > 0}
+                        className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold hover:underline disabled:opacity-50 disabled:cursor-not-allowed disabled:no-underline cursor-pointer"
+                      >
+                        {resending ? (
+                          "Sending..."
+                        ) : resendCooldown > 0 ? (
+                          `Resend in ${resendCooldown}s`
+                        ) : (
+                          "Resend"
+                        )}
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>

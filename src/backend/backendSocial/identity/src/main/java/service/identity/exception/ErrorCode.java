@@ -16,13 +16,13 @@ public enum ErrorCode {
   ROLE_ALREADY_EXISTS(1008, "Role already exists", HttpStatus.CONFLICT),
   USERNAME_REQUIRED(1009, "Username is required", HttpStatus.BAD_REQUEST),
   USERNAME_INVALID(1010,
-                   "Username is invalid, username must be least 5 characters " +
-                   "and the most 20 characters",
+                   "Username is invalid, username must be least 5 characters "
+                       + "and the most 20 characters",
                    HttpStatus.BAD_REQUEST),
   PASSWORD_REQUIRED(1011, "Password is required", HttpStatus.BAD_REQUEST),
   PASSWORD_INVALID(1012,
-                   "Password is invalid, password must be least 4 characters " +
-                   "and the most 30 characters",
+                   "Password is invalid, password must be least 4 characters "
+                       + "and the most 30 characters",
                    HttpStatus.BAD_REQUEST),
   TOKEN_EXPIRED(1013, "Token has expired", HttpStatus.UNAUTHORIZED),
   EMAIL_REQUIRED(1014, "Email is required", HttpStatus.BAD_REQUEST),
@@ -53,10 +53,22 @@ public enum ErrorCode {
   USER_ALREADY_SET_PASSWORD(1026, "User has already set a password",
                             HttpStatus.BAD_REQUEST),
   LIMIT_REGISTER_EXCEEDED(1027,
-                          "Registration limit exceeded for this IP address. " +
-                          "Please try again later or contact support.",
+                          "Registration limit exceeded for this IP address. "
+                              + "Please try again later or contact support.",
                           HttpStatus.TOO_MANY_REQUESTS),
-  INVALID_TOKEN(1028, "Invalid token", HttpStatus.UNAUTHORIZED);
+  INVALID_TOKEN(1028, "Invalid token", HttpStatus.UNAUTHORIZED),
+  EMAIL_NOT_FOUND(1029, "No account found with this email address",
+                  HttpStatus.NOT_FOUND),
+  EMAIL_NOT_VERIFIED(1030, "Email address has not been verified",
+                     HttpStatus.BAD_REQUEST),
+  PASSWORD_RESET_TOKEN_EXPIRED(
+      1031, "Password reset link has expired. Please request a new one.",
+      HttpStatus.BAD_REQUEST),
+  PASSWORD_RESET_TOKEN_INVALID(1032, "Invalid password reset link",
+                               HttpStatus.BAD_REQUEST),
+  FAILED_TO_SEND_EMAIL(1033,
+                       "Failed to send password reset email. Please try again.",
+                       HttpStatus.INTERNAL_SERVER_ERROR);
 
   int code;
   String message;

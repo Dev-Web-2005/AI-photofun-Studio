@@ -1,0 +1,80 @@
+# ✅ KIỂM TRA BIẾN MÔI TRƯỜNG
+
+## Các biến môi trường trong .env.example:
+
+### Firebase (9 biến) ✅
+- VITE_FIREBASE_API_KEY
+- VITE_FIREBASE_AUTH_DOMAIN
+- VITE_FIREBASE_PROJECT_ID
+- VITE_FIREBASE_STORAGE_BUCKET
+- VITE_FIREBASE_MESSAGING_SENDER_ID
+- VITE_FIREBASE_APP_ID
+- VITE_FIREBASE_MEASUREMENT_ID
+- VITE_FIREBASE_DATABASE_URL ⚠️ (không có trong deploy.yaml)
+
+### Google OAuth (2 biến) ✅
+- VITE_GOOGLE_CLIENT_ID ✅
+- VITE_GOOGLE_REDIRECT_URI ✅
+
+### API URLs (6 biến)
+- VITE_API_GATEWAY ✅
+- VITE_SOCKET_URL ✅
+- VITE_AI_API_URL ✅
+- VITE_COMMENT_API_URL ✅
+- VITE_FILE_UPLOAD_URL ✅
+- VITE_SOCKET_COMMENT_URL ⚠️ (không có trong deploy.yaml)
+
+### Payment (2 biến) ✅
+- VITE_PAYMENT_API_URL ✅
+- VITE_PAYMENT_API_KEY ✅
+
+### Chatbot (4 biến) ✅
+- VITE_CHATBOT_API_URL ✅
+- VITE_CHATBOT_X_API_KEY ✅
+- VITE_CHATBOT_USER_ID ✅
+- VITE_CHATBOT_BEARER_TOKEN ✅
+
+### TURN Server (6 biến) ✅
+- VITE_TURN_URL_1 ✅
+- VITE_TURN_USERNAME_1 ✅
+- VITE_TURN_CREDENTIAL_1 ✅
+- VITE_TURN_URL_2 ⚠️ (không có trong deploy.yaml)
+- VITE_TURN_USERNAME_2 ⚠️ (không có trong deploy.yaml)
+- VITE_TURN_CREDENTIAL_2 ⚠️ (không có trong deploy.yaml)
+
+### Không dùng trong deploy.yaml:
+- VITE_SOCIAL_GATWAY_API_URL (có trong deploy.yaml nhưng không dùng trong code)
+
+---
+
+## ⚠️ CÁC BIẾN CẦN BỔ SUNG VÀO deploy.yaml:
+
+1. **VITE_SOCKET_COMMENT_URL** - WebSocket cho comment service
+2. **VITE_FIREBASE_DATABASE_URL** - Firebase Realtime Database
+3. **VITE_TURN_URL_2** - TURN server thứ 2 (backup)
+4. **VITE_TURN_USERNAME_2** - Username TURN server 2
+5. **VITE_TURN_CREDENTIAL_2** - Credential TURN server 2
+
+---
+
+## 📋 HƯỚNG DẪN SỬA
+
+Thêm vào phần `env:` của job `deploy-frontend` trong deploy.yaml:
+
+```yaml
+VITE_SOCKET_COMMENT_URL: ${{ vars.VITE_SOCKET_COMMENT_URL }}
+VITE_FIREBASE_DATABASE_URL: ${{ vars.VITE_FIREBASE_DATABASE_URL }}
+```
+
+Và thêm vào phần `envs:` (dòng 289):
+
+```yaml
+envs: DEPLOY_PATH,BRANCH,VITE_GOOGLE_CLIENT_ID,VITE_GOOGLE_REDIRECT_URI,VITE_SOCIAL_GATWAY_API_URL,VITE_TURN_CREDENTIAL_1,VITE_TURN_CREDENTIAL_2,VITE_TURN_URL_1,VITE_TURN_URL_2,VITE_TURN_USERNAME_1,VITE_TURN_USERNAME_2,VITE_API_GATEWAY,VITE_AI_API_URL,VITE_FILE_UPLOAD_URL,VITE_SOCKET_URL,VITE_SOCKET_COMMENT_URL,VITE_COMMENT_API_URL,VITE_PAYMENT_API_URL,VITE_CHATBOT_API_URL,VITE_FIREBASE_API_KEY,VITE_FIREBASE_APP_ID,VITE_FIREBASE_AUTH_DOMAIN,VITE_FIREBASE_DATABASE_URL,VITE_FIREBASE_MEASUREMENT_ID,VITE_FIREBASE_MESSAGING_SENDER_ID,VITE_FIREBASE_PROJECT_ID,VITE_FIREBASE_STORAGE_BUCKET,VITE_PAYMENT_API_KEY,VITE_CHATBOT_BEARER_TOKEN,VITE_CHATBOT_USER_ID,VITE_CHATBOT_X_API_KEY
+```
+
+Và thêm vào script tạo .env file (sau dòng 302):
+
+```bash
+VITE_SOCKET_COMMENT_URL=$VITE_SOCKET_COMMENT_URL
+VITE_FIREBASE_DATABASE_URL=$VITE_FIREBASE_DATABASE_URL
+```

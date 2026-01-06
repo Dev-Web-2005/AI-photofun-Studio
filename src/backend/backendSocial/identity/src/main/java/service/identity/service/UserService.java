@@ -553,4 +553,152 @@ public class UserService {
         })
         .toList();
   }
+
+  @NonFinal
+  @org.springframework.beans.factory.annotation.Autowired
+  service.identity.utils.PasswordResetTokenUtils passwordResetTokenUtils;
+
+  @NonFinal
+  @Value("${config.http.frontend-url:http://localhost:5173}")
+  String frontendUrl;
+
+  public service.identity.DTOs.response.CheckEmailResponse
+  checkEmailForPasswordReset(String email) {
+    User user = userRepository.findByUsernameOrEmail(email, email);
+
+    if (user == null) {
+      return service.identity.DTOs.response.CheckEmailResponse.builder()
+          .exists(false)
+          .verified(false)
+          .message("No account found with this email address")
+          .build();
+    }
+
+    boolean isVerified = true; // All registered users are considered verified
+
+    return service.identity.DTOs.response.CheckEmailResponse.builder()
+        .exists(true)
+        .verified(isVerified)
+        .message(isVerified ? "Email is valid and verified"
+                            : "Email exists but not verified")
+        .build();
+  }
+
+  public boolean requestPasswordReset(String email) {
+    User user = userRepository.findByUsernameOrEmail(email, email);
+
+    if (user == null) {
+      throw new AppException(ErrorCode.EMAIL_NOT_FOUND);
+    }
+
+    // Generate password reset token using RSA
+    String token = passwordResetTokenUtils.generatePasswordResetToken(
+        user.getUserId(), user.getEmail());
+
+    // Build reset link
+    String resetLink = frontendUrl + "/reset-password?token=" + token;
+
+    // Load and prepare email template
+    String emailContent =
+        loadPasswordResetEmailTemplate(user.getUsername(), resetLink);
+
+    // Send email
+    try {
+      mailClient.sendMail(
+          service.identity.DTOs.request.mail.SendMailRequest.builder()
+              .toEmail(user.getEmail())
+              .toName(user.getUsername())
+              .subject("Reset Your Password - AI PhotoFun Studio")
+              .content(emailContent)
+              .build());
+
+      log.info("Password reset email sent to: {}", user.getEmail());
+      return true;
+    } catch (Exception e) {
+      log.error("Failed to send password reset email to {}: {}",
+                user.getEmail(), e.getMessage());
+      throw new AppException(ErrorCode.FAILED_TO_SEND_EMAIL);
+    }
+  }
+
+  public service.identity.DTOs.response.ValidateResetTokenResponse
+  validatePasswordResetToken(String token) {
+    try {
+      service.identity.utils.PasswordResetTokenUtils
+          .PasswordResetTokenData tokenData =
+          passwordResetTokenUtils.validatePasswordResetToken(token);
+
+      return service.identity.DTOs.response.ValidateResetTokenResponse.builder()
+          .valid(true)
+          .email(tokenData.getEmail())
+          .message("Token is valid")
+          .build();
+    } catch (AppException e) {
+      return service.identity.DTOs.response.ValidateResetTokenResponse.builder()
+          .valid(false)
+          .email(null)
+          .message(e.getErrorCode().getMessage())
+          .build();
+    }
+  }
+
+  public boolean resetPassword(String token, String newPassword,
+                               String confirmPassword) {
+    // Validate password confirmation
+    if (!newPassword.equals(confirmPassword)) {
+      throw new AppException(ErrorCode.PASSWORDS_DO_NOT_MATCH);
+    }
+
+    // Validate password length (same as registration)
+    if (newPassword.length() < 4 || newPassword.length() > 30) {
+      throw new AppException(ErrorCode.PASSWORD_INVALID);
+    }
+
+    // Validate token and get user data
+    service.identity.utils.PasswordResetTokenUtils
+        .PasswordResetTokenData tokenData =
+        passwordResetTokenUtils.validatePasswordResetToken(token);
+
+    String userId = tokenData.getUserId();
+
+    lock.lock();
+    try {
+      User user = userRepository.findById(userId).orElseThrow(
+          () -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+      // Update password
+      user.setPassword(passwordEncoder.encode(newPassword));
+
+      // If user was using Google login, mark that they now have a password
+      if (user.isLoginByGoogle()) {
+        user.setLoginByGoogle(false);
+      }
+
+      userRepository.save(user);
+      log.info("Password reset successfully for user: {}", userId);
+
+      return true;
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  private String loadPasswordResetEmailTemplate(String username,
+                                                String resetLink) {
+    try {
+      org.springframework.core.io.ClassPathResource resource =
+          new org.springframework.core.io.ClassPathResource(
+              "templates/password-reset.html");
+      String content =
+          new String(java.nio.file.Files.readAllBytes(
+                         java.nio.file.Paths.get(resource.getURI())),
+                     java.nio.charset.StandardCharsets.UTF_8);
+      return content.replace("{{username}}", username)
+          .replace("{{resetLink}}", resetLink);
+    } catch (java.io.IOException e) {
+      log.error("Error reading password-reset.html template: {}",
+                e.getMessage());
+      throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR);
+    }
+  }
 }

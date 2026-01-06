@@ -39,7 +39,11 @@ public class SecurityGlobal {
                                 "/authorities/create",
                                 "/roles/create",
                                 "/auth/refresh-token",
-                                "/users/summaries"};
+                                "/users/summaries",
+                                "/users/check-email",
+                                "/users/forgot-password",
+                                "/users/validate-reset-token",
+                                "/users/reset-password"};
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
