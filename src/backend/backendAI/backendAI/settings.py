@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     "drf_yasg",
     "apps.conversation",
     "apps.prompt_service",
-    "apps.image_service",
     "apps.image_gallery",
     "apps.intent_router",
     "apps.image_generation",

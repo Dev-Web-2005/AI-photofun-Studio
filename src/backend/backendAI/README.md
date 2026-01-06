@@ -327,7 +327,6 @@ docker-compose --profile monitoring up -d
 apps/
 ├── conversation/            # 💬 Chat service (MongoDB + Celery chains)
 ├── prompt_service/          # 🤖 Prompt refinement + intent detection (Gemini)
-├── image_service/           # 🎨 Image generation + Cloudinary upload
 ├── image_gallery/           # 🖼️ User image management (PostgreSQL/Supabase)
 └── [future AI apps...]      # Will be added as needed
 
@@ -351,7 +350,6 @@ testing_apps/                # � Backup of experimental apps
 **Current Implementation:**
 - `conversation` → MongoDB chat with Celery pipeline orchestration (active)
 - `prompt_service` → Gemini API integration for prompt refinement (active)
-- `image_service` → Image generation with Cloudinary upload (active)
 - `image_gallery` → PostgreSQL persistence for user images (active)
 - `api_gateway` → Port 9999 service orchestration (active)
 

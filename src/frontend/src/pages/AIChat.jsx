@@ -21,6 +21,7 @@ import CreatePostWidget from "../components/post/CreatePostWidget";
 import { communicationApi } from "../api/communicationApi";
 import { usePosts } from "../hooks/usePosts";
 import { formatAIError } from "../utils/formatAIError";
+import { getUserId } from "../api/aiApi";
 
 const AI_BACKEND_URL =
   import.meta.env.VITE_AI_BACKEND_URL ||
@@ -125,7 +126,7 @@ const AIChat = () => {
       const res = await fetch(`${AI_BACKEND_URL}/chat/sessions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: user?.id || "anonymous" }),
+        body: JSON.stringify({ user_id: getUserId() }),
       });
       const data = await res.json();
       const newSessionId =
@@ -242,7 +243,7 @@ const AIChat = () => {
 
     // Build request
     const requestBody = {
-      user_id: user?.id || "anonymous",
+      user_id: getUserId(),
       prompt,
     };
 

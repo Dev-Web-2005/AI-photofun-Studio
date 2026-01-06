@@ -5,7 +5,6 @@ from pymongo import ReturnDocument
 import uuid
 import logging
 from apps.prompt_service.celery_tasks import process_prompt_task
-from apps.image_service.celery_tasks import generate_image_task
 from .celery_tasks import finalize_conversation_task
 from celery import chain
 from core import ResponseFormatter
