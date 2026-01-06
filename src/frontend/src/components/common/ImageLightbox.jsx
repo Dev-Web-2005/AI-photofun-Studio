@@ -18,12 +18,19 @@ const ImageLightbox = ({
   const [position, setPosition] = React.useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = React.useState(false);
   const [dragStart, setDragStart] = React.useState({ x: 0, y: 0 });
+  const [hasMoved, setHasMoved] = React.useState(false);
+  const [startPosition, setStartPosition] = React.useState({ x: 0, y: 0 });
+  
+  // Track if interaction started from image (to prevent closing viewer when dragging from image to overlay)
+  const interactionFromImage = React.useRef(false);
 
   // Reset state when opening
   useEffect(() => {
     if (isOpen) {
       setScale(1);
       setPosition({ x: 0, y: 0 });
+      setHasMoved(false);
+      interactionFromImage.current = false;
     }
   }, [isOpen]);
 
@@ -68,13 +75,28 @@ const ImageLightbox = ({
 
   const handleMouseDown = (e) => {
     if (scale > 1) {
+      e.preventDefault();
       setIsDragging(true);
-      setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y });
+      setHasMoved(false);
+      setStartPosition({ x: e.clientX, y: e.clientY });
+      // Store current mouse position minus current image position
+      setDragStart({ 
+        x: e.clientX - position.x, 
+        y: e.clientY - position.y 
+      });
     }
   };
 
   const handleMouseMove = (e) => {
     if (isDragging && scale > 1) {
+      // Track if user has moved mouse significantly (threshold: 5px)
+      const dx = Math.abs(e.clientX - startPosition.x);
+      const dy = Math.abs(e.clientY - startPosition.y);
+      if (dx > 5 || dy > 5) {
+        setHasMoved(true);
+      }
+      
+      // Calculate new position as current mouse position minus drag start offset
       setPosition({
         x: e.clientX - dragStart.x,
         y: e.clientY - dragStart.y,
@@ -84,6 +106,11 @@ const ImageLightbox = ({
 
   const handleMouseUp = () => {
     setIsDragging(false);
+    // Reset hasMoved after a short delay to allow onClick to check the current state
+    setTimeout(() => {
+      setHasMoved(false);
+      interactionFromImage.current = false;
+    }, 0);
   };
 
   const handleWheel = (e) => {
@@ -100,7 +127,14 @@ const ImageLightbox = ({
   const lightboxContent = (
     <div
       className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center"
-      onClick={onClose}
+      onClick={(e) => {
+        // Only close if:
+        // 1. No drag movement detected (!hasMoved)
+        // 2. Interaction did not start from image (!interactionFromImage.current)
+        if (!hasMoved && !interactionFromImage.current) {
+          onClose();
+        }
+      }}
     >
       {/* Controls */}
       <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
@@ -148,24 +182,33 @@ const ImageLightbox = ({
         </button>
       </div>
 
-      {/* Image */}
+      {/* Image Container - overflow visible to allow zoom beyond initial bounds */}
       <div
-        className="max-w-[90vw] max-h-[90vh] overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
+        className="flex items-center justify-center"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         onWheel={handleWheel}
+        style={{
+          width: "90vw",
+          height: "90vh",
+          overflow: "visible",
+        }}
       >
         <img
           src={imageUrl}
           alt={alt}
-          className="max-w-full max-h-[90vh] object-contain transition-transform duration-200"
+          onMouseDown={(e) => {
+            // Mark that interaction started from image
+            interactionFromImage.current = true;
+          }}
+          onClick={(e) => e.stopPropagation()}
+          className="object-contain transition-transform duration-200"
           style={{
-            transform: `scale(${scale}) translate(${position.x / scale}px, ${
-              position.y / scale
-            }px)`,
+            maxWidth: "90vw",
+            maxHeight: "90vh",
+            transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
             cursor: scale > 1 ? (isDragging ? "grabbing" : "grab") : "zoom-in",
           }}
           draggable={false}
