@@ -58,6 +58,7 @@ urlpatterns = [
     
     # Shared gallery (used by both flows)
     path('v1/gallery/', include('apps.image_gallery.urls')),
+    path('api/v1/ai/gallery/', include('apps.image_gallery.urls')),
 ]
 
 if settings.DEBUG:

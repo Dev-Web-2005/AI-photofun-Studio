@@ -29,6 +29,7 @@ import PaymentSuccess from "../pages/PaymentSuccess";
 import PricingPage from "../pages/PricingPage";
 import PaymentFail from "../pages/PaymentFail";
 import Settings from "../pages/Settings";
+import Gallery from "../pages/Gallery";
 import { useAuthContext } from "../context/AuthContext";
 import LoadingScreen from "../components/common/LoadingScreen";
 import { useAuth } from "../hooks/useAuth";
@@ -116,6 +117,7 @@ function AppRoutes() {
         <Route path="/image-expand" element={<ImageExpand />} />
         <Route path="/image-to-video" element={<ImageToVideo />} />
         <Route path="/prompt-to-video" element={<PromptToVideo />} />
+        <Route path="/gallery" element={<Gallery />} />
         <Route path="/activity" element={<Notifications />} />
         <Route path="/messages" element={<MessagesPage />} />
         <Route path="/profile" element={<Profile />} />
