@@ -417,8 +417,8 @@ const AIChat = () => {
       {/* Header */}
       <header
         className={`${isDarkMode
-            ? "bg-slate-800 border-slate-700"
-            : "bg-white border-gray-200"
+          ? "bg-slate-800 border-slate-700"
+          : "bg-white border-gray-200"
           } border-b -mx-6 px-6 py-4`}
       >
         <div className="flex items-center justify-between">
@@ -426,8 +426,8 @@ const AIChat = () => {
             type="button"
             onClick={() => navigate("/ai-tools")}
             className={`flex items-center gap-2 ${isDarkMode
-                ? "text-slate-400 hover:text-white"
-                : "text-gray-600 hover:text-gray-900"
+              ? "text-slate-400 hover:text-white"
+              : "text-gray-600 hover:text-gray-900"
               } transition-colors group`}
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200" />
@@ -460,8 +460,8 @@ const AIChat = () => {
           <button
             onClick={handleResetChat}
             className={`flex items-center gap-2 px-3 py-1.5 rounded-lg ${isDarkMode
-                ? "text-slate-400 hover:text-white hover:bg-slate-700"
-                : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"
+              ? "text-slate-400 hover:text-white hover:bg-slate-700"
+              : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"
               } text-sm transition-all duration-200 group/reset`}
             title="Start new conversation"
           >
@@ -474,8 +474,8 @@ const AIChat = () => {
       {/* Chat Container */}
       <div
         className={`${isDarkMode
-            ? "bg-slate-800 border-slate-700"
-            : "bg-white border-gray-100"
+          ? "bg-slate-800 border-slate-700"
+          : "bg-white border-gray-100"
           } border rounded-2xl shadow-sm overflow-hidden`}
       >
         {/* Messages Area */}
@@ -486,8 +486,8 @@ const AIChat = () => {
           {error && (
             <div
               className={`${isDarkMode
-                  ? "bg-red-900/30 border-red-700 text-red-300"
-                  : "bg-red-50 border-red-200 text-red-700"
+                ? "bg-red-900/30 border-red-700 text-red-300"
+                : "bg-red-50 border-red-200 text-red-700"
                 } border px-4 py-3 rounded-xl text-sm animate-fade-in flex items-start gap-3`}
             >
               <span className="text-lg">⚠️</span>
@@ -504,12 +504,12 @@ const AIChat = () => {
             >
               <div
                 className={`max-w-[85%] md:max-w-[75%] rounded-2xl px-5 py-3.5 ${msg.role === "user"
-                    ? isDarkMode
-                      ? "bg-slate-700 text-white shadow-sm"
-                      : "bg-gray-900 text-white shadow-sm"
-                    : isDarkMode
-                      ? "bg-slate-800 text-slate-100 shadow-sm border border-slate-700/50"
-                      : "bg-white text-gray-800 shadow-sm border border-gray-200"
+                  ? isDarkMode
+                    ? "bg-slate-700 text-white shadow-sm"
+                    : "bg-gray-900 text-white shadow-sm"
+                  : isDarkMode
+                    ? "bg-slate-800 text-slate-100 shadow-sm border border-slate-700/50"
+                    : "bg-white text-gray-800 shadow-sm border border-gray-200"
                   } ${msg.role === "user" ? "rounded-br-sm" : "rounded-bl-sm"
                   } transition-all duration-200 hover:shadow-md`}
               >
@@ -522,8 +522,8 @@ const AIChat = () => {
                 {msg.intent && (
                   <div
                     className={`text-xs mt-3 px-3 py-1.5 rounded-lg inline-block ${isDarkMode
-                        ? "bg-slate-700/50 text-slate-300"
-                        : "bg-gray-100 text-gray-600"
+                      ? "bg-slate-700/50 text-slate-300"
+                      : "bg-gray-100 text-gray-600"
                       }`}
                   >
                     🎯 {msg.intent}
@@ -538,8 +538,8 @@ const AIChat = () => {
                         src={msg.imageUrl}
                         alt="AI Generated"
                         className={`rounded-xl max-w-full max-h-[300px] object-contain cursor-pointer transition-all duration-300 ${isDarkMode
-                            ? "border-2 border-slate-700"
-                            : "border-2 border-gray-200"
+                          ? "border-2 border-slate-700"
+                          : "border-2 border-gray-200"
                           } group-hover/image:scale-[1.02] group-hover/image:shadow-2xl`}
                         onClick={() => setLightboxImage(msg.imageUrl)}
                       />
@@ -550,8 +550,8 @@ const AIChat = () => {
                         <button
                           onClick={() => handleDownload(msg.imageUrl)}
                           className={`flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-lg transition-all duration-200 hover:scale-105 ${isDarkMode
-                              ? "bg-slate-700 hover:bg-slate-600 text-slate-200"
-                              : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                            ? "bg-slate-700 hover:bg-slate-600 text-slate-200"
+                            : "bg-gray-100 hover:bg-gray-200 text-gray-700"
                             }`}
                         >
                           <Download className="w-3.5 h-3.5" /> Download
@@ -586,12 +586,12 @@ const AIChat = () => {
                   <div className="mt-3">
                     <span
                       className={`text-xs font-medium px-2.5 py-1 rounded-full ${msg.status === "COMPLETED"
-                          ? "bg-green-100 text-green-700"
-                          : msg.status === "PROCESSING"
-                            ? "bg-blue-100 text-blue-700"
-                            : msg.status === "FAILED"
-                              ? "bg-red-100 text-red-700"
-                              : "bg-yellow-100 text-yellow-700"
+                        ? "bg-green-100 text-green-700"
+                        : msg.status === "PROCESSING"
+                          ? "bg-blue-100 text-blue-700"
+                          : msg.status === "FAILED"
+                            ? "bg-red-100 text-red-700"
+                            : "bg-yellow-100 text-yellow-700"
                         }`}
                     >
                       {msg.status}
@@ -602,12 +602,12 @@ const AIChat = () => {
                 {/* Timestamp */}
                 <div
                   className={`text-xs mt-2 ${msg.role === "user"
-                      ? isDarkMode
-                        ? "text-slate-300"
-                        : "text-gray-200"
-                      : isDarkMode
-                        ? "text-slate-500"
-                        : "text-gray-400"
+                    ? isDarkMode
+                      ? "text-slate-300"
+                      : "text-gray-200"
+                    : isDarkMode
+                      ? "text-slate-500"
+                      : "text-gray-400"
                     }`}
                 >
                   {formatTime(msg.timestamp)}
@@ -618,70 +618,101 @@ const AIChat = () => {
 
           {/* Example Cards - show when only welcome message exists */}
           {messages.length === 1 && messages[0].id === "welcome" && (
-            <div className="mt-6 animate-fade-in">
+            <div className="mt-4 animate-fade-in">
               <p
-                className={`text-sm font-medium mb-4 ${isDarkMode ? "text-slate-400" : "text-gray-500"
+                className={`text-xs font-medium mb-3 ${isDarkMode ? "text-slate-500" : "text-gray-400"
                   }`}
               >
-                ✨ Try one of these examples:
+                ✨ Try an example:
               </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                 {[
                   {
                     icon: "🎨",
-                    title: "Create an Image",
-                    prompt: "Create a majestic dragon flying over a mystical mountain at sunset",
+                    title: "Create Image",
+                    prompts: [
+                      "A magical forest with glowing mushrooms at night",
+                      "Futuristic city skyline with flying cars",
+                      "Cute cat wearing a wizard hat",
+                      "Dragon perched on a medieval castle",
+                      "Astronaut playing guitar on the moon",
+                    ],
                   },
                   {
                     icon: "🔍",
-                    title: "Upscale & Enhance",
-                    prompt: "Upscale this image to 4K resolution with enhanced details",
+                    title: "Upscale",
+                    prompts: [
+                      "Upscale this image to 4K with enhanced details",
+                      "Enhance resolution and sharpen this photo",
+                      "Make this image ultra HD quality",
+                      "Upscale and improve clarity of this picture",
+                      "Enhance this low-res image to high quality",
+                    ],
                   },
                   {
                     icon: "🧹",
-                    title: "Remove Background",
-                    prompt: "Remove the background from this image and make it transparent",
+                    title: "Remove BG",
+                    prompts: [
+                      "Remove the background and make it transparent",
+                      "Cut out the subject from this image",
+                      "Delete background, keep only the main object",
+                      "Make background transparent for this photo",
+                      "Remove everything except the person",
+                    ],
                   },
                   {
                     icon: "🎭",
-                    title: "Change Style",
-                    prompt: "Transform this photo into a Studio Ghibli anime style artwork",
+                    title: "Style Transfer",
+                    prompts: [
+                      "Transform into Studio Ghibli anime style",
+                      "Make this look like a Van Gogh painting",
+                      "Convert to pixel art retro game style",
+                      "Apply watercolor painting effect",
+                      "Transform into cyberpunk neon aesthetic",
+                    ],
                   },
                   {
                     icon: "☀️",
-                    title: "Adjust Lighting",
-                    prompt: "Add warm golden hour lighting to this portrait photo",
+                    title: "Lighting",
+                    prompts: [
+                      "Add warm golden hour lighting",
+                      "Apply dramatic cinematic lighting",
+                      "Make it look like sunset atmosphere",
+                      "Add soft studio portrait lighting",
+                      "Apply moody dark lighting effect",
+                    ],
                   },
                   {
                     icon: "📐",
-                    title: "Expand Canvas",
-                    prompt: "Extend the left and right edges of this landscape image",
+                    title: "Expand",
+                    prompts: [
+                      "Extend the left and right edges",
+                      "Expand the top of this image",
+                      "Make the canvas wider horizontally",
+                      "Add more space around the subject",
+                      "Extend background in all directions",
+                    ],
                   },
-                ].map((example, idx) => (
+                ].map((card, idx) => (
                   <button
                     key={idx}
-                    onClick={() => setInputValue(example.prompt)}
-                    className={`text-left p-4 rounded-xl border transition-all duration-200 hover:scale-[1.02] hover:shadow-md ${isDarkMode
-                        ? "bg-slate-800/50 border-slate-700 hover:bg-slate-700/50 hover:border-slate-600"
-                        : "bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300"
+                    onClick={() => {
+                      const randomPrompt = card.prompts[Math.floor(Math.random() * card.prompts.length)];
+                      setInputValue(randomPrompt);
+                    }}
+                    className={`text-left p-3 rounded-xl border transition-all duration-200 hover:scale-[1.02] hover:shadow-md ${isDarkMode
+                        ? "bg-slate-800/50 border-slate-700 hover:bg-slate-700/50"
+                        : "bg-white border-gray-200 hover:bg-gray-50"
                       }`}
                   >
-                    <div className="flex items-start gap-3">
-                      <span className="text-2xl">{example.icon}</span>
-                      <div>
-                        <h4
-                          className={`font-semibold text-sm mb-1 ${isDarkMode ? "text-slate-200" : "text-gray-800"
-                            }`}
-                        >
-                          {example.title}
-                        </h4>
-                        <p
-                          className={`text-xs leading-relaxed ${isDarkMode ? "text-slate-400" : "text-gray-500"
-                            }`}
-                        >
-                          {example.prompt}
-                        </p>
-                      </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">{card.icon}</span>
+                      <span
+                        className={`text-xs font-medium ${isDarkMode ? "text-slate-300" : "text-gray-700"
+                          }`}
+                      >
+                        {card.title}
+                      </span>
                     </div>
                   </button>
                 ))}
@@ -694,8 +725,8 @@ const AIChat = () => {
             <div className="flex justify-start animate-fade-in">
               <div
                 className={`${isDarkMode
-                    ? "bg-slate-800 border-slate-700/50"
-                    : "bg-white border-gray-200"
+                  ? "bg-slate-800 border-slate-700/50"
+                  : "bg-white border-gray-200"
                   } rounded-2xl rounded-bl-sm px-5 py-3.5 shadow-sm border`}
               >
                 <div className="flex gap-1.5 items-center">
@@ -725,16 +756,16 @@ const AIChat = () => {
         {/* Input Area */}
         <div
           className={`p-5 ${isDarkMode
-              ? "border-t border-slate-700 bg-slate-800/30"
-              : "border-t border-gray-200 bg-white"
+            ? "border-t border-slate-700 bg-slate-800/30"
+            : "border-t border-gray-200 bg-white"
             }`}
         >
           {/* Reply Preview */}
           {replyToMessageId && replyToImageUrl && (
             <div
               className={`flex items-center gap-3 mb-4 p-3 rounded-xl border transition-all duration-200 ${isDarkMode
-                  ? "bg-slate-700/50 border-slate-600"
-                  : "bg-gray-50 border-gray-200"
+                ? "bg-slate-700/50 border-slate-600"
+                : "bg-gray-50 border-gray-200"
                 }`}
             >
               <img
@@ -760,8 +791,8 @@ const AIChat = () => {
               <button
                 onClick={cancelReply}
                 className={`${isDarkMode
-                    ? "text-slate-400 hover:text-white hover:bg-slate-700"
-                    : "text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+                  ? "text-slate-400 hover:text-white hover:bg-slate-700"
+                  : "text-gray-400 hover:text-gray-600 hover:bg-gray-100"
                   } p-1.5 rounded-lg transition-colors`}
               >
                 <X className="w-4 h-4" />
@@ -782,8 +813,8 @@ const AIChat = () => {
           {(attachedImagePreview || attachedImageUrl) && (
             <div
               className={`flex items-center gap-3 mb-4 p-3 rounded-xl border transition-all duration-200 ${isDarkMode
-                  ? "bg-slate-700/50 border-slate-600"
-                  : "bg-gray-50 border-gray-200"
+                ? "bg-slate-700/50 border-slate-600"
+                : "bg-gray-50 border-gray-200"
                 }`}
             >
               <img
@@ -816,8 +847,8 @@ const AIChat = () => {
                 onClick={removeAttachedImage}
                 disabled={isUploading}
                 className={`${isDarkMode
-                    ? "text-slate-400 hover:text-white hover:bg-slate-700"
-                    : "text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+                  ? "text-slate-400 hover:text-white hover:bg-slate-700"
+                  : "text-gray-400 hover:text-gray-600 hover:bg-gray-100"
                   } p-1.5 rounded-lg transition-colors disabled:opacity-50`}
               >
                 <X className="w-4 h-4" />
@@ -831,8 +862,8 @@ const AIChat = () => {
               onClick={() => imageInputRef.current?.click()}
               disabled={isUploading}
               className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-200 disabled:opacity-50 hover:scale-110 ${isDarkMode
-                  ? "bg-slate-700 hover:bg-slate-600 text-slate-300"
-                  : "bg-gray-100 hover:bg-gray-200 text-gray-600"
+                ? "bg-slate-700 hover:bg-slate-600 text-slate-300"
+                : "bg-gray-100 hover:bg-gray-200 text-gray-600"
                 }`}
               title="Upload image"
             >
@@ -850,8 +881,8 @@ const AIChat = () => {
               onKeyPress={handleKeyPress}
               placeholder="Type your message..."
               className={`flex-1 px-4 py-2.5 rounded-xl transition-all duration-200 ${isDarkMode
-                  ? "bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:border-slate-500 focus:bg-slate-600/50"
-                  : "bg-white border border-gray-300 text-gray-900 placeholder-gray-400 focus:border-gray-400 focus:bg-gray-50"
+                ? "bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:border-slate-500 focus:bg-slate-600/50"
+                : "bg-white border border-gray-300 text-gray-900 placeholder-gray-400 focus:border-gray-400 focus:bg-gray-50"
                 } focus:outline-none`}
               disabled={isLoading}
             />
@@ -859,8 +890,8 @@ const AIChat = () => {
               onClick={handleSendMessage}
               disabled={isLoading || !inputValue.trim()}
               className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-200 disabled:opacity-40 ${isDarkMode
-                  ? "bg-slate-700 hover:bg-slate-600 text-white"
-                  : "bg-gray-900 hover:bg-gray-800 text-white"
+                ? "bg-slate-700 hover:bg-slate-600 text-white"
+                : "bg-gray-900 hover:bg-gray-800 text-white"
                 } disabled:hover:bg-slate-700 group/send`}
             >
               {isLoading ? (
