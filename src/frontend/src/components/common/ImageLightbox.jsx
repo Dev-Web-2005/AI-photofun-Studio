@@ -1,9 +1,11 @@
 import React, { useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { X, ZoomIn, ZoomOut, Download } from "lucide-react";
 
 /**
  * ImageLightbox - A reusable component for viewing images in fullscreen with zoom
  * Can be used in ChatBot, PostCard, and other components
+ * Uses React Portal to render outside parent DOM hierarchy
  */
 const ImageLightbox = ({
   isOpen,
@@ -95,7 +97,7 @@ const ImageLightbox = ({
 
   if (!isOpen) return null;
 
-  return (
+  const lightboxContent = (
     <div
       className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center"
       onClick={onClose}
@@ -176,6 +178,9 @@ const ImageLightbox = ({
       </div>
     </div>
   );
+
+  // Use Portal to render lightbox outside parent DOM hierarchy
+  return createPortal(lightboxContent, document.body);
 };
 
 export default ImageLightbox;
