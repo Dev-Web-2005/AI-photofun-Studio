@@ -361,7 +361,7 @@ jobs:
 
             echo "Deploying frontend..."
             cd $WORKSPACE/src/frontend
-            rm -rf dist node_modules/.vite
+            rm -rf dist node_modules
 
             cat > .env << EOF
             VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID
