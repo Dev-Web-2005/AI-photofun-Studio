@@ -11,14 +11,14 @@ from .serializers import (
 
 
 class ImageGalleryCountView(APIView):
-    """GET: Count all images for a user (including deleted)"""
+    """GET: Count active images for a user (excluding deleted)"""
     def get(self, request):
         user_id = request.query_params.get('user_id')
         if not user_id:
             return APIResponse.error(message='user_id is required')
 
-        # Count all images (including soft-deleted)
-        count = ImageGallery.objects.filter(user_id=user_id).count()
+        # Count only non-deleted images
+        count = ImageGallery.objects.filter(user_id=user_id, deleted_at__isnull=True).count()
         return APIResponse.success(result={'count': count})
 
 

@@ -7,13 +7,18 @@ from .serializers import VideoGallerySerializer, VideoGalleryListSerializer
 
 
 class VideoGalleryCountView(APIView):
-    """GET: Count all videos for a user (including deleted)"""
+    """GET: Count active videos for a user (excluding deleted, only SUCCEEDED)"""
     def get(self, request):
         user_id = request.query_params.get('user_id')
         if not user_id:
             return APIResponse.error(message='user_id is required')
 
-        count = VideoGallery.objects.filter(user_id=user_id).count()
+        # Count only non-deleted, succeeded videos
+        count = VideoGallery.objects.filter(
+            user_id=user_id,
+            deleted_at__isnull=True,
+            status='SUCCEEDED'
+        ).count()
         return APIResponse.success(result={'count': count})
 
 
