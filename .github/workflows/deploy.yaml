@@ -35,6 +35,15 @@ jobs:
       - name: Get changed files
         id: changes
         run: |
+          # If tag push or manual dispatch, deploy all
+          if [[ "${{ github.ref }}" == refs/tags/* ]] || [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "Tag push or manual dispatch detected - deploying all services"
+            echo "frontend=true" >> $GITHUB_OUTPUT
+            echo "backendAI=true" >> $GITHUB_OUTPUT
+            echo "backendSocial=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
           if [ "${{ github.event_name }}" == "pull_request" ]; then
             BASE_SHA="${{ github.event.pull_request.base.sha }}"
           elif [ "${{ github.event_name }}" == "push" ]; then
@@ -358,10 +367,20 @@ jobs:
           command_timeout: 50m
           envs: DEPLOY_PATH,BRANCH,VITE_GOOGLE_CLIENT_ID,VITE_GOOGLE_REDIRECT_URI,VITE_SOCIAL_GATWAY_API_URL,VITE_TURN_CREDENTIAL_1,VITE_TURN_CREDENTIAL_2,VITE_TURN_URL_1,VITE_TURN_URL_2,VITE_TURN_USERNAME_1,VITE_TURN_USERNAME_2,VITE_API_GATEWAY,VITE_AI_API_URL,VITE_FILE_UPLOAD_URL,VITE_SOCKET_URL,VITE_SOCKET_COMMENT_URL,VITE_COMMENT_API_URL,VITE_PAYMENT_API_URL,VITE_CHATBOT_API_URL,VITE_FIREBASE_API_KEY,VITE_FIREBASE_APP_ID,VITE_FIREBASE_AUTH_DOMAIN,VITE_FIREBASE_MEASUREMENT_ID,VITE_FIREBASE_MESSAGING_SENDER_ID,VITE_FIREBASE_PROJECT_ID,VITE_FIREBASE_STORAGE_BUCKET,VITE_PAYMENT_API_KEY,VITE_CHATBOT_BEARER_TOKEN,VITE_CHATBOT_USER_ID,VITE_CHATBOT_X_API_KEY
           script: |
-            WORKSPACE="/home/$USER/projects/frontend/"
+            WORKSPACE="/home/$USER/projects/frontend"
+
+            echo "Checking workspace structure..."
+            ls -la "$WORKSPACE" || echo "Directory does not exist"
 
             if [ ! -d "$WORKSPACE" ]; then
               echo "ERROR: Frontend directory not found at $WORKSPACE"
+              exit 1
+            fi
+
+            if [ ! -f "$WORKSPACE/package.json" ]; then
+              echo "ERROR: package.json not found at $WORKSPACE/package.json"
+              echo "Directory contents:"
+              ls -la "$WORKSPACE"
               exit 1
             fi
 
