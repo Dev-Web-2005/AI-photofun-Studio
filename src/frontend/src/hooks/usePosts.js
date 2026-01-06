@@ -27,7 +27,8 @@ const normalizePost = (post, index = 0) => {
   if (!post) return null;
 
   // Prompt mặc định khi người dùng tự upload ảnh/video (không phải từ AI tools)
-  const DEFAULT_PROMPT = "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e";
+  const DEFAULT_PROMPT =
+    "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e";
 
   const author = post.author || post.user || post.owner || post.createdBy || {};
   const promptValue = typeof post.prompt === "string" ? post.prompt.trim() : "";
@@ -38,9 +39,10 @@ const normalizePost = (post, index = 0) => {
   const userId =
     post.userId || post.userID || post.ownerId || post.authorId || author.id;
   const name =
-    author.username ||
     author.fullName ||
+    author.username ||
     author.name ||
+    post.fullName ||
     post.username ||
     post.ownerName ||
     "Unknown artist";
@@ -86,8 +88,8 @@ export const usePosts = (options = {}) => {
 
   const isMyPosts = Boolean(
     normalizedOptions.isMyPosts ||
-    normalizedOptions.scope === "my" ||
-    normalizedOptions.scope === "my-posts"
+      normalizedOptions.scope === "my" ||
+      normalizedOptions.scope === "my-posts"
   );
   const scope = isMyPosts ? "my" : normalizedOptions.scope || "feed";
   const page = normalizedOptions.page ?? 1;
@@ -142,10 +144,10 @@ export const usePosts = (options = {}) => {
             if (key) {
               acc[key] = Boolean(
                 entry.liked ??
-                entry.isLiked ??
-                entry.value ??
-                entry.status ??
-                true
+                  entry.isLiked ??
+                  entry.value ??
+                  entry.status ??
+                  true
               );
             }
             return acc;
@@ -193,11 +195,7 @@ export const usePosts = (options = {}) => {
             setUserCache((prev) => ({
               ...prev,
               [id]: {
-                name:
-                  data?.fullName ||
-                  data?.username ||
-                  data?.email ||
-                  "User",
+                name: data?.fullName || data?.username || data?.email || "User",
                 avatar:
                   data?.avatarUrl ||
                   data?.avatar ||
@@ -206,9 +204,9 @@ export const usePosts = (options = {}) => {
                 // Premium status
                 isPremium: Boolean(
                   data?.isPremium ||
-                  data?.premium ||
-                  data?.premiumOneMonth ||
-                  data?.premiumSixMonths
+                    data?.premium ||
+                    data?.premiumOneMonth ||
+                    data?.premiumSixMonths
                 ),
                 premiumOneMonth: Boolean(data?.premiumOneMonth),
                 premiumSixMonths: Boolean(data?.premiumSixMonths),
@@ -335,9 +333,15 @@ export const usePosts = (options = {}) => {
 
           // Compress image if it's too large (> 2MB)
           if (blob.size > 2 * 1024 * 1024) {
-            console.log(`📦 Compressing image (${(blob.size / 1024 / 1024).toFixed(2)}MB)...`);
+            console.log(
+              `📦 Compressing image (${(blob.size / 1024 / 1024).toFixed(
+                2
+              )}MB)...`
+            );
             blob = await compressImage(blob, 1920, 0.75);
-            console.log(`✅ Compressed to ${(blob.size / 1024 / 1024).toFixed(2)}MB`);
+            console.log(
+              `✅ Compressed to ${(blob.size / 1024 / 1024).toFixed(2)}MB`
+            );
           }
 
           const fileName = `ai-generated-${Date.now()}.jpg`;
@@ -346,7 +350,9 @@ export const usePosts = (options = {}) => {
           console.log("✅ Image ready for upload");
         } catch (downloadError) {
           console.error("Failed to download image from URL:", downloadError);
-          throw new Error("Unable to download image from URL. Please try again.");
+          throw new Error(
+            "Unable to download image from URL. Please try again."
+          );
         }
       }
 
@@ -441,10 +447,10 @@ export const usePosts = (options = {}) => {
         prev.map((post) =>
           post.id === postId
             ? {
-              ...post,
-              liked: nextLiked,
-              likes: nextLikes,
-            }
+                ...post,
+                liked: nextLiked,
+                likes: nextLikes,
+              }
             : post
         )
       );
@@ -457,10 +463,10 @@ export const usePosts = (options = {}) => {
           prev.map((post) =>
             post.id === postId
               ? {
-                ...post,
-                liked: prevLiked,
-                likes: prevLikes,
-              }
+                  ...post,
+                  liked: prevLiked,
+                  likes: prevLikes,
+                }
               : post
           )
         );

@@ -1,0 +1,50 @@
+Trường:
+- Hiển thị vài example card trong AI Chat
+- hiện pop-up tạo group (thay mấy cái alert bằng pop-up)
+- tạo group của acc premium -> nghiên cứu button create groups đâu cho hợp lí
+- api get count videos
+- api get my videos
+- Tích hợp 2 api trên
+-> note: dùng biến môi trường thì dùng cẩn thận nha dung ép cứng, thêm lên GitHub rồi báo tui là những biến gì, báo luôn là variables hay secrets luôn
+
+Thịnh:
+- gửi mail hỏi revision history, phạm vi task, bias trong công thức percent của git
+- chặn normal user sử dụng image to video, text to video (chuyển qua trang pricing luôn)
+- quay quay trong lúc tạo ảnh/video
+- mở ảnh trong ai chat, ảnh trong chatbot (hiện pop-up)
+- login google fail xấu
+- Thêm nút để người dùng sử dụng prompt của người đã đăng bài
+- Cho popup chọn icon
+Đế
+- bỏ set email password
+- bỏ following, follower
+- nút message lỗi màu (dark mode)
+- fix tắt mở ảnh bằng cách nhấn ra ngoài (lúc zoom ảnh post k click ra ngoài dc cần fix)
+- api get count images
+- api get my images
+- Tích hợp 2 api trên
+
+Công
+k edit profile được
+change password
+apt get count posts userId
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -239,10 +239,67 @@ jobs:
             sudo docker-compose ps
             sudo docker-compose logs --tail=30 backendAI
 
+  test-frontend:
+    name: "Test Frontend"
+    needs: detect-changes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: |
+          cd src/frontend
+          npm install
+
+      - name: Run tests
+        env:
+          DEPLOY_PATH: "/var/www/html/nmcnpm.lethanhcong.site/"
+          BRANCH: "test"
+
+          VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
+          VITE_GOOGLE_REDIRECT_URI: ${{ vars.VITE_GOOGLE_REDIRECT_URI }}
+          VITE_SOCIAL_GATWAY_API_URL: ${{ vars.VITE_SOCIAL_GATWAY_API_URL }}
+          VITE_TURN_CREDENTIAL_1: ${{ vars.VITE_TURN_CREDENTIAL_1 }}
+          VITE_TURN_CREDENTIAL_2: ${{ vars.VITE_TURN_CREDENTIAL_2 }}
+          VITE_TURN_URL_1: ${{ vars.VITE_TURN_URL_1 }}
+          VITE_TURN_URL_2: ${{ vars.VITE_TURN_URL_2 }}
+          VITE_TURN_USERNAME_1: ${{ vars.VITE_TURN_USERNAME_1 }}
+          VITE_TURN_USERNAME_2: ${{ vars.VITE_TURN_USERNAME_2 }}
+          VITE_API_GATEWAY: ${{ vars.VITE_API_GATEWAY }}
+          VITE_AI_API_URL: ${{ vars.VITE_AI_API_URL }}
+          VITE_SOCKET_URL: ${{ vars.VITE_SOCKET_URL }}
+          VITE_SOCKET_COMMENT_URL: ${{ vars.VITE_SOCKET_COMMENT_URL }}
+          VITE_COMMENT_API_URL: ${{ vars.VITE_COMMENT_API_URL }}
+          VITE_PAYMENT_API_URL: ${{ vars.VITE_PAYMENT_API_URL }}
+          VITE_FILE_UPLOAD_URL: ${{ vars.VITE_FILE_UPLOAD_URL }}
+          VITE_CHATBOT_API_URL: ${{ vars.VITE_CHATBOT_API_URL }}
+
+          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
+          VITE_PAYMENT_API_KEY: ${{ secrets.VITE_PAYMENT_API_KEY }}
+          VITE_CHATBOT_BEARER_TOKEN: ${{ secrets.VITE_CHATBOT_BEARER_TOKEN }}
+          VITE_CHATBOT_USER_ID: ${{ secrets.VITE_CHATBOT_USER_ID }}
+          VITE_CHATBOT_X_API_KEY: ${{ secrets.VITE_CHATBOT_X_API_KEY }}
+        run: |
+          set -e
+          cd src/frontend
+          npm run build
+
   deploy-frontend:
     name: "Deploy Frontend"
-    needs: detect-changes
-    #if: needs.detect-changes.outputs.frontend == 'true'
+    needs: [detect-changes, test-frontend]
+    if: needs.detect-changes.outputs.frontend == 'true' && needs.test-frontend.result == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: "Deploy Frontend via SSH"
@@ -325,6 +382,7 @@ jobs:
             VITE_FIREBASE_API_KEY=$VITE_FIREBASE_API_KEY
             VITE_FIREBASE_APP_ID=$VITE_FIREBASE_APP_ID
             VITE_FIREBASE_AUTH_DOMAIN=$VITE_FIREBASE_AUTH_DOMAIN
+            VITE_FIREBASE_DATABASE_URL=https://ai-photofun-studio-default-rtdb.firebaseio.com
             VITE_FIREBASE_MEASUREMENT_ID=$VITE_FIREBASE_MEASUREMENT_ID
             VITE_FIREBASE_MESSAGING_SENDER_ID=$VITE_FIREBASE_MESSAGING_SENDER_ID
             VITE_FIREBASE_PROJECT_ID=$VITE_FIREBASE_PROJECT_ID
@@ -337,8 +395,15 @@ jobs:
             VITE_CHATBOT_BEARER_TOKEN=$VITE_CHATBOT_BEARER_TOKEN
             EOF
 
+            set -e
             npm install --prefer-offline --no-audit
             npm run build
+
+            if [ ! -d "dist" ]; then
+              echo "ERROR: Build failed - dist directory not found"
+              exit 1
+            fi
+
             rm -rf $DEPLOY_PATH/*
             cp -r dist/* $DEPLOY_PATH
             sudo systemctl restart nginx

@@ -149,6 +149,26 @@ const UserProfile = () => {
     }
   };
 
+  const handleLikePost = async (postId) => {
+    try {
+      await postApi.likePost(postId);
+      setPosts((prevPosts) =>
+        prevPosts.map((post) => {
+          if (post.id === postId || post.backendId === postId) {
+            return {
+              ...post,
+              liked: !post.liked,
+              likes: post.liked ? post.likes - 1 : post.likes + 1,
+            };
+          }
+          return post;
+        })
+      );
+    } catch (error) {
+      console.error("Failed to like post:", error);
+    }
+  };
+
   const handleFollow = () => {
     setIsFollowing((prev) => !prev);
     // TODO: Call API to follow/unfollow
@@ -398,7 +418,7 @@ const UserProfile = () => {
                   premiumSixMonths: profile.premiumSixMonths,
                 },
               }}
-              onLikePost={() => {}}
+              onLikePost={handleLikePost}
               onNavigateAiTools={() => navigate("/ai-tools")}
             />
             

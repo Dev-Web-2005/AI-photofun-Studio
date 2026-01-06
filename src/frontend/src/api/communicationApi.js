@@ -71,7 +71,9 @@ export const communicationApi = {
   getGroupMembers: (groupId) =>
     axiosClient.get(`${BASE_URL}/groups/${groupId}/members`),
 
-  // File Upload - Production uses VITE_FILE_UPLOAD_URL, dev uses Vite proxy
+  getGroupMemberCount: (groupId) =>
+    axiosClient.get(`${BASE_URL}/groups/${groupId}/member-count`),
+
   uploadChatImage: async (file) => {
     const formData = new FormData();
     formData.append(

@@ -143,7 +143,7 @@ const MessagesPage = () => {
       const formattedConversations = data.map((conv) => ({
         id: conv.userId,
         userId: conv.userId,
-        name: conv.username || "User",
+        name: conv.fullName || conv.username || "User",
         avatar: conv.avatarUrl || `https://i.pravatar.cc/150?u=${conv.userId}`,
         lastMessage: "",
         time: "",
@@ -167,11 +167,21 @@ const MessagesPage = () => {
       const response = await communicationApi.getAllGroups(1, 50);
       const data = response?.data?.result?.items || [];
 
-      const formattedGroups = data
-        .map((group) => {
+      const formattedGroupsPromises = data
+        .map(async (group) => {
           const memberIds = group.memberIds || [];
           const isMember =
             memberIds.includes(user.id) || group.adminId === user.id;
+
+          let memberCount = memberIds.length || 0;
+          try {
+            const countResponse = await communicationApi.getGroupMemberCount(group.groupId);
+            if (countResponse?.data?.result !== undefined) {
+              memberCount = countResponse.data.result;
+            }
+          } catch (error) {
+            console.log("Failed to fetch member count for group:", group.groupId);
+          }
 
           return {
             id: group.groupId,
@@ -182,15 +192,17 @@ const MessagesPage = () => {
             lastMessage: "",
             time: "",
             unread: 0,
-            memberCount: memberIds.length || 0,
+            memberCount: memberCount,
             isGroup: true,
             adminId: group.adminId,
             memberIds: memberIds,
             isMember: isMember,
             isAdmin: group.adminId === user.id,
           };
-        })
-        .filter((group) => !group.isMember); // Filter out groups user has joined
+        });
+
+      const formattedGroups = (await Promise.all(formattedGroupsPromises))
+        .filter((group) => !group.isMember);
 
       setExploreGroups(formattedGroups);
       console.log("✅ Fetched explore groups:", formattedGroups);
@@ -314,7 +326,7 @@ const MessagesPage = () => {
               const userRes = await userApi.getUserById(req.userId);
               const userData = userRes?.data?.result;
               const username =
-                userData?.username || userData?.fullName || "User";
+                userData?.fullName || userData?.username || "User";
               const avatarUrl =
                 userData?.avatarUrl ||
                 `https://i.pravatar.cc/150?u=${req.userId}`;
@@ -391,7 +403,7 @@ const MessagesPage = () => {
               );
               return {
                 id: senderId,
-                username: userData?.username || userData?.fullName || "User",
+                username: userData?.fullName || userData?.username || "User",
                 avatarUrl:
                   userData?.avatarUrl ||
                   `https://i.pravatar.cc/150?u=${senderId}`,
@@ -602,7 +614,7 @@ const MessagesPage = () => {
 
         setIncomingCallData({
           callerId: data.callerId,
-          callerName: userData?.username || userData?.fullName || "User",
+          callerName: userData?.fullName || userData?.username || "User",
           callerAvatar:
             userData?.avatarUrl ||
             `https://i.pravatar.cc/150?u=${data.callerId}`,
@@ -700,7 +712,7 @@ const MessagesPage = () => {
               userData?.premiumSixMonths
             );
             senderInfo = {
-              username: userData?.username || userData?.fullName || "User",
+              username: userData?.fullName || userData?.username || "User",
               avatarUrl:
                 userData?.avatarUrl ||
                 `https://i.pravatar.cc/150?u=${data.senderId}`,
