@@ -148,6 +148,7 @@ def process_message(session_id, message):
     # Build context with all available information
     context = {
         "session_id": session_id,
+        "user_id": user_id,  # Pass the actual user_id for proper gallery attribution
         "images": context_images,  # List of all context images
         "image_url": context_images[0] if context_images else None,  # Primary image (backward compatible)
         "reference_image": context_images[1] if len(context_images) > 1 else None,  # Secondary image for features like style_transfer

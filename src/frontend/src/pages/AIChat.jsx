@@ -23,9 +23,10 @@ import { usePosts } from "../hooks/usePosts";
 import { formatAIError } from "../utils/formatAIError";
 import { getUserId } from "../api/aiApi";
 
+// Use same base URL as other AI features for consistency
 const AI_BACKEND_URL =
   import.meta.env.VITE_AI_BACKEND_URL ||
-  "https://nmcnpm-api-ai.lethanhcong.site:46337/api/v1";
+  (import.meta.env.VITE_AI_API_URL || "http://localhost:9999") + "/api/v1";
 
 const AIChat = () => {
   const navigate = useNavigate();
