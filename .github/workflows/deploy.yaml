@@ -302,10 +302,22 @@ jobs:
     if: needs.detect-changes.outputs.frontend == 'true' && needs.test-frontend.result == 'success'
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Move code to server
+        use: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "src/frontend/"
+          target: "/home/${{ secrets.SSH_USERNAME }}/projects/frontend/"
+
       - name: "Deploy Frontend via SSH"
         env:
           DEPLOY_PATH: "/var/www/html/nmcnpm.lethanhcong.site/"
-          BRANCH: "test"
 
           VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
           VITE_GOOGLE_REDIRECT_URI: ${{ vars.VITE_GOOGLE_REDIRECT_URI }}
@@ -346,22 +358,16 @@ jobs:
           command_timeout: 50m
           envs: DEPLOY_PATH,BRANCH,VITE_GOOGLE_CLIENT_ID,VITE_GOOGLE_REDIRECT_URI,VITE_SOCIAL_GATWAY_API_URL,VITE_TURN_CREDENTIAL_1,VITE_TURN_CREDENTIAL_2,VITE_TURN_URL_1,VITE_TURN_URL_2,VITE_TURN_USERNAME_1,VITE_TURN_USERNAME_2,VITE_API_GATEWAY,VITE_AI_API_URL,VITE_FILE_UPLOAD_URL,VITE_SOCKET_URL,VITE_SOCKET_COMMENT_URL,VITE_COMMENT_API_URL,VITE_PAYMENT_API_URL,VITE_CHATBOT_API_URL,VITE_FIREBASE_API_KEY,VITE_FIREBASE_APP_ID,VITE_FIREBASE_AUTH_DOMAIN,VITE_FIREBASE_MEASUREMENT_ID,VITE_FIREBASE_MESSAGING_SENDER_ID,VITE_FIREBASE_PROJECT_ID,VITE_FIREBASE_STORAGE_BUCKET,VITE_PAYMENT_API_KEY,VITE_CHATBOT_BEARER_TOKEN,VITE_CHATBOT_USER_ID,VITE_CHATBOT_X_API_KEY
           script: |
-            WORKSPACE="/home/$USER/AI-photofun-Studio"
-            if [ -d "$WORKSPACE" ]; then
-              cd $WORKSPACE
-              git fetch origin
-              git reset --hard origin/$BRANCH
-              git clean -fd
-            else
-              cd /home/$USER
-              git clone https://github.com/Dev-Web-2005/AI-photofun-Studio.git
-              cd AI-photofun-Studio
-              git checkout $BRANCH
+            WORKSPACE="/home/$USER/projects/frontend"
+
+            if [ ! -d "$WORKSPACE" ]; then
+              echo "ERROR: Frontend directory not found at $WORKSPACE"
+              exit 1
             fi
 
-            echo "Deploying frontend..."
-            cd $WORKSPACE/src/frontend
-            rm -rf dist node_modules
+            if [ -d "$WORKSPACE/node_modules" ]; then
+              rm -rf $WORKSPACE/node_modules
+            fi
 
             cat > .env << EOF
             VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID
