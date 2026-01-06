@@ -389,6 +389,10 @@ jobs:
             fi
 
             echo "Using WORKSPACE: $WORKSPACE"
+            cd "$WORKSPACE"
+            echo "Current directory after cd: $(pwd)"
+            echo "Verifying package.json exists:"
+            ls -la package.json
 
             if [ -d "node_modules" ]; then
               rm -rf node_modules
