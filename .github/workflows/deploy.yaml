@@ -367,24 +367,28 @@ jobs:
           command_timeout: 50m
           envs: DEPLOY_PATH,BRANCH,VITE_GOOGLE_CLIENT_ID,VITE_GOOGLE_REDIRECT_URI,VITE_SOCIAL_GATWAY_API_URL,VITE_TURN_CREDENTIAL_1,VITE_TURN_CREDENTIAL_2,VITE_TURN_URL_1,VITE_TURN_URL_2,VITE_TURN_USERNAME_1,VITE_TURN_USERNAME_2,VITE_API_GATEWAY,VITE_AI_API_URL,VITE_FILE_UPLOAD_URL,VITE_SOCKET_URL,VITE_SOCKET_COMMENT_URL,VITE_COMMENT_API_URL,VITE_PAYMENT_API_URL,VITE_CHATBOT_API_URL,VITE_FIREBASE_API_KEY,VITE_FIREBASE_APP_ID,VITE_FIREBASE_AUTH_DOMAIN,VITE_FIREBASE_MEASUREMENT_ID,VITE_FIREBASE_MESSAGING_SENDER_ID,VITE_FIREBASE_PROJECT_ID,VITE_FIREBASE_STORAGE_BUCKET,VITE_PAYMENT_API_KEY,VITE_CHATBOT_BEARER_TOKEN,VITE_CHATBOT_USER_ID,VITE_CHATBOT_X_API_KEY
           script: |
-            WORKSPACE="/home/$USER/projects/frontend"
+            USER=$(whoami)
+            echo "Current user: $USER"
 
-            echo "Checking workspace structure..."
-            ls -la "$WORKSPACE" || echo "Directory does not exist"
+            # Check directory structure after scp
+            echo "Checking /home/$USER/projects/frontend structure:"
+            ls -la "/home/$USER/projects/frontend/" || echo "Directory does not exist"
 
-            if [ ! -d "$WORKSPACE" ]; then
-              echo "ERROR: Frontend directory not found at $WORKSPACE"
-              exit 1
-            fi
-
-            if [ ! -f "$WORKSPACE/package.json" ]; then
-              echo "ERROR: package.json not found at $WORKSPACE/package.json"
+            # Check if files are in src/frontend subdirectory
+            if [ -d "/home/$USER/projects/frontend/src/frontend" ]; then
+              echo "Files are in src/frontend subdirectory"
+              WORKSPACE="/home/$USER/projects/frontend/src/frontend"
+            elif [ -f "/home/$USER/projects/frontend/package.json" ]; then
+              echo "Files are directly in frontend directory"
+              WORKSPACE="/home/$USER/projects/frontend"
+            else
+              echo "ERROR: Cannot find package.json in expected locations"
               echo "Directory contents:"
-              ls -la "$WORKSPACE"
+              find "/home/$USER/projects/frontend" -name "package.json" 2>/dev/null || echo "No package.json found"
               exit 1
             fi
 
-            cd $WORKSPACE
+            echo "Using WORKSPACE: $WORKSPACE"
 
             if [ -d "node_modules" ]; then
               rm -rf node_modules
