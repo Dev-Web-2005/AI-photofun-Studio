@@ -32,7 +32,6 @@ app.conf.update(
 app.autodiscover_tasks([
     'apps.conversation',
     'apps.prompt_service',
-    'apps.image_service',
     'apps.intent_router',
     'apps.image_generation',
     'apps.upscale',

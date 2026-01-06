@@ -5,9 +5,13 @@ from .views import (
     ImageGalleryDeletedListView,
     ImageGalleryRestoreView,
     ImageGalleryPermanentDeleteView,
+    ImageGalleryCountView,
 )
 
 urlpatterns = [
+    # Count all images for a user
+    path('count', ImageGalleryCountView.as_view(), name='image-gallery-count'),
+    
     # List and create images
     path('', ImageGalleryListView.as_view(), name='image-gallery-list'),
     

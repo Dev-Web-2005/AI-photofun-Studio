@@ -41,6 +41,11 @@ export default defineConfig({
           });
         },
       },
+      "/api/v1/ai": {
+        target: "http://localhost:9999",
+        changeOrigin: true,
+        secure: false,
+      },
       "/api/v1/identity": {
         target: "http://localhost:8888",
         changeOrigin: true,

@@ -100,7 +100,6 @@ INSTALLED_APPS = [
     # Your apps
     'apps.conversation',
     'apps.prompt_service',
-    'apps.image_service',
     'apps.image_gallery',
     'apps.intent_router',
     

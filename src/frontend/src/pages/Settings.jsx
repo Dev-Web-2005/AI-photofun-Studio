@@ -176,14 +176,14 @@ const Settings = () => {
       actionLabel: "Update",
       icon: Lock,
     },
-    {
-      id: "set-email-password",
-      title: "Set Email Password",
-      description:
-        "Create a password when you previously only logged in with Google or social accounts.",
-      actionLabel: "Set Up",
-      icon: KeyRound,
-    },
+    // {
+    //   id: "set-email-password",
+    //   title: "Set Email Password",
+    //   description:
+    //     "Create a password when you previously only logged in with Google or social accounts.",
+    //   actionLabel: "Set Up",
+    //   icon: KeyRound,
+    // },
   ];
 
   // Trạng thái liên kết Google (dựa vào xác minh email)
