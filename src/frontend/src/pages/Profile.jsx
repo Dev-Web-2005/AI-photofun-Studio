@@ -20,6 +20,7 @@ import { usePosts } from "../hooks/usePosts";
 import { useProfile } from "../hooks/useProfile";
 import { userApi } from "../api/userApi";
 import { galleryApi } from "../api/galleryApi";
+import { videoGalleryApi } from "../api/videoGalleryApi";
 import { toast } from "../hooks/use-toast";
 
 const DEFAULT_AVATAR = "https://placehold.co/128x128/111/fff?text=U";
@@ -59,6 +60,7 @@ const Profile = () => {
   const [showEmail, setShowEmail] = useState(false);
   const [showPhone, setShowPhone] = useState(false);
   const [imageCount, setImageCount] = useState(0);
+  const [videoCount, setVideoCount] = useState(0);
   const {
     profile,
     currentUser,
@@ -93,6 +95,22 @@ const Profile = () => {
       }
     };
     fetchImageCount();
+  }, [currentUser?.id]);
+
+  // Fetch video count for user
+  useEffect(() => {
+    const fetchVideoCount = async () => {
+      if (!currentUser?.id) return;
+      try {
+        const response = await videoGalleryApi.getVideoCount(currentUser.id);
+        const count = response?.data?.result?.count ?? 0;
+        setVideoCount(count);
+      } catch (error) {
+        console.error("Failed to fetch video count:", error);
+        setVideoCount(0);
+      }
+    };
+    fetchVideoCount();
   }, [currentUser?.id]);
 
   // Gọi API kiểm tra trạng thái xác minh email
@@ -147,11 +165,11 @@ const Profile = () => {
       : PROFILE_DEFAULTS.created,
     isPremium: Boolean(
       profile?.isPremium ||
-        profile?.premium ||
-        profile?.premiumOneMonth ||
-        profile?.premiumSixMonths ||
-        currentUser?.premiumOneMonth ||
-        currentUser?.premiumSixMonths
+      profile?.premium ||
+      profile?.premiumOneMonth ||
+      profile?.premiumSixMonths ||
+      currentUser?.premiumOneMonth ||
+      currentUser?.premiumSixMonths
     ),
     premiumOneMonth: Boolean(
       profile?.premiumOneMonth || currentUser?.premiumOneMonth
@@ -195,11 +213,10 @@ const Profile = () => {
         </div>
       )}
       <section
-        className={`backdrop-blur-xl rounded-3xl p-6 md:p-8 shadow-[0_20px_70px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_70px_-15px_rgba(0,0,0,0.6)] relative overflow-hidden transition-all duration-300 ${
-          displayProfile.isPremium
-            ? "bg-gradient-to-br from-yellow-50/95 via-orange-50/95 to-pink-50/95 dark:from-yellow-900/10 dark:via-orange-900/10 dark:to-pink-900/10 border-2 border-yellow-200/50 dark:border-yellow-700/50"
-            : "bg-white/95 dark:bg-gray-800/95 border border-gray-200/50 dark:border-gray-700/50"
-        }`}
+        className={`backdrop-blur-xl rounded-3xl p-6 md:p-8 shadow-[0_20px_70px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_70px_-15px_rgba(0,0,0,0.6)] relative overflow-hidden transition-all duration-300 ${displayProfile.isPremium
+          ? "bg-gradient-to-br from-yellow-50/95 via-orange-50/95 to-pink-50/95 dark:from-yellow-900/10 dark:via-orange-900/10 dark:to-pink-900/10 border-2 border-yellow-200/50 dark:border-yellow-700/50"
+          : "bg-white/95 dark:bg-gray-800/95 border border-gray-200/50 dark:border-gray-700/50"
+          }`}
       >
         {/* Premium Background Decoration */}
         {displayProfile.isPremium && (
@@ -222,11 +239,10 @@ const Profile = () => {
               />
             )}
             <div
-              className={`relative ${
-                displayProfile.isPremium
-                  ? "p-1.5 bg-gradient-to-br from-yellow-400 via-orange-500 to-pink-500 rounded-full shadow-xl"
-                  : "p-1 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 rounded-full"
-              }`}
+              className={`relative ${displayProfile.isPremium
+                ? "p-1.5 bg-gradient-to-br from-yellow-400 via-orange-500 to-pink-500 rounded-full shadow-xl"
+                : "p-1 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 rounded-full"
+                }`}
             >
               <div className="p-1 bg-white dark:bg-gray-800 rounded-full">
                 <img
@@ -249,11 +265,10 @@ const Profile = () => {
               <div>
                 <div className="flex items-center gap-3 flex-wrap">
                   <h1
-                    className={`text-3xl md:text-4xl font-bold tracking-tight ${
-                      displayProfile.isPremium
-                        ? "bg-gradient-to-r from-yellow-600 via-orange-600 to-pink-600 dark:from-yellow-400 dark:via-orange-400 dark:to-pink-400 bg-clip-text text-transparent"
-                        : "text-gray-900 dark:text-gray-100"
-                    }`}
+                    className={`text-3xl md:text-4xl font-bold tracking-tight ${displayProfile.isPremium
+                      ? "bg-gradient-to-r from-yellow-600 via-orange-600 to-pink-600 dark:from-yellow-400 dark:via-orange-400 dark:to-pink-400 bg-clip-text text-transparent"
+                      : "text-gray-900 dark:text-gray-100"
+                      }`}
                   >
                     {displayProfile.fullName}
                   </h1>
@@ -270,13 +285,21 @@ const Profile = () => {
                 </p>
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 gap-3">
                 <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700/50 dark:to-gray-800/50 rounded-2xl p-4 border border-gray-200/50 dark:border-gray-600/50 hover:shadow-lg transition-all duration-300 hover:scale-105">
                   <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold tracking-wider">
                     Images Created
                   </p>
                   <p className="text-2xl md:text-3xl font-bold mt-2 text-gray-900 dark:text-gray-100">
                     {imageCount}
+                  </p>
+                </div>
+                <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-700/30 dark:to-purple-800/30 rounded-2xl p-4 border border-purple-200/50 dark:border-purple-600/50 hover:shadow-lg transition-all duration-300 hover:scale-105">
+                  <p className="text-xs text-purple-600 dark:text-purple-400 uppercase font-semibold tracking-wider">
+                    Videos Created
+                  </p>
+                  <p className="text-2xl md:text-3xl font-bold mt-2 text-purple-700 dark:text-purple-300">
+                    {videoCount}
                   </p>
                 </div>
               </div>
@@ -324,11 +347,10 @@ const Profile = () => {
                   {/* Verified badge for email - after email value */}
                   {isEmailField && (
                     <span
-                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm ${
-                        emailVerified
-                          ? "bg-gradient-to-br from-emerald-50 to-green-50 dark:from-emerald-900/30 dark:to-green-900/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-700"
-                          : "bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-900/30 dark:to-rose-900/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-700"
-                      }`}
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm ${emailVerified
+                        ? "bg-gradient-to-br from-emerald-50 to-green-50 dark:from-emerald-900/30 dark:to-green-900/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-700"
+                        : "bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-900/30 dark:to-rose-900/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-700"
+                        }`}
                     >
                       {emailVerified ? (
                         <>
@@ -382,11 +404,10 @@ const Profile = () => {
                     </button>
                     {verifyMessage && (
                       <p
-                        className={`text-sm font-medium ${
-                          verifyMessage.includes("sent")
-                            ? "text-green-600 dark:text-green-400"
-                            : "text-red-600 dark:text-red-400"
-                        }`}
+                        className={`text-sm font-medium ${verifyMessage.includes("sent")
+                          ? "text-green-600 dark:text-green-400"
+                          : "text-red-600 dark:text-red-400"
+                          }`}
                       >
                         {verifyMessage}
                       </p>
