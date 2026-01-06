@@ -30,6 +30,9 @@ const aiClient = axios.create({
   },
 });
 
+// Export aiClient for use in other API modules
+export { aiClient };
+
 // Request interceptor with rate limiting + auth token
 aiClient.interceptors.request.use(
   async (config) => {
@@ -150,7 +153,7 @@ const getSessionId = () => {
 export const pollTaskStatus = async (
   taskId,
   endpoint,
-  onStatusUpdate = () => { },
+  onStatusUpdate = () => {},
   maxAttempts = 60,
   interval = 3000
 ) => {
@@ -749,7 +752,7 @@ export const generateVideoFromImage = async ({
 export const pollVideoTaskStatus = async (
   taskId,
   feature = "prompt-to-video",
-  onStatusUpdate = () => { },
+  onStatusUpdate = () => {},
   maxAttempts = 60,
   interval = 3000
 ) => {
