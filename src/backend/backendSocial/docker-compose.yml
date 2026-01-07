@@ -20,6 +20,7 @@ services:
       REDIRECT_AFTER_LOGIN_GOOGLE_FRONTEND: ${REDIRECT_AFTER_LOGIN_GOOGLE_FRONTEND:-http://localhost:5173/google-loading}
       REDIRECT_AFTER_LOGIN_GOOGLE_FRONTEND_FAILURE: ${REDIRECT_AFTER_LOGIN_GOOGLE_FRONTEND_FAILURE:-http://localhost:5173/failure}
       REDIRECT_URI: ${REDIRECT_URI:-http://localhost:5173/google-loading}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
     depends_on:
       - profile-service
       - post-service
