@@ -32,9 +32,6 @@ const axiosClient = axios.create({
 // Rate limiting + Auth token interceptor
 axiosClient.interceptors.request.use(
   async (config) => {
-    // Wait for rate limit slot
-
-    // Get token from memory
     const token = tokenManager.getToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -50,18 +47,30 @@ axiosClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // Skip refresh for auth endpoints to prevent infinite loop
-    const isAuthEndpoint =
+    // Skip refresh for public/auth endpoints - these don't need authentication
+    const isPublicEndpoint =
       originalRequest?.url?.includes("/login") ||
       originalRequest?.url?.includes("/register") ||
-      originalRequest?.url?.includes("/refresh");
+      originalRequest?.url?.includes("/refresh") ||
+      originalRequest?.url?.includes("/check-email") ||
+      originalRequest?.url?.includes("/forgot-password") ||
+      originalRequest?.url?.includes("/validate-reset-token") ||
+      originalRequest?.url?.includes("/reset-password") ||
+      originalRequest?.url?.includes("/logout");
+
+    // For public endpoints, just reject the error without trying to refresh
+    if (isPublicEndpoint) {
+      return Promise.reject(error);
+    }
+
+    // Check if we have a token - if not, don't try to refresh
+    const currentToken = tokenManager.getToken();
+    if (!currentToken) {
+      return Promise.reject(error);
+    }
 
     // Handle 401 Unauthorized - try to refresh token
-    if (
-      error.response?.status === 401 &&
-      !isAuthEndpoint &&
-      !originalRequest._retry
-    ) {
+    if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
         // If already refreshing, queue this request
         return new Promise((resolve, reject) => {
@@ -111,11 +120,6 @@ axiosClient.interceptors.response.use(
       } finally {
         isRefreshing = false;
       }
-    }
-
-    // Log other 401s
-    if (error.response?.status === 401) {
-      console.warn("Unauthorized request", error.response?.data);
     }
 
     return Promise.reject(error);

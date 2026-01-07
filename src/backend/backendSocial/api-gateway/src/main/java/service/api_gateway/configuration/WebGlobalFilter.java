@@ -24,13 +24,20 @@ class WebGlobalFilter implements GlobalFilter, Ordered {
 
   HttpClientIdentity httpClientIdentity;
 
-  static final String[] PUBLIC_URLS = {
-      "/identity/auth/login", "/identity/auth/logout",
-      "/identity/users/register",
-      //"/posts/download/**",
-      "/identity/auth/authentication", "/check", "/identity/users/tokens/**",
-      "/identity/users/modify-tokens", "/identity/authorities/create",
-      "/identity/roles/create", "/identity/auth/refresh-token"};
+  static final String[] PUBLIC_URLS = {"/identity/auth/login",
+                                       "/identity/auth/logout",
+                                       "/identity/users/register",
+                                       "/identity/auth/authentication",
+                                       "/check",
+                                       "/identity/users/tokens/**",
+                                       "/identity/users/modify-tokens",
+                                       "/identity/authorities/create",
+                                       "/identity/roles/create",
+                                       "/identity/auth/refresh-token",
+                                       "/identity/users/check-email",
+                                       "/identity/users/forgot-password",
+                                       "/identity/users/validate-reset-token",
+                                       "/identity/users/reset-password"};
 
   @NonFinal @Value("${config.prefix}") private String prefix;
 

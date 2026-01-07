@@ -298,4 +298,58 @@ public class UserController {
         .result(userService.getUserSummaries(request.getUserIds()))
         .build();
   }
+
+  @PostMapping("/check-email")
+  HttpResponse<service.identity.DTOs.response.CheckEmailResponse>
+  checkEmail(@RequestBody
+             @Valid service.identity.DTOs.request.CheckEmailRequest request) {
+    return HttpResponse
+        .<service.identity.DTOs.response.CheckEmailResponse>builder()
+        .code(1000)
+        .message("Email check completed")
+        .result(userService.checkEmailForPasswordReset(request.getEmail()))
+        .build();
+  }
+
+  @PostMapping("/forgot-password")
+  HttpResponse<Boolean> forgotPassword(
+      @RequestBody
+      @Valid service.identity.DTOs.request.ForgotPasswordRequest request) {
+    boolean result = userService.requestPasswordReset(request.getEmail());
+    return HttpResponse.<Boolean>builder()
+        .code(1000)
+        .message(
+            "Password reset email sent successfully. Please check your inbox.")
+        .result(result)
+        .build();
+  }
+
+  @PostMapping("/validate-reset-token")
+  HttpResponse<service.identity.DTOs.response.ValidateResetTokenResponse>
+  validateResetToken(@RequestBody @Valid service.identity.DTOs.request
+                         .ValidateResetTokenRequest request) {
+    service.identity.DTOs.response.ValidateResetTokenResponse response =
+        userService.validatePasswordResetToken(request.getToken());
+    return HttpResponse
+        .<service.identity.DTOs.response.ValidateResetTokenResponse>builder()
+        .code(response.isValid() ? 1000 : 1032)
+        .message(response.getMessage())
+        .result(response)
+        .build();
+  }
+
+  @PostMapping("/reset-password")
+  HttpResponse<Boolean> resetPassword(
+      @RequestBody
+      @Valid service.identity.DTOs.request.ResetPasswordRequest request) {
+    boolean result =
+        userService.resetPassword(request.getToken(), request.getNewPassword(),
+                                  request.getConfirmPassword());
+    return HttpResponse.<Boolean>builder()
+        .code(1000)
+        .message("Password has been reset successfully. You can now login "
+                 + "with your new password.")
+        .result(result)
+        .build();
+  }
 }

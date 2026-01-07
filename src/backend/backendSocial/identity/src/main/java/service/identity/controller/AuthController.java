@@ -110,8 +110,11 @@ public class AuthController {
   HttpResponse<?> logout(HttpServletRequest httpServletRequest,
                          HttpServletResponse httpServletResponse)
       throws JOSEException, ParseException {
-    String accessToken =
-        httpServletRequest.getHeader("Authorization").split(" ")[1];
+    String authHeader = httpServletRequest.getHeader("Authorization");
+    String accessToken = null;
+    if (authHeader != null && authHeader.startsWith("Bearer ")) {
+      accessToken = authHeader.substring(7);
+    }
     String refreshToken =
         httpServletRequest.getCookies() == null
             ? null
@@ -121,7 +124,9 @@ public class AuthController {
                   .map(Cookie::getValue)
                   .orElse(null);
 
-    authService.logout(accessToken, refreshToken);
+    if (accessToken != null || refreshToken != null) {
+      authService.logout(accessToken, refreshToken);
+    }
     ResponseCookie cookie = cookieUtils.createExpiredJwtCookie();
     httpServletResponse.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     return HttpResponse.builder()

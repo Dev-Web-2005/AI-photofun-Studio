@@ -3,6 +3,7 @@ import { postApi } from "../api/postApi";
 import { userApi } from "../api/userApi";
 import { communicationApi } from "../api/communicationApi";
 import { useAuth } from "./useAuth";
+import tokenManager from "../api/tokenManager";
 
 const DEFAULT_AVATAR = "https://placehold.co/40x40/111/fff?text=U";
 const DEFAULT_IMAGE =
@@ -106,6 +107,9 @@ export const usePosts = (options = {}) => {
   const fetchLikedStatus = useCallback(
     async (postList = []) => {
       if (!authUser?.id) return {};
+
+      const token = tokenManager.getToken();
+      if (!token) return {};
 
       const backendIds = Array.from(
         new Set(
