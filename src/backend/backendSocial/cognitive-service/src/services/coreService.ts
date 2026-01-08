@@ -32,9 +32,7 @@ export class CoreService {
 	}
 
 	async detectSafetyContent(apiKey: string | undefined, message: string) {
-		if (this.LIST_KEY_WORD_DENIED.some((word) => message.includes(word))) {
-			return false
-		}
+		// Skip keyword check - rely on AI model for better accuracy
 		const newListApiKey = [apiKey, ...this.SYSTEM_API_KEY]
 		for (const key of newListApiKey) {
 			try {
