@@ -43,7 +43,7 @@ export function chatCompletion_safetyContent(
 		.post(
 			'/openai/v1/chat/completions',
 			{
-				model: model,
+				model: model.trim(),
 				messages: [
 					{ role: 'system', content: PROMPT_SYSTEM },
 					{ role: 'system', content: PROMPT_SYSTEM_SAFETY_CONTENT },
@@ -51,7 +51,7 @@ export function chatCompletion_safetyContent(
 				],
 			},
 			{
-				headers: { Authorization: `Bearer ${apiKey}` },
+				headers: { Authorization: `Bearer ${apiKey?.trim()}` },
 			},
 		)
 		.then((response) => response)
