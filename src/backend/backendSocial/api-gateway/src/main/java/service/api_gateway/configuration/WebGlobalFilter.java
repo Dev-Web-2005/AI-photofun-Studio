@@ -38,7 +38,8 @@ class WebGlobalFilter implements GlobalFilter, Ordered {
                                        "/identity/users/check-email",
                                        "/identity/users/forgot-password",
                                        "/identity/users/validate-reset-token",
-                                       "/identity/users/reset-password"};
+                                       "/identity/users/reset-password",
+                                       "/cognitive/**"};
 
   @NonFinal @Value("${config.prefix}") private String prefix;
 
