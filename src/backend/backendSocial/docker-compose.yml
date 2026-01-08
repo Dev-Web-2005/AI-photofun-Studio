@@ -123,6 +123,26 @@ services:
       - backend-network
     restart: unless-stopped
 
+  payment-service:
+    build:
+      context: ./payment
+      dockerfile: Dockerfile
+    container_name: payment-service
+    ports:
+      - "4444:4444"
+    environment:
+      PORT: 4444
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+      SUCCESS_URL: ${PAYMENT_SUCCESS_URL:-https://nmcnpm.lethanhcong.site:46337/payment-success}
+      CANCEL_URL: ${PAYMENT_CANCEL_URL:-https://nmcnpm.lethanhcong.site:46337/payment-fail}
+      API_SECRET_KEY: ${PAYMENT_API_SECRET_KEY}
+      DATABASE_URL: ${PAYMENT_DATABASE_URL}
+      ENABLE_CORS: "false"
+    networks:
+      - backend-network
+    restart: unless-stopped
+
   api-gateway:
     build:
       context: ./api-gateway
@@ -138,7 +158,7 @@ services:
       COMMENT_SERVICE_URL: http://comments-service:8003
       COMMUNICATION_SERVICE_URL: http://communication-service:8085
       COGNITIVE_SERVICE_URL: http://cognitive-service:9090
-      PAYMENT_SERVICE_URL: ${PAYMENT_SERVICE_URL:-http://host.docker.internal:4444}
+      PAYMENT_SERVICE_URL: http://payment-service:4444
       CONFIG_HTTP_IDENTITY: http://identity-service:8000/identity
       CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:5173,http://localhost:3000,https://nmcnpm.lethanhcong.site,https://nmcnpm.lethanhcong.site:46337}
     depends_on:
@@ -148,11 +168,10 @@ services:
       - comments-service
       - communication-service
       - cognitive-service
+      - payment-service
     networks:
       - backend-network
     restart: unless-stopped
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
 
 networks:
   backend-network:
