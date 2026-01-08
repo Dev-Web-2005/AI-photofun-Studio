@@ -10,6 +10,7 @@ import {
   Upload,
 } from "lucide-react";
 import { communicationApi } from "../api/communicationApi";
+import { generateVideoFromImage, pollVideoTaskStatus } from "../api/aiApi";
 import ShareToGroupModal from "../components/common/ShareToGroupModal";
 import { toast } from "../hooks/use-toast";
 
