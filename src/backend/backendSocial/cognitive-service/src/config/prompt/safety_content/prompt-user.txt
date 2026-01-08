@@ -1,1 +1,5 @@
-Câu sau có chứa ngôn từ tục tĩu hoặc 18+ không?\n\n[CÂU NGƯỜI DÙNG]: <<<CONTENT>>>
+Phân loại nội dung sau là safe hay unsafe:
+
+"<CONTENT>"
+
+Trả lời 1 từ duy nhất:
