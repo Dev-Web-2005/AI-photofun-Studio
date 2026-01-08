@@ -240,9 +240,8 @@ const RegisterPage = () => {
       import.meta.env.VITE_FACEBOOK_APP_ID ||
       "652099144594034";
 
-    const redirectUri =
-      import.meta.env.VITE_FACEBOOK_REDIRECT_URI ||
-      "http://localhost:5173/facebook-loading";
+    // Use current origin for redirect URI to work in all environments
+    const redirectUri = `${window.location.origin}/facebook-loading`;
 
     const facebookAuthUrl =
       `https://www.facebook.com/v17.0/dialog/oauth?` +

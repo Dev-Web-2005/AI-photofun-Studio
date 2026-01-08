@@ -113,20 +113,24 @@ public class AuthService {
   @PreAuthorize("isAuthenticated()")
   public void logout(String accessToken, String refreshToken)
       throws ParseException {
-    SignedJWT signedJWTAccess = SignedJWT.parse(accessToken);
-    Instant accessExpireTime =
-        signedJWTAccess.getJWTClaimsSet().getExpirationTime().toInstant();
-    removeTokenRepository.save(RemoveToken.builder()
-                                   .removeAt(accessExpireTime)
-                                   .token(accessToken)
-                                   .build());
-    SignedJWT signedJWTRefresh = SignedJWT.parse(refreshToken);
-    Instant refreshExpireTime =
-        signedJWTRefresh.getJWTClaimsSet().getExpirationTime().toInstant();
-    removeTokenRepository.save(RemoveToken.builder()
-                                   .removeAt(refreshExpireTime)
-                                   .token(refreshToken)
-                                   .build());
+    if (accessToken != null && !accessToken.trim().isEmpty()) {
+      SignedJWT signedJWTAccess = SignedJWT.parse(accessToken);
+      Instant accessExpireTime =
+          signedJWTAccess.getJWTClaimsSet().getExpirationTime().toInstant();
+      removeTokenRepository.save(RemoveToken.builder()
+                                     .removeAt(accessExpireTime)
+                                     .token(accessToken)
+                                     .build());
+    }
+    if (refreshToken != null && !refreshToken.trim().isEmpty()) {
+      SignedJWT signedJWTRefresh = SignedJWT.parse(refreshToken);
+      Instant refreshExpireTime =
+          signedJWTRefresh.getJWTClaimsSet().getExpirationTime().toInstant();
+      removeTokenRepository.save(RemoveToken.builder()
+                                     .removeAt(refreshExpireTime)
+                                     .token(refreshToken)
+                                     .build());
+    }
   }
 
   public String refreshToken(String token)
