@@ -5,7 +5,7 @@ import { toast } from "../hooks/use-toast";
 
 const API_GATEWAY =
   import.meta.env.VITE_API_GATEWAY || "http://localhost:8888";
-const PAYMENT_API_URL = `${API_GATEWAY}/api-gateway/api/v1/payment/create-payment`;
+const PAYMENT_API_URL = `${API_GATEWAY}/api/v1/payment/create-payment`;
 const PAYMENT_API_KEY =
   import.meta.env.VITE_PAYMENT_API_KEY ||
   "81aa801afec422868bea639e7c7bde4be900f533a4e1c755bffbb7c331c205b972a70e93bae29c79023cfe53a1fd9abd7c825cd57a1a46152fcaaacabfda350f";
