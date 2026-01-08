@@ -356,7 +356,7 @@ RATE_LIMIT_TIERS = {
         'window': 1      
     },
     'api': {
-        'requests': 5,  # 3 requests per second - normal API usage
+        'requests': 5,  # 5 requests per second - normal API usage
         'window': 1      
     },
     'conversation': {

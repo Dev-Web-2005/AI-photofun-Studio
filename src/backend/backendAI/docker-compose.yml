@@ -17,6 +17,9 @@ services:
       DJANGO_SECRET_KEY: "${DJANGO_SECRET_KEY:-dev-secret-key-change-in-production}"
       DJANGO_ALLOWED_HOSTS: "${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1,0.0.0.0,nmcnpm-api-ai.lethanhcong.site}"
 
+      MONGO_URI: "mongodb://mongo:27017"
+      MONGO_DB_NAME: "ai_photofun_studio"
+
       # Supabase PostgreSQL (Image Gallery) - Use environment variables
       SUPABASE_DB_HOST: "${SUPABASE_DB_HOST}"
       SUPABASE_DB_PORT: "${SUPABASE_DB_PORT:-5432}"
