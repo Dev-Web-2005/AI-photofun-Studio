@@ -3,9 +3,9 @@ import { Check, Loader2, Star } from "lucide-react";
 import { useAuthContext } from "../context/AuthContext";
 import { toast } from "../hooks/use-toast";
 
-const PAYMENT_API_URL =
-  import.meta.env.VITE_PAYMENT_API_URL ||
-  "https://nmcnpm-payment-service.onrender.com/payment/create-payment";
+const API_GATEWAY =
+  import.meta.env.VITE_API_GATEWAY || "http://localhost:8888";
+const PAYMENT_API_URL = `${API_GATEWAY}/api-gateway/api/v1/payment/create-payment`;
 const PAYMENT_API_KEY =
   import.meta.env.VITE_PAYMENT_API_KEY ||
   "81aa801afec422868bea639e7c7bde4be900f533a4e1c755bffbb7c331c205b972a70e93bae29c79023cfe53a1fd9abd7c825cd57a1a46152fcaaacabfda350f";
@@ -19,7 +19,7 @@ const PLAN_CONFIG = {
     image: "https://via.placeholder.com/300x300.png?text=Premium",
   },
   "6_MONTHS": {
-    productName: "PREMIUM_SIX_MONTHS",
+    productName: "PREMIUM_SIX_MONTH",
     price: 2000,
     amount: 2000,
     description: "Premium 6 months",

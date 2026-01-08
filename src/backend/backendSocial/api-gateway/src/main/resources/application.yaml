@@ -95,3 +95,10 @@ spring:
             - Path=${config.prefix}/cognitive/**
           filters:
             - StripPrefix=${config.remove-prefix}
+
+        - id: payment-service
+          uri: ${PAYMENT_SERVICE_URL:http://localhost:4444}
+          predicates:
+            - Path=${config.prefix}/payment/**
+          filters:
+            - StripPrefix=${config.remove-prefix}

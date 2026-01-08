@@ -26,6 +26,7 @@ jobs:
       frontend: ${{ steps.changes.outputs.frontend }}
       backendAI: ${{ steps.changes.outputs.backendAI }}
       backendSocial: ${{ steps.changes.outputs.backendSocial }}
+      payment: ${{ steps.changes.outputs.payment }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -41,6 +42,7 @@ jobs:
             echo "frontend=true" >> $GITHUB_OUTPUT
             echo "backendAI=true" >> $GITHUB_OUTPUT
             echo "backendSocial=true" >> $GITHUB_OUTPUT
+            echo "payment=true" >> $GITHUB_OUTPUT
             exit 0
           fi
 
@@ -49,16 +51,20 @@ jobs:
           elif [ "${{ github.event_name }}" == "push" ]; then
             BASE_SHA="${{ github.event.before }}"
             if [ "$BASE_SHA" == "0000000000000000000000000000000000000000" ]; then
-              BASE_SHA=$(git hash-object -t tree /dev/null)
+              BASE_SHA=$(git rev-parse HEAD~1 2>/dev/null || git hash-object -t tree /dev/null)
             fi
           else
             BASE_SHA="HEAD~1"
           fi
           HEAD_SHA="${{ github.sha }}"
+
+          # Get changed files with proper error handling
           CHANGED_FILES=$(git diff --name-only $BASE_SHA $HEAD_SHA 2>/dev/null || git diff --name-only HEAD~1 HEAD 2>/dev/null || echo "")
 
           echo "Changed files:"
           echo "$CHANGED_FILES"
+
+          # Frontend changes
           if echo "$CHANGED_FILES" | grep -q "^src/frontend/"; then
             echo "frontend=true" >> $GITHUB_OUTPUT
             echo "Frontend changes detected"
@@ -67,6 +73,7 @@ jobs:
             echo "No frontend changes"
           fi
 
+          # BackendAI changes
           if echo "$CHANGED_FILES" | grep -q "^src/backend/backendAI/"; then
             echo "backendAI=true" >> $GITHUB_OUTPUT
             echo "BackendAI changes detected"
@@ -75,12 +82,24 @@ jobs:
             echo "No backendAI changes"
           fi
 
-          if echo "$CHANGED_FILES" | grep -q "^src/backend/backendSocial/"; then
+          # BackendSocial changes (excluding payment folder)
+          BACKENDSOCIAL_CHANGES=$(echo "$CHANGED_FILES" | grep "^src/backend/backendSocial/" | grep -v "^src/backend/backendSocial/payment/" || true)
+          if [ -n "$BACKENDSOCIAL_CHANGES" ]; then
             echo "backendSocial=true" >> $GITHUB_OUTPUT
-            echo "BackendSocial changes detected"
+            echo "BackendSocial changes detected (excluding payment):"
+            echo "$BACKENDSOCIAL_CHANGES"
           else
             echo "backendSocial=false" >> $GITHUB_OUTPUT
             echo "No backendSocial changes"
+          fi
+
+          # Payment service changes
+          if echo "$CHANGED_FILES" | grep -q "^src/backend/backendSocial/payment/"; then
+            echo "payment=true" >> $GITHUB_OUTPUT
+            echo "Payment service changes detected"
+          else
+            echo "payment=false" >> $GITHUB_OUTPUT
+            echo "No payment changes"
           fi
 
   deploy-backend-social:
@@ -117,6 +136,7 @@ jobs:
           COGNITIVE_BASE_URL: ${{ secrets.COGNITIVE_BASE_URL }}
           COGNITIVE_API_KEYS: ${{ secrets.COGNITIVE_API_KEYS }}
           COGNITIVE_ORIGIN: ${{ vars.COGNITIVE_ORIGIN }}
+          PAYMENT_SERVICE_URL: ${{ vars.PAYMENT_SERVICE_URL }}
 
         uses: appleboy/ssh-action@v0.1.6
         with:
@@ -125,7 +145,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE }}
           port: ${{ secrets.SSH_PORT }}
           command_timeout: 50m
-          envs: GOOGLE_CLIENT_SECRET,CORS_ORIGINS,GOOGLE_REDIRECT_FRONTEND,GOOGLE_REDIRECT_FRONTEND_FAILURE,FACEBOOK_APP_ID,FACEBOOK_APP_SECRET,COGNITIVE_PORT,COGNITIVE_TEMPERATURE,COGNITIVE_X_API_KEY,COGNITIVE_BASE_URL,COGNITIVE_API_KEYS,COGNITIVE_ORIGIN
+          envs: GOOGLE_CLIENT_SECRET,CORS_ORIGINS,GOOGLE_REDIRECT_FRONTEND,GOOGLE_REDIRECT_FRONTEND_FAILURE,FACEBOOK_APP_ID,FACEBOOK_APP_SECRET,COGNITIVE_PORT,COGNITIVE_TEMPERATURE,COGNITIVE_X_API_KEY,COGNITIVE_BASE_URL,COGNITIVE_API_KEYS,COGNITIVE_ORIGIN,PAYMENT_SERVICE_URL
           script: |
             USER=$(whoami)
             WORKSPACE="/home/$USER/projects/backendSocial/src/backend/backendSocial"
@@ -152,6 +172,7 @@ jobs:
             REDIRECT_URI=$GOOGLE_REDIRECT_FRONTEND
             FRONTEND_URL=https://nmcnpm.lethanhcong.site:46337
             COGNITIVE_SERVICE_URL=http://cognitive-service:9090
+            PAYMENT_SERVICE_URL=$PAYMENT_SERVICE_URL
             COGNITIVE_PORT=$COGNITIVE_PORT
             COGNITIVE_TEMPERATURE=$COGNITIVE_TEMPERATURE
             COGNITIVE_X_API_KEY=$COGNITIVE_X_API_KEY
@@ -169,6 +190,88 @@ jobs:
             sleep 15
             sudo docker-compose ps
             sudo docker-compose logs --tail=50 api-gateway
+
+  deploy-payment:
+    name: "Deploy Payment Service"
+    needs: detect-changes
+    if: needs.detect-changes.outputs.payment == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Upload code to server
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "src/backend/backendSocial/payment/*"
+          target: "/home/${{ secrets.SSH_USERNAME }}/projects/payment/"
+          rm: true
+
+      - name: "Deploy Payment Service via SSH"
+        env:
+          PAYMENT_PORT: ${{ vars.PAYMENT_PORT }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+          PAYMENT_SUCCESS_URL: ${{ vars.PAYMENT_SUCCESS_URL }}
+          PAYMENT_CANCEL_URL: ${{ vars.PAYMENT_CANCEL_URL }}
+          PAYMENT_API_SECRET_KEY: ${{ secrets.PAYMENT_API_SECRET_KEY }}
+          PAYMENT_DATABASE_URL: ${{ secrets.PAYMENT_DATABASE_URL }}
+
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE }}
+          port: ${{ secrets.SSH_PORT }}
+          command_timeout: 20m
+          envs: PAYMENT_PORT,STRIPE_SECRET_KEY,STRIPE_WEBHOOK_SECRET,PAYMENT_SUCCESS_URL,PAYMENT_CANCEL_URL,PAYMENT_API_SECRET_KEY,PAYMENT_DATABASE_URL
+          script: |
+            USER=$(whoami)
+            WORKSPACE="/home/$USER/projects/payment/src/backend/backendSocial/payment"
+
+            if [ ! -d "$WORKSPACE" ]; then
+              echo "ERROR: Payment service directory not found at $WORKSPACE"
+              exit 1
+            fi
+
+            cd $WORKSPACE
+            echo "Current directory: $(pwd)"
+
+            # Create .env file for payment service
+            cat > .env << EOF
+            PORT=$PAYMENT_PORT
+            STRIPE_SECRET_KEY=$STRIPE_SECRET_KEY
+            STRIPE_WEBHOOK_SECRET=$STRIPE_WEBHOOK_SECRET
+            SUCCESS_URL=$PAYMENT_SUCCESS_URL
+            CANCEL_URL=$PAYMENT_CANCEL_URL
+            API_SECRET_KEY=$PAYMENT_API_SECRET_KEY
+            DATABASE_URL=$PAYMENT_DATABASE_URL
+            ENABLE_CORS=false
+            EOF
+
+            echo "Environment variables for payment service:"
+            cat .env
+
+            # Install dependencies
+            npm install --prefer-offline --no-audit
+
+            # Stop existing pm2 process if running
+            pm2 stop payment-service 2>/dev/null || true
+            pm2 delete payment-service 2>/dev/null || true
+
+            # Start with pm2
+            pm2 start main.js --name payment-service --time
+
+            # Save pm2 process list
+            pm2 save
+
+            # Show status and logs
+            pm2 status
+            pm2 logs payment-service --lines 30 --nostream
 
   deploy-backend-ai:
     name: "Deploy Backend AI"
