@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Image, Video, Sparkles, X, Loader2 } from "lucide-react";
 import { useToast } from "../../hooks/use-toast";
+import { cognitiveApi } from "../../api/cognitiveApi";
 
 const DEFAULT_AVATAR = "https://placehold.co/40x40/111/fff?text=U";
 
@@ -157,7 +158,6 @@ export default function CreatePostWidget({
 
   const handleSubmit = async () => {
     if (submitting) return;
-    // Allow post with imagePreview/videoPreview URL (from AI tools) even without file
     if (
       !caption &&
       !imageFile &&
@@ -167,6 +167,19 @@ export default function CreatePostWidget({
     ) {
       setError("Please enter content or select an image/video.");
       return;
+    }
+
+    if (caption.trim()) {
+      const safetyResult = await cognitiveApi.detectSafetyContent(caption.trim());
+      if (safetyResult.success && !safetyResult.isSafe) {
+        setError("Your caption contains inappropriate content. Please use more polite language.");
+        toast({
+          variant: "destructive",
+          title: "Content not allowed",
+          description: "Your caption contains inappropriate content. Please use more polite language.",
+        });
+        return;
+      }
     }
 
     setError("");

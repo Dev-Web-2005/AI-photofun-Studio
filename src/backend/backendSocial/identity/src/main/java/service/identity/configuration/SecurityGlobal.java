@@ -27,6 +27,7 @@ public class SecurityGlobal {
                                 "/auth/refresh/**",
                                 "/auth/introspect/ignore/**",
                                 "/auth/authentication",
+                                "/auth/authentication-facebook",
                                 "/check",
                                 "/users/tokens/**",
                                 "/users/modify-tokens",

@@ -173,6 +173,27 @@ public class AuthController {
         .build();
   }
 
+  @GetMapping("/authentication-facebook")
+  HttpResponse<Map<String, Object>>
+  authenticateFacebook(@RequestParam("code") String code,
+                       HttpServletResponse response,
+                       HttpServletRequest request) {
+    String clientIp = request.getRemoteAddr();
+
+    boolean success =
+        authService.authenticateFacebook(code, response, clientIp);
+
+    String redirectUrl = success ? redirectAfterLoginGoogleFrontendSuccess
+                                 : redirectAfterLoginGoogleFrontendFailure;
+
+    return HttpResponse.<Map<String, Object>>builder()
+        .code(1000)
+        .message(success ? "Facebook authentication successful"
+                         : "Facebook authentication failed")
+        .result(Map.of("success", success, "redirectUrl", redirectUrl))
+        .build();
+  }
+
   @GetMapping("/refresh-token")
   HttpResponse<RefreshTokenResponse> refreshTokenFromCookie(
       @CookieValue(name = "jwt", defaultValue = "") String refreshToken,

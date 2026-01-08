@@ -116,6 +116,8 @@ public class UserService {
 
     User user = userMapper.toUser(registerUserRequest);
     user.setPassword(passwordEncoder.encode(user.getPassword()));
+    user.setLoginByGoogle(registerUserRequest.isLoginByGoogle());
+    user.setLoginByFacebook(registerUserRequest.isLoginByFacebook());
 
     Set<String> roleStrings = new HashSet<>(List.of("USER"));
     if (registerUserRequest.getRoles() != null) {
@@ -325,6 +327,22 @@ public class UserService {
   }
 
   @PreAuthorize("isAuthenticated()")
+  public boolean checkLoginByFacebook() {
+    String userId =
+        SecurityContextHolder.getContext().getAuthentication().getName();
+    User user = userRepository.findById(userId).orElseThrow(
+        () -> new AppException(ErrorCode.USER_NOT_FOUND));
+    if (!user.isLoginByFacebook()) {
+      return false;
+    }
+    if (user.getEmail() != null &&
+        user.getEmail().endsWith("@facebook.local")) {
+      return false;
+    }
+    return true;
+  }
+
+  @PreAuthorize("isAuthenticated()")
   public boolean setPassword(SetPasswordRequest request) {
     String newPassword = request.getNewPassword();
     String confirmPassword = request.getConfirmPassword();
@@ -343,10 +361,11 @@ public class UserService {
     try {
       User user = userRepository.findById(userId).orElseThrow(
           () -> new AppException(ErrorCode.USER_NOT_FOUND));
-      if (!user.isLoginByGoogle()) {
+      if (!user.isLoginByGoogle() && !user.isLoginByFacebook()) {
         throw new AppException(ErrorCode.USER_ALREADY_SET_PASSWORD);
       }
       user.setLoginByGoogle(false);
+      user.setLoginByFacebook(false);
       user.setPassword(passwordEncoder.encode(request.getNewPassword()));
       userRepository.save(user);
       return true;
@@ -574,8 +593,7 @@ public class UserService {
           .build();
     }
 
-    boolean isVerified = true; // All registered users are considered verified
-
+    boolean isVerified = true;
     return service.identity.DTOs.response.CheckEmailResponse.builder()
         .exists(true)
         .verified(isVerified)
@@ -669,9 +687,11 @@ public class UserService {
       // Update password
       user.setPassword(passwordEncoder.encode(newPassword));
 
-      // If user was using Google login, mark that they now have a password
       if (user.isLoginByGoogle()) {
         user.setLoginByGoogle(false);
+      }
+      if (user.isLoginByFacebook()) {
+        user.setLoginByFacebook(false);
       }
 
       userRepository.save(user);

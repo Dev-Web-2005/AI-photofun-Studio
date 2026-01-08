@@ -88,3 +88,10 @@ spring:
             - Path=${config.prefix}/communications/**
           filters:
             - StripPrefix=${config.remove-prefix}
+
+        - id: cognitive-service
+          uri: ${COGNITIVE_SERVICE_URL:http://localhost:9090}
+          predicates:
+            - Path=${config.prefix}/cognitive/**
+          filters:
+            - StripPrefix=${config.remove-prefix}

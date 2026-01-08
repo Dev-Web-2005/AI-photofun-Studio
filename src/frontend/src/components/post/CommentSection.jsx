@@ -11,6 +11,7 @@ import {
 import { useAuth } from "../../hooks/useAuth";
 import { commentApi } from "../../api/commentApi";
 import { userApi } from "../../api/userApi";
+import { cognitiveApi } from "../../api/cognitiveApi";
 
 const DEFAULT_AVATAR =
   "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=150&h=150&fit=crop";
@@ -336,6 +337,13 @@ export default function CommentSection({ postId }) {
 
     setIsSubmitting(true);
     setError("");
+
+    const safetyResult = await cognitiveApi.detectSafetyContent(content);
+    if (safetyResult.success && !safetyResult.isSafe) {
+      setError("Your comment contains inappropriate content. Please use more polite language.");
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
       const payload = {

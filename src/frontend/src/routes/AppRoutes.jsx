@@ -37,6 +37,7 @@ import LoadingScreen from "../components/common/LoadingScreen";
 import { useAuth } from "../hooks/useAuth";
 import VerifyEmailPage from "../pages/VerifyEmailPage";
 import GoogleLoadingPage from "../pages/GoogleLoadingPage";
+import FacebookLoadingPage from "../pages/FacebookLoadingPage";
 import FailurePage from "../pages/FailurePage";
 
 const RequireAuth = ({ children }) => {
@@ -96,6 +97,7 @@ function AppRoutes() {
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/verify-email" element={<VerifyEmailPage />} />
       <Route path="/google-loading" element={<GoogleLoadingPage />} />
+      <Route path="/facebook-loading" element={<FacebookLoadingPage />} />
       <Route path="/failure" element={<FailurePage />} />
 
       {/* routes using shared layout (sidebar + mobile nav) */}
