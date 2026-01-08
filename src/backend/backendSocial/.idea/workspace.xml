@@ -5,12 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="740a1931-dd5b-46a1-9947-5fe7d5aa7c77" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/payment/.env.example" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/payment/check_database_schema.sql" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/payment/deploy.ps1" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/payment/deploy.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/payment/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/payment/main.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/payment/models/UserModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/payment/models/UserModel.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/payment/render.yaml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/payment/services/scheduler.js" beforeDir="false" afterPath="$PROJECT_DIR$/payment/services/scheduler.js" afterDir="false" />
