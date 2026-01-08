@@ -3,6 +3,7 @@ server:
   servlet:
     context-path: /api-gateway
 
+# Payment service integrated - Updated 2026-01-08
 config:
   http:
     identity: ${IDENTITY_SERVICE_URL:http://localhost:8000/identity}
