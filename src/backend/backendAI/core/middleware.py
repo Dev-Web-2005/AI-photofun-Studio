@@ -25,6 +25,8 @@ class RateLimitMiddleware(MiddlewareMixin):
         RATE_LIMIT_WHITELIST = ['127.0.0.1', '10.0.0.0/8']
     """
     
+    async_mode = False  # Django 5.x compatibility
+    
     def __init__(self, get_response):
         self.get_response = get_response
         self.enabled = getattr(settings, 'RATE_LIMIT_ENABLED', True)
@@ -64,28 +66,33 @@ class RateLimitMiddleware(MiddlewareMixin):
         # Create cache key for this IP
         cache_key = f"rate_limit:{client_ip}"
         
-        # Get current request count
-        request_count = cache.get(cache_key, 0)
-        
-        if request_count >= self.requests_per_window:
-            # Rate limit exceeded
-            logger.warning(f"Rate limit exceeded for IP: {client_ip}")
-            return JsonResponse(
-                {
-                    'code': 9999,
-                    'message': f'Rate limit exceeded: Maximum {self.requests_per_window} request(s) per {self.window_seconds} second(s)',
-                    'result': {'retry_after': self.window_seconds}
-                },
-                status=429
-            )
-        
-        # Increment request count
-        if request_count == 0:
-            # First request in window, set with expiry
-            cache.set(cache_key, 1, self.window_seconds)
-        else:
-            # Increment existing count
-            cache.incr(cache_key)
+        try:
+            # Get current request count
+            request_count = cache.get(cache_key, 0)
+            
+            if request_count >= self.requests_per_window:
+                # Rate limit exceeded
+                logger.warning(f"Rate limit exceeded for IP: {client_ip}")
+                return JsonResponse(
+                    {
+                        'code': 9999,
+                        'message': f'Rate limit exceeded: Maximum {self.requests_per_window} request(s) per {self.window_seconds} second(s)',
+                        'result': {'retry_after': self.window_seconds}
+                    },
+                    status=429
+                )
+            
+            # Increment request count
+            if request_count == 0:
+                # First request in window, set with expiry
+                cache.set(cache_key, 1, self.window_seconds)
+            else:
+                # Increment existing count
+                cache.incr(cache_key)
+        except Exception as e:
+            # Redis not available - log warning and allow request
+            logger.warning(f"Rate limiting disabled: Redis connection failed - {e}")
+            pass
         
         return None
 
@@ -110,6 +117,8 @@ class AdvancedRateLimitMiddleware(MiddlewareMixin):
             '/v1/gallery/': 'api',
         }
     """
+    
+    async_mode = False  # Django 5.x compatibility
     
     def __init__(self, get_response):
         self.get_response = get_response
@@ -164,25 +173,30 @@ class AdvancedRateLimitMiddleware(MiddlewareMixin):
         # Create cache key
         cache_key = f"rate_limit:{tier_name}:{client_ip}"
         
-        # Check current count
-        request_count = cache.get(cache_key, 0)
-        
-        if request_count >= max_requests:
-            logger.warning(f"Rate limit exceeded for IP {client_ip} on tier {tier_name}")
-            return JsonResponse(
-                {
-                    'code': 9999,
-                    'message': f'Rate limit exceeded: Maximum {max_requests} request(s) per {window} second(s) for {tier_name}',
-                    'result': {'tier': tier_name, 'retry_after': window}
-                },
-                status=429
-            )
-        
-        # Increment count
-        if request_count == 0:
-            cache.set(cache_key, 1, window)
-        else:
-            cache.incr(cache_key)
+        try:
+            # Check current count
+            request_count = cache.get(cache_key, 0)
+            
+            if request_count >= max_requests:
+                logger.warning(f"Rate limit exceeded for IP {client_ip} on tier {tier_name}")
+                return JsonResponse(
+                    {
+                        'code': 9999,
+                        'message': f'Rate limit exceeded: Maximum {max_requests} request(s) per {window} second(s) for {tier_name}',
+                        'result': {'tier': tier_name, 'retry_after': window}
+                    },
+                    status=429
+                )
+            
+            # Increment count
+            if request_count == 0:
+                cache.set(cache_key, 1, window)
+            else:
+                cache.incr(cache_key)
+        except Exception as e:
+            # Redis not available - log warning and allow request
+            logger.warning(f"Rate limiting disabled: Redis connection failed - {e}")
+            pass
         
         return None
 
@@ -201,6 +215,8 @@ class InputSanitizationMiddleware(MiddlewareMixin):
         INPUT_SANITIZATION_ENABLED = True
         INPUT_SANITIZATION_STRICT_MODE = False  # If True, reject instead of sanitize
     """
+    
+    async_mode = False  # Django 5.x compatibility
     
     def __init__(self, get_response):
         self.get_response = get_response
@@ -320,6 +336,8 @@ class InputSanitizationMiddleware(MiddlewareMixin):
 class RequestLoggingMiddleware(MiddlewareMixin):
     """Middleware to log all requests"""
     
+    async_mode = False  # Django 5.x compatibility
+    
     def process_request(self, request):
         request._start_time = time.time()
         logger.info(f"Request: {request.method} {request.path}")
@@ -337,6 +355,8 @@ class RequestLoggingMiddleware(MiddlewareMixin):
 
 class CORSMiddleware(MiddlewareMixin):
     """Custom CORS middleware (if not using django-cors-headers)"""
+    
+    async_mode = False  # Django 5.x compatibility
     
     def process_response(self, request, response):
         response['Access-Control-Allow-Origin'] = '*'

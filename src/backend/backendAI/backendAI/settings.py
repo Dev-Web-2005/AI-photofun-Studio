@@ -67,6 +67,9 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.middleware.common.CommonMiddleware",
+    # "core.middleware.RateLimitMiddleware",  # Simple rate limiting (too strict - commented out)
+    "core.middleware.AdvancedRateLimitMiddleware",  # Advanced tiered rate limiting (recommended)
+    "core.middleware.InputSanitizationMiddleware",  # Input sanitization for security
     "core.middleware.RequestLoggingMiddleware",
 ]
 
@@ -333,6 +336,56 @@ CACHES = {
         'LOCATION': os.environ.get('REDIS_URL', 'redis://localhost:6379/1'),
     }
 }
+
+# ============================================================================
+# RATE LIMITING CONFIGURATION
+# ============================================================================
+
+# Enable/disable rate limiting globally
+RATE_LIMIT_ENABLED = env_bool('RATE_LIMIT_ENABLED', True)
+
+# Simple Rate Limit (default: 1 request per second for all AI operations)
+RATE_LIMIT_REQUESTS = env_int('RATE_LIMIT_REQUESTS', 1)  # Max requests
+RATE_LIMIT_WINDOW = env_int('RATE_LIMIT_WINDOW', 1)      # Per seconds
+RATE_LIMIT_WHITELIST = []  # IPs excluded from rate limiting (empty = test localhost too)
+
+# Advanced Tiered Rate Limits (for AdvancedRateLimitMiddleware)
+RATE_LIMIT_TIERS = {
+    'ai_operations': {
+        'requests': 1,   # 1 request per second - strict for AI generation
+        'window': 1      
+    },
+    'api': {
+        'requests': 5,  # 3 requests per second - normal API usage
+        'window': 1      
+    },
+    'conversation': {
+        'requests': 1,  # 1 request per second - chat
+        'window': 1      
+    },
+}
+
+# Map URL paths to rate limit tiers
+RATE_LIMIT_PATHS = {
+    '/v1/features/': 'ai_operations',       # All AI feature endpoints (strict: 1 req/sec)
+    '/api/v1/chat/': 'conversation',        # Chat/conversation endpoints (10 req/sec)
+    '/v1/gallery/': 'api',                  # Gallery API (30 req/sec)
+    '/api/v1/ai/gallery/': 'api',           # Gallery API alternative path (30 req/sec)
+    '/api/v1/ai/video-gallery/': 'api',     # Video gallery API (30 req/sec)
+}
+
+# ============================================================================
+# INPUT SANITIZATION CONFIGURATION
+# ============================================================================
+
+# Enable/disable input sanitization
+INPUT_SANITIZATION_ENABLED = env_bool('INPUT_SANITIZATION_ENABLED', True)
+
+# Strict mode: True = reject dangerous input, False = clean it
+INPUT_SANITIZATION_STRICT_MODE = env_bool('INPUT_SANITIZATION_STRICT_MODE', False)
+
+# Max length for any input field (prevent DoS)
+INPUT_MAX_LENGTH = env_int('INPUT_MAX_LENGTH', 10000)
 
 # ============================================================================
 # API DOCUMENTATION (Swagger)

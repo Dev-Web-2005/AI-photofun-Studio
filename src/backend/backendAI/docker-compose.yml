@@ -17,10 +17,6 @@ services:
       DJANGO_SECRET_KEY: "${DJANGO_SECRET_KEY:-dev-secret-key-change-in-production}"
       DJANGO_ALLOWED_HOSTS: "${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1,0.0.0.0,nmcnpm-api-ai.lethanhcong.site}"
 
-      # MongoDB (Conversations)
-      MONGO_URI: "mongodb://mongo:27017"
-      MONGO_DB_NAME: "ai_photofun_studio"
-
       # Supabase PostgreSQL (Image Gallery) - Use environment variables
       SUPABASE_DB_HOST: "${SUPABASE_DB_HOST}"
       SUPABASE_DB_PORT: "${SUPABASE_DB_PORT:-5432}"
@@ -115,20 +111,6 @@ services:
       timeout: 5s
       retries: 5
 
-  # MongoDB for Rec Prompt and Conversations
-  mongo:
-    image: mongo:7
-    container_name: backendai_mongo
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
-    healthcheck:
-      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   # Flower for Celery Monitoring (Optional)
   flower:
     image: backendai:latest
@@ -150,7 +132,6 @@ services:
 
 volumes:
   redis_data:
-  mongo_data:
 
 
 networks:
