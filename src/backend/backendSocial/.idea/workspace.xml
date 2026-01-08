@@ -5,7 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="740a1931-dd5b-46a1-9947-5fe7d5aa7c77" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../../.github/workflows/deploy.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.github/workflows/deploy.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../docs/management/Group11-Template0.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../docs/management/Group11-Template0.zip" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/src/main/java/service/api_gateway/configuration/WebGlobalFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/src/main/java/service/api_gateway/configuration/WebGlobalFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/src/features/auth/components/LoginForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/src/features/auth/components/LoginForm.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/src/features/auth/components/RegisterForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/src/features/auth/components/RegisterForm.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/src/routes/AppRoutes.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/src/routes/AppRoutes.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,8 +26,8 @@
         <option value="Enum" />
         <option value="Record" />
         <option value="package-info" />
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -54,7 +62,7 @@
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;test&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;new-feat-fb__login-detect__safetyContent&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/ACER/Desktop/Project/NMCNPM/temp/AI-photofun-Studio/src/backend/backendSocial&quot;,
@@ -103,7 +111,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Application.gateway">
+  <component name="RunManager" selected="Application.Profile">
     <configuration name="Profile" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="temurin-21" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />

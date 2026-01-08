@@ -39,6 +39,10 @@ public class User {
 
   @Builder.Default boolean loginByGoogle = false;
 
+  @Column(nullable = false, columnDefinition = "boolean default false")
+  @Builder.Default
+  boolean loginByFacebook = false;
+
   @Builder.Default int premiumPoints = 0;
 
   @Builder.Default boolean premiumOneMonth = false;
@@ -50,5 +54,4 @@ public class User {
   @Builder.Default Instant createdAt = Instant.now();
 
   @Builder.Default Instant lastRefillAt = Instant.now();
-
 }

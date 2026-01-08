@@ -11,6 +11,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
@@ -28,6 +29,8 @@ import service.identity.DTOs.request.RegisterUserRequest;
 import service.identity.DTOs.response.IntrospectIgnoreRefreshResponse;
 import service.identity.DTOs.response.LoginResponse;
 import service.identity.DTOs.response.RegisterUserResponse;
+import service.identity.DTOs.response.fb.FbTokenResponse;
+import service.identity.DTOs.response.fb.FbUserInfoResponse;
 import service.identity.DTOs.response.gg.GetInfoResponse;
 import service.identity.DTOs.response.gg.GetTokenResponse;
 import service.identity.entity.RemoveToken;
@@ -36,6 +39,7 @@ import service.identity.exception.AppException;
 import service.identity.exception.ErrorCode;
 import service.identity.repository.RemoveTokenRepository;
 import service.identity.repository.UserRepository;
+import service.identity.repository.http.FbClient;
 import service.identity.repository.http.GgClient;
 import service.identity.repository.http.OpenIdClient;
 import service.identity.utils.CookieUtils;
@@ -50,6 +54,7 @@ public class AuthService {
   RemoveTokenRepository removeTokenRepository;
   PasswordEncoder passwordEncoder;
   GgClient ggClient;
+  FbClient fbClient;
   OpenIdClient openIdClient;
   Utils utils;
   CookieUtils cookieUtils;
@@ -255,6 +260,115 @@ public class AuthService {
     } catch (Exception e) {
       log.error("Error during authentication: {} - {}", e.getClass().getName(),
                 e.getMessage(), e);
+      throw new AppException(ErrorCode.AUTHENTICATION_FAILED);
+    }
+  }
+
+  public boolean authenticateFacebook(String code, HttpServletResponse response,
+                                      String clientIp) {
+    if (code == null || code.isEmpty()) {
+      return false;
+    }
+    log.info("Facebook code: {}", code);
+
+    try {
+      Map<String, String> params = utils.generateParamFbRequest(code);
+      log.info("Requesting Facebook access token with params: client_id={}, "
+                   + "redirect_uri={}",
+               params.get("client_id"), params.get("redirect_uri"));
+
+      FbTokenResponse fbTokenResponse = fbClient.getAccessToken(
+          params.get("client_id"), params.get("redirect_uri"),
+          params.get("client_secret"), params.get("code"));
+
+      String accessToken = fbTokenResponse.getAccessToken();
+      log.info("Facebook access token received");
+
+      if (accessToken == null || accessToken.isEmpty()) {
+        return false;
+      }
+
+      FbUserInfoResponse fbUserInfo =
+          fbClient.getUserInfo("id,name,email,picture", accessToken);
+      log.info("Facebook user info: {}", fbUserInfo.toString());
+
+      String email = fbUserInfo.getEmail();
+      String facebookId = fbUserInfo.getId();
+      String identifier =
+          (email != null && !email.isEmpty()) ? email : "fb_" + facebookId;
+      boolean hasEmail = (email != null && !email.isEmpty());
+
+      log.info("Facebook login - hasEmail: {}, identifier: {}", hasEmail,
+               identifier);
+
+      try {
+        User user =
+            userRepository.findByUsernameOrEmail(identifier, identifier);
+        log.info("User found: {}", user != null ? user.getUserId() : "null");
+
+        if (user != null) {
+          log.info("User already exists, generating tokens...");
+          String jwtAccessToken = utils.generateToken(user);
+          String refreshToken = utils.generateRefreshToken(user);
+          log.info("JWT tokens generated");
+          ResponseCookie cookie = cookieUtils.createJwtCookie(refreshToken);
+          response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+          response.setHeader("X-Access-Token", jwtAccessToken);
+          log.info("Cookie and header added to response");
+          return true;
+        }
+      } catch (Exception e) {
+        log.error("Error during existing user login: {}", e.getMessage(), e);
+        throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR);
+      }
+
+      log.info("User not found, creating new user...");
+      RegisterUserRequest registerUserRequest =
+          RegisterUserRequest.builder()
+              .username(identifier)
+              .email(hasEmail ? email : identifier + "@facebook.local")
+              .fullName(fbUserInfo.getName())
+              .password(facebookId)
+              .roles(new HashSet<>(List.of("USER")))
+              .loginByFacebook(true)
+              .confirmPass(facebookId)
+              .build();
+      log.info("Register request created: {}", registerUserRequest.toString());
+
+      try {
+        log.info("Calling userService.register...");
+
+        RegisterUserResponse userResponse =
+            userService.register(registerUserRequest, clientIp);
+        log.info("Registered user response: {}", userResponse.toString());
+
+        User saveUser =
+            userRepository.findById(userResponse.getUserId())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        log.info("Retrieved saved user: {}", saveUser.getUserId());
+
+        String jwtAccessToken = utils.generateToken(saveUser);
+        String refreshToken = utils.generateRefreshToken(saveUser);
+        ResponseCookie cookie = cookieUtils.createJwtCookie(refreshToken);
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        response.setHeader("X-Access-Token", jwtAccessToken);
+        log.info("Cookie and header added for new user");
+        return true;
+      } catch (AppException e) {
+        log.error("AppException during user registration: {} - {}",
+                  e.getErrorCode().getCode(), e.getMessage());
+        throw e;
+      } catch (Exception e) {
+        log.error("Error during user registration: {}", e.getMessage(), e);
+        throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR);
+      }
+    } catch (AppException e) {
+      log.error("AppException during Facebook authentication: {} - {}",
+                e.getErrorCode().getCode(), e.getMessage());
+      throw e;
+    } catch (Exception e) {
+      log.error("Error during Facebook authentication: {} - {}",
+                e.getClass().getName(), e.getMessage(), e);
       throw new AppException(ErrorCode.AUTHENTICATION_FAILED);
     }
   }

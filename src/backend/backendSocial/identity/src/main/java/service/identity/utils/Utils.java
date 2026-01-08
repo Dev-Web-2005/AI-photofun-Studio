@@ -4,21 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
-import lombok.experimental.NonFinal;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import service.identity.DTOs.request.gg.ParamGgRequest;
-import service.identity.entity.Authority;
-import service.identity.entity.Role;
-import service.identity.entity.User;
-import service.identity.exception.AppException;
-import service.identity.exception.ErrorCode;
-import service.identity.repository.RoleRepository;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -31,125 +16,148 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.UUID;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import service.identity.DTOs.request.gg.ParamGgRequest;
+import service.identity.entity.Authority;
+import service.identity.entity.Role;
+import service.identity.entity.User;
+import service.identity.exception.AppException;
+import service.identity.exception.ErrorCode;
+import service.identity.repository.RoleRepository;
 
 @Component
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Utils {
 
-    @Autowired
-    RoleRepository roleRepository;
+  @Autowired RoleRepository roleRepository;
 
-    @NonFinal
-    @Value("${config.jwt.secret}")
-    private String jwtSecret;
+  @NonFinal @Value("${config.jwt.secret}") private String jwtSecret;
 
-    @NonFinal
-    @Value("${config.jwt.expires-in}")
-    private long expiresIn;
+  @NonFinal @Value("${config.jwt.expires-in}") private long expiresIn;
 
-    @NonFinal
-    @Value("${config.jwt.refresh-expires-in}")
-    private long refreshExpiresIn;
+  @NonFinal
+  @Value("${config.jwt.refresh-expires-in}")
+  private long refreshExpiresIn;
 
-    @NonFinal
-    @Value("${config.http.redirect-uri}")
-    private String redirectUri;
+  @NonFinal @Value("${config.http.redirect-uri}") private String redirectUri;
 
-    @NonFinal
-    @Value("${config.gg.client-id}")
-    private String clientId;
+  @NonFinal @Value("${config.gg.client-id}") private String clientId;
 
-    @NonFinal
-    @Value("${config.gg.client-secret}")
-    private String clientSecret;
+  @NonFinal @Value("${config.gg.client-secret}") private String clientSecret;
 
-    @NonFinal
-    @Value("${config.jwt.secret-refresh}")
-    private String jwtRefreshSecret;
+  @NonFinal @Value("${config.fb.app-id}") private String fbAppId;
 
-    public String generateScope(User user) {
-        StringJoiner scope = new StringJoiner(" ");
-        Set<Role> roles = user.getRoles();
-        for (Role role : roles) {
-            String roleName = "ROLE_" + role.getRoleName();
-            scope.add(roleName);
-            for (Authority authority : role.getAuthorities()) {
-                scope.add(authority.getAuthorityName());
-            }
-        }
+  @NonFinal @Value("${config.fb.app-secret}") private String fbAppSecret;
 
-        return scope.toString();
+  @NonFinal @Value("${config.fb.redirect-uri}") private String fbRedirectUri;
+
+  @NonFinal
+  @Value("${config.jwt.secret-refresh}")
+  private String jwtRefreshSecret;
+
+  public String generateScope(User user) {
+    StringJoiner scope = new StringJoiner(" ");
+    Set<Role> roles = user.getRoles();
+    for (Role role : roles) {
+      String roleName = "ROLE_" + role.getRoleName();
+      scope.add(roleName);
+      for (Authority authority : role.getAuthorities()) {
+        scope.add(authority.getAuthorityName());
+      }
     }
 
-    public String generateToken(User user) throws JOSEException {
-        JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
+    return scope.toString();
+  }
 
-        JWTClaimsSet claimSet = new JWTClaimsSet.Builder()
-                .subject(user.getUserId())
-                .issuer("ThanhCong")
-                .expirationTime(Date.from(Instant.now().plus(expiresIn, ChronoUnit.SECONDS)))
-                .issueTime(Date.from(Instant.now()))
-                .jwtID(String.valueOf(UUID.randomUUID()))
-                .audience("NMCNPM-CLIENT")
-                .claim("scope", generateScope(user))
-                .claim("type", "access")
-                .build();
+  public String generateToken(User user) throws JOSEException {
+    JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
-        Payload payload = new Payload(claimSet.toJSONObject());
-        JWSObject jwtObject = new JWSObject(header, payload);
+    JWTClaimsSet claimSet =
+        new JWTClaimsSet.Builder()
+            .subject(user.getUserId())
+            .issuer("ThanhCong")
+            .expirationTime(
+                Date.from(Instant.now().plus(expiresIn, ChronoUnit.SECONDS)))
+            .issueTime(Date.from(Instant.now()))
+            .jwtID(String.valueOf(UUID.randomUUID()))
+            .audience("NMCNPM-CLIENT")
+            .claim("scope", generateScope(user))
+            .claim("type", "access")
+            .build();
 
-        jwtObject.sign(new MACSigner(jwtSecret.getBytes()));
+    Payload payload = new Payload(claimSet.toJSONObject());
+    JWSObject jwtObject = new JWSObject(header, payload);
 
-        return jwtObject.serialize();
+    jwtObject.sign(new MACSigner(jwtSecret.getBytes()));
+
+    return jwtObject.serialize();
+  }
+
+  public String generateRefreshToken(User user) throws JOSEException {
+    JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
+
+    JWTClaimsSet claimSet = new JWTClaimsSet.Builder()
+                                .subject(user.getUserId())
+                                .issuer("ThanhCong")
+                                .expirationTime(Date.from(Instant.now().plus(
+                                    refreshExpiresIn, ChronoUnit.SECONDS)))
+                                .issueTime(Date.from(Instant.now()))
+                                .jwtID(String.valueOf(UUID.randomUUID()))
+                                .audience("NMCNPM-CLIENT")
+                                .claim("type", "refresh")
+                                .claim("scope", generateScope(user))
+                                .build();
+    Payload payload = new Payload(claimSet.toJSONObject());
+    JWSObject jwtObject = new JWSObject(header, payload);
+    jwtObject.sign(new MACSigner(jwtRefreshSecret.getBytes()));
+    return jwtObject.serialize();
+  }
+
+  public MultiValueMap<String, String> generateParamGgRequest(String code) {
+    MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+    params.add("code", code);
+    params.add("client_id", clientId);
+    params.add("client_secret", clientSecret);
+    params.add("redirect_uri", redirectUri);
+    params.add("grant_type", "authorization_code");
+    return params;
+  }
+
+  public Map<String, String> generateParamFbRequest(String code) {
+    Map<String, String> params = new HashMap<>();
+    params.put("client_id", fbAppId);
+    params.put("redirect_uri", fbRedirectUri);
+    params.put("client_secret", fbAppSecret);
+    params.put("code", code);
+    return params;
+  }
+
+  public Role getRoleDefault() {
+    return roleRepository.findById("USER").orElseThrow(
+        () -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+  }
+
+  public String Welcome(String username) {
+    try {
+      ClassPathResource resource =
+          new ClassPathResource("templates/welcome.html");
+      String content =
+          new String(Files.readAllBytes(Paths.get(resource.getURI())),
+                     StandardCharsets.UTF_8);
+      return content.replace("{{username}}", username);
+    } catch (IOException e) {
+      log.error("Error reading welcome.html template: {}", e.getMessage());
+      throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR);
     }
-
-    public String generateRefreshToken(User user) throws JOSEException {
-        JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
-
-        JWTClaimsSet claimSet = new JWTClaimsSet.Builder()
-                .subject(user.getUserId())
-                .issuer("ThanhCong")
-                .expirationTime(Date.from(Instant.now().plus(refreshExpiresIn, ChronoUnit.SECONDS)))
-                .issueTime(Date.from(Instant.now()))
-                .jwtID(String.valueOf(UUID.randomUUID()))
-                .audience("NMCNPM-CLIENT")
-                .claim("type", "refresh")
-                .claim("scope", generateScope(user))
-                .build();
-        Payload payload = new Payload(claimSet.toJSONObject());
-        JWSObject jwtObject = new JWSObject(header, payload);
-        jwtObject.sign(new MACSigner(jwtRefreshSecret.getBytes()));
-        return jwtObject.serialize();
-    }
-
-    public MultiValueMap<String, String> generateParamGgRequest(String code) {
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("code", code);
-        params.add("client_id", clientId);
-        params.add("client_secret", clientSecret);
-        params.add("redirect_uri", redirectUri);
-        params.add("grant_type", "authorization_code");
-        return params;
-    }
-
-    public Role getRoleDefault() {
-        return roleRepository.findById("USER").orElseThrow(
-                () -> new AppException(ErrorCode.ROLE_NOT_FOUND));
-    }
-
-    public String Welcome(String username) {
-        try {
-            ClassPathResource resource = new ClassPathResource("templates/welcome.html");
-            String content = new String(Files.readAllBytes(Paths.get(resource.getURI())), StandardCharsets.UTF_8);
-            return content.replace("{{username}}", username);
-        } catch (IOException e) {
-            log.error("Error reading welcome.html template: {}", e.getMessage());
-            throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-    }
-
+  }
 }

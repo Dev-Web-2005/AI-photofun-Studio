@@ -36,10 +36,16 @@ config:
     redirect-uri: ${REDIRECT_URI:http://localhost:5173/google-loading}
     communication: ${COMMUNICATION_SERVICE_URL:http://localhost:8085}
     frontend-url: ${FRONTEND_URL:http://localhost:5173}
+    fb-api-url: ${FB_API_URL:https://graph.facebook.com/v17.0/me?fields=id,name,email,picture}
 
   gg:
     client-id: ${GOOGLE_CLIENT_ID:424511485278-d36bocf4e3avqsadguauellt3gn4l412.apps.googleusercontent.com}
     client-secret: ${GOOGLE_CLIENT_SECRET:}
+
+  fb:
+    app-id: ${FACEBOOK_APP_ID:652099144594034}
+    app-secret: ${FACEBOOK_APP_SECRET:44bd6d4b0fa3a46db03c709fa916d4bb}
+    redirect-uri: ${FACEBOOK_REDIRECT_URI:http://localhost:5173/facebook-loading}
 
   jwt:
     secret: ${JWT_SECRET:83dc48544aeb79bb92fb8f7271d4cbeb825e5ec19ce7f0b4c1be2048d1bd98671fc1e39e2a0a97c4d7d0a20a63b580e7c238f5ba880bcd2b6a091fd79f72e3e1}

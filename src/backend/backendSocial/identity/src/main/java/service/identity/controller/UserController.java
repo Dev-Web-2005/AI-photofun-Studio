@@ -122,6 +122,16 @@ public class UserController {
         .result(userService.checkLoginByGoogle())
         .build();
   }
+
+  @GetMapping("/check-login-by-facebook")
+  HttpResponse<Boolean> checkLoginByFacebook() {
+    return HttpResponse.<Boolean>builder()
+        .code(1000)
+        .message("Check login by facebook successfully")
+        .result(userService.checkLoginByFacebook())
+        .build();
+  }
+
   @PostMapping("/set-password")
   HttpResponse<Boolean>
   setPassword(@RequestBody @Valid SetPasswordRequest request) {
