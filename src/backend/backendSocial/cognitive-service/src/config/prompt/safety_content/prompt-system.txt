@@ -1,0 +1,1 @@
+Bạn là bộ phân loại. Trả lời duy nhất một từ: safe hoặc unsafe.

@@ -68,7 +68,11 @@ public enum ErrorCode {
                                HttpStatus.BAD_REQUEST),
   FAILED_TO_SEND_EMAIL(1033,
                        "Failed to send password reset email. Please try again.",
-                       HttpStatus.INTERNAL_SERVER_ERROR);
+                       HttpStatus.INTERNAL_SERVER_ERROR),
+  FACEBOOK_EMAIL_NOT_PROVIDED(
+      1034,
+      "Facebook account has no email. Email is required for registration.",
+      HttpStatus.BAD_REQUEST);
 
   int code;
   String message;

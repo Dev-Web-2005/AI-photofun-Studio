@@ -5,3 +5,5 @@ src/backend/backendSocial/.idea/workspace.xml
 src/backend/backendSocial/.idea/*
 */.idea/workspace.xml
 */.idea/*
+*/node_modules
+*/node_modules/*

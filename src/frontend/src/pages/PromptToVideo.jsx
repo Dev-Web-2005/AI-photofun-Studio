@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { ArrowLeft, Download, Film, Play, Share2, Video } from "lucide-react";
+import { ArrowLeft, Download, Film, Play, Share2, Video, Mic, MicOff, Loader2 } from "lucide-react";
 import {
   suggestPrompts,
   recordPromptChoice,
   generateVideoFromPrompt,
   pollVideoTaskStatus,
 } from "../api/aiApi";
+import { cognitiveApi } from "../api/cognitiveApi";
 import { toast } from "../hooks/use-toast";
 
 // Models for Prompt to Video (Text to Video)
@@ -57,6 +58,12 @@ const PromptToVideo = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+
+  const [isRecording, setIsRecording] = useState(false);
+  const [isConvertingSpeech, setIsConvertingSpeech] = useState(false);
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
+  const [showSpeechLangModal, setShowSpeechLangModal] = useState(false);
 
   // Check for prompt passed via navigation state
   useEffect(() => {
@@ -158,6 +165,12 @@ const PromptToVideo = () => {
       return;
     }
 
+    const safetyResult = await cognitiveApi.detectSafetyContent(prompt.trim());
+    if (safetyResult.success && !safetyResult.isSafe) {
+      toast.error("Your prompt contains inappropriate content. Please use more polite and appropriate language.");
+      return;
+    }
+
     setError("");
     setLoading(true);
     setVideoUrl(null);
@@ -200,6 +213,72 @@ const PromptToVideo = () => {
       if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
     };
   }, []);
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunksRef.current = [];
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
+        stream.getTracks().forEach((track) => track.stop());
+        await handleSpeechToVideo(audioBlob);
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+    } catch (err) {
+      toast.error("Unable to access microphone. Please check your permissions.");
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    }
+  };
+
+  const handleSpeechToVideo = async (audioBlob) => {
+    setIsConvertingSpeech(true);
+    try {
+      const audioFile = new File([audioBlob], "speech.webm", { type: "audio/webm" });
+      const result = await cognitiveApi.speechToText(audioFile);
+      
+      if (result.success && result.text) {
+        const transcribedText = result.text.trim();
+        setPrompt(transcribedText);
+        toast.success("Speech converted successfully! Click Create Video to generate your video.");
+      } else {
+        toast.error(result.error || "Failed to convert speech to text. Please try again.");
+      }
+    } catch (err) {
+      toast.error("Failed to convert speech. Please try again.");
+    } finally {
+      setIsConvertingSpeech(false);
+    }
+  };
+
+  const handleMicClick = () => {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      setShowSpeechLangModal(true);
+    }
+  };
+
+  const confirmSpeechLanguage = () => {
+    setShowSpeechLangModal(false);
+    startRecording();
+  };
 
   const handleDownload = async () => {
     if (!videoUrl) return;
@@ -254,6 +333,25 @@ const PromptToVideo = () => {
         <h1 className="text-lg md:text-xl font-bold flex items-center gap-2">
           <Video className="w-5 h-5 text-pink-500" /> Prompt to Video
         </h1>
+        <button
+          type="button"
+          onClick={handleMicClick}
+          disabled={isConvertingSpeech}
+          className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold transition-all ${
+            isRecording
+              ? "bg-red-500 text-white animate-pulse"
+              : "bg-pink-100 text-pink-700 hover:bg-pink-200"
+          }`}
+        >
+          {isConvertingSpeech ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : isRecording ? (
+            <MicOff className="w-4 h-4" />
+          ) : (
+            <Mic className="w-4 h-4" />
+          )}
+          {isConvertingSpeech ? "Converting..." : isRecording ? "Stop" : "Speech to Video"}
+        </button>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -437,6 +535,41 @@ const PromptToVideo = () => {
           )}
         </section>
       </div>
+
+      {/* Speech Language Warning Modal */}
+      {showSpeechLangModal && (
+        <>
+          <div className="fixed inset-0 bg-black/40 z-40" onClick={() => setShowSpeechLangModal(false)} />
+          <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+            <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl">
+              <div className="text-center">
+                <Mic className="w-12 h-12 mx-auto text-pink-500 mb-4" />
+                <h3 className="text-lg font-bold mb-2">Speech to Video</h3>
+                <p className="text-gray-600 mb-6">
+                  Please note: This feature only supports <strong>English</strong> language. 
+                  Speak clearly in English to describe the video you want to create.
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setShowSpeechLangModal(false)}
+                    className="flex-1 py-2 px-4 rounded-xl border border-gray-300 font-semibold hover:bg-gray-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={confirmSpeechLanguage}
+                    className="flex-1 py-2 px-4 rounded-xl bg-pink-600 text-white font-semibold hover:bg-pink-700"
+                  >
+                    Start Recording
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

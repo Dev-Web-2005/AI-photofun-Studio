@@ -28,6 +28,7 @@ class WebGlobalFilter implements GlobalFilter, Ordered {
                                        "/identity/auth/logout",
                                        "/identity/users/register",
                                        "/identity/auth/authentication",
+                                       "/identity/auth/authentication-facebook",
                                        "/check",
                                        "/identity/users/tokens/**",
                                        "/identity/users/modify-tokens",
@@ -52,8 +53,10 @@ class WebGlobalFilter implements GlobalFilter, Ordered {
     String accessToken =
         exchange.getRequest().getHeaders().getFirst("Authorization");
     String path = exchange.getRequest().getPath().toString();
+    String pathWithoutQuery = path.split("\\?")[0];
 
     log.info("Incoming request path: {}", path);
+    log.info("Path without query: {}", pathWithoutQuery);
 
     // Check if this is a public URL (use startsWith for more reliable matching)
     for (String url : PUBLIC_URLS) {
@@ -62,7 +65,7 @@ class WebGlobalFilter implements GlobalFilter, Ordered {
       // Handle wildcard patterns
       if (url.endsWith("/**")) {
         String basePath = realPath.replace("/**", "");
-        if (path.startsWith(basePath)) {
+        if (pathWithoutQuery.startsWith(basePath)) {
           log.info(
               "Public URL matched (wildcard)! Path: {} matches pattern: {}",
               path, realPath);
@@ -70,7 +73,7 @@ class WebGlobalFilter implements GlobalFilter, Ordered {
         }
       } else {
         // Exact match
-        if (path.equals(realPath)) {
+        if (pathWithoutQuery.equals(realPath)) {
           log.info("Public URL matched (exact)! Path: {}", path);
           return chain.filter(exchange);
         }

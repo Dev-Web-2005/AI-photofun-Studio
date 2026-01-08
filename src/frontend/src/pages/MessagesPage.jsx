@@ -24,12 +24,15 @@ import {
   Trash2,
   ArrowLeft,
   Menu,
+  Mic,
+  MicOff,
 } from "lucide-react";
 import EmojiPicker from "emoji-picker-react";
 import io from "socket.io-client";
 import { useAuth } from "../hooks/useAuth";
 import { communicationApi } from "../api/communicationApi";
 import { userApi } from "../api/userApi";
+import { cognitiveApi } from "../api/cognitiveApi";
 import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import VideoCallModal from "../components/common/VideoCallModal";
 import IncomingCallModal from "../components/common/IncomingCallModal";
@@ -84,6 +87,13 @@ const MessagesPage = () => {
 
   // Mobile responsive state
   const [showMobileSidebar, setShowMobileSidebar] = useState(true);
+
+  // Speech to text state
+  const [isRecordingVoice, setIsRecordingVoice] = useState(false);
+  const [isConvertingVoice, setIsConvertingVoice] = useState(false);
+  const [showVoiceLangModal, setShowVoiceLangModal] = useState(false);
+  const voiceRecorderRef = useRef(null);
+  const voiceChunksRef = useRef([]);
 
   // Edit Group State (Admin Only)
   const [isEditingGroup, setIsEditingGroup] = useState(false);
@@ -1528,6 +1538,72 @@ const MessagesPage = () => {
     }
   };
 
+  const startVoiceRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
+      voiceRecorderRef.current = mediaRecorder;
+      voiceChunksRef.current = [];
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          voiceChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(voiceChunksRef.current, { type: "audio/webm" });
+        stream.getTracks().forEach((track) => track.stop());
+        await handleVoiceToText(audioBlob);
+      };
+
+      mediaRecorder.start();
+      setIsRecordingVoice(true);
+    } catch (err) {
+      toast.error("Unable to access microphone. Please check your permissions.");
+    }
+  };
+
+  const stopVoiceRecording = () => {
+    if (voiceRecorderRef.current && isRecordingVoice) {
+      voiceRecorderRef.current.stop();
+      setIsRecordingVoice(false);
+    }
+  };
+
+  const handleVoiceToText = async (audioBlob) => {
+    setIsConvertingVoice(true);
+    try {
+      const audioFile = new File([audioBlob], "voice.webm", { type: "audio/webm" });
+      const result = await cognitiveApi.speechToText(audioFile);
+      
+      if (result.success && result.text) {
+        const transcribedText = result.text.trim();
+        setInputMessage(transcribedText);
+        toast.success("Voice converted to text!");
+      } else {
+        toast.error(result.error || "Failed to convert voice to text. Please try again.");
+      }
+    } catch (err) {
+      toast.error("Failed to convert voice. Please try again.");
+    } finally {
+      setIsConvertingVoice(false);
+    }
+  };
+
+  const handleVoiceMicClick = () => {
+    if (isRecordingVoice) {
+      stopVoiceRecording();
+    } else {
+      setShowVoiceLangModal(true);
+    }
+  };
+
+  const confirmVoiceLanguage = () => {
+    setShowVoiceLangModal(false);
+    startVoiceRecording();
+  };
+
   // Loading state
   if (loading) {
     return (
@@ -2179,6 +2255,25 @@ const MessagesPage = () => {
                 >
                   <button
                     type="button"
+                    onClick={handleVoiceMicClick}
+                    disabled={isConvertingVoice || !socketConnected}
+                    className={`rounded-lg p-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer touch-manipulation ${
+                      isRecordingVoice
+                        ? "bg-red-500 text-white animate-pulse"
+                        : "text-gray-600 hover:bg-gray-100"
+                    }`}
+                    title={isRecordingVoice ? "Stop recording" : "Voice to text"}
+                  >
+                    {isConvertingVoice ? (
+                      <Loader2 className="h-4 w-4 md:h-5 md:w-5 animate-spin" />
+                    ) : isRecordingVoice ? (
+                      <MicOff className="h-4 w-4 md:h-5 md:w-5" />
+                    ) : (
+                      <Mic className="h-4 w-4 md:h-5 md:w-5" />
+                    )}
+                  </button>
+                  <button
+                    type="button"
                     onClick={() => imageInputRef.current?.click()}
                     disabled={uploadingImage || !socketConnected}
                     className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer touch-manipulation"
@@ -2687,6 +2782,41 @@ const MessagesPage = () => {
           socket={socketRef.current}
           isCaller={isCaller}
         />
+
+        {/* Voice Language Warning Modal */}
+        {showVoiceLangModal && (
+          <>
+            <div className="fixed inset-0 bg-black/40 z-[60]" onClick={() => setShowVoiceLangModal(false)} />
+            <div className="fixed inset-0 z-[70] flex items-center justify-center px-4">
+              <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl">
+                <div className="text-center">
+                  <Mic className="w-12 h-12 mx-auto text-blue-500 mb-4" />
+                  <h3 className="text-lg font-bold mb-2">Voice to Text</h3>
+                  <p className="text-gray-600 mb-6">
+                    Please note: This feature only supports <strong>English</strong> language. 
+                    Speak clearly in English to convert your voice to text message.
+                  </p>
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setShowVoiceLangModal(false)}
+                      className="flex-1 py-2 px-4 rounded-xl border border-gray-300 font-semibold hover:bg-gray-50"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={confirmVoiceLanguage}
+                      className="flex-1 py-2 px-4 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700"
+                    >
+                      Start Recording
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
