@@ -46,12 +46,13 @@ export class CoreService {
 							message,
 						)
 						if (response && response.status === 200) {
-							const content = response.data.choices[0].message.content
-							const hasResult =
-								content.toLowerCase().includes('unsafe') ||
-								content.toLowerCase().includes('safe')
-							if (hasResult) {
-								return content.toLowerCase().includes('safe')
+							const content = response.data.choices[0].message.content.toLowerCase()
+							// Check "unsafe" first to avoid matching "safe" in "unsafe"
+							if (content.includes('unsafe')) {
+								return false
+							}
+							if (content.includes('safe')) {
+								return true
 							}
 						}
 					} catch (err) {
