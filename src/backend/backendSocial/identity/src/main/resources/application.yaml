@@ -44,7 +44,7 @@ config:
 
   fb:
     app-id: ${FACEBOOK_APP_ID:652099144594034}
-    app-secret: ${FACEBOOK_APP_SECRET:44bd6d4b0fa3a46db03c709fa916d4bb}
+    app-secret: ${FACEBOOK_APP_SECRET:}
     redirect-uri: ${FACEBOOK_REDIRECT_URI:http://localhost:5173/facebook-loading}
 
   jwt:
