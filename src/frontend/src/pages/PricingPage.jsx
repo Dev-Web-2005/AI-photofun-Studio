@@ -3,8 +3,12 @@ import { Check, Loader2, Star } from "lucide-react";
 import { useAuthContext } from "../context/AuthContext";
 import { toast } from "../hooks/use-toast";
 
-const API_GATEWAY =
-  import.meta.env.VITE_API_GATEWAY || "http://localhost:8888";
+// Nếu VITE_MODE=dev thì dùng API deployed, ngược lại dùng localhost
+const MODE = import.meta.env.VITE_MODE || "prod";
+const API_GATEWAY_LOCAL = import.meta.env.VITE_API_GATEWAY || "http://localhost:8888";
+const API_GATEWAY_DEV = "https://nmcnpm-api.lethanhcong.site:46337";
+const API_GATEWAY = MODE === "dev" ? API_GATEWAY_DEV : API_GATEWAY_LOCAL;
+
 const PAYMENT_API_URL = `${API_GATEWAY}/api/v1/payment/create-payment`;
 const PAYMENT_API_KEY =
   import.meta.env.VITE_PAYMENT_API_KEY ||
