@@ -1,0 +1,184 @@
+version: "3.9"
+
+services:
+  # Main Django API Server
+  backendAI:
+    image: backendai:latest
+    build:
+      context: .
+      target: development
+    container_name: backendai_api
+    command: python manage.py runserver 0.0.0.0:9999
+    ports:
+      - "9999:9999"
+    environment:
+      # Django Settings
+      DJANGO_DEBUG: "${DJANGO_DEBUG:-1}"
+      DJANGO_SECRET_KEY: "${DJANGO_SECRET_KEY:-dev-secret-key-change-in-production}"
+      DJANGO_ALLOWED_HOSTS: "${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1,0.0.0.0}"
+
+      MONGO_URI: "${MONGO_URI:-mongodb+srv://lethuongde290605_db_user:iv4cv7vNxdrZulWe@aiphotofunstudio.id2vdaa.mongodb.net/?appName=AIPhotofunStudio}"
+      MONGO_DB_NAME: "${MONGO_DB_NAME:-ai_photofun_studio}"
+
+      # Supabase PostgreSQL (Image Gallery) - Use environment variables
+      SUPABASE_DB_HOST: "${SUPABASE_DB_HOST}"
+      SUPABASE_DB_PORT: "${SUPABASE_DB_PORT:-5432}"
+      SUPABASE_DB_NAME: "${SUPABASE_DB_NAME:-postgres}"
+      SUPABASE_DB_USER: "${SUPABASE_DB_USER:-postgres}"
+      SUPABASE_DB_PASSWORD: "${SUPABASE_DB_PASSWORD}"
+      SUPABASE_DB_SSLMODE: "${SUPABASE_DB_SSLMODE:-require}"
+
+      # Redis (Celery)
+      REDIS_URL: "redis://redis:6379/0"
+      CELERY_BROKER_URL: "redis://redis:6379/0"
+      CELERY_RESULT_BACKEND: "redis://redis:6379/0"
+
+      # External APIs
+      FREEPIK_API_KEY: "${FREEPIK_API_KEY}"
+      GEMINI_API_KEY: "${GEMINI_API_KEY}"
+      GEMINI_API_KEYS: "${GEMINI_API_KEYS}"
+      MODELSTUDIO_API_KEY: "${MODELSTUDIO_API_KEY}"
+      MODELSTUDIO_API_BASE: "${MODELSTUDIO_API_BASE:-https://dashscope-intl.aliyuncs.com/api/v1}"
+      FILE_SERVICE_URL: "${FILE_SERVICE_URL:-https://file-service-cdal.onrender.com}"
+
+      # JWT Configuration
+      JWT_SECRET_KEY: "${JWT_SECRET_KEY}"
+      JWT_ALGORITHM: "${JWT_ALGORITHM:-HS512}"
+      JWT_ISSUER: "${JWT_ISSUER:-ThanhCong}"
+      JWT_AUDIENCE: "${JWT_AUDIENCE:-NMCNPM-CLIENT}"
+
+    
+      TOKEN_SERVICE_URL: "http://api-gateway:8888"
+      TOKEN_API_KEY_1: "${TOKEN_API_KEY_1}"
+      TOKEN_API_KEY_2: "${TOKEN_API_KEY_2}"
+      TOKEN_SERVICE_TIMEOUT: "${TOKEN_SERVICE_TIMEOUT:-10}"
+
+    volumes:
+      - .:/app
+      - ./logs:/app/logs
+      - ./media:/app/media
+    depends_on:
+      - redis
+    # mongo container is optional when using MongoDB Atlas
+    # depends_on:
+    #   - redis
+    #   - mongo
+    networks:
+      - backendai_network
+      - shared-local-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9999/health/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Celery Worker for Background Tasks
+  celery_worker:
+    image: backendai:latest
+    build:
+      context: .
+      target: development
+    container_name: backendai_celery
+    command: celery -A backendAI worker --loglevel=info --concurrency=10
+    environment:
+      # Django Settings
+      DJANGO_DEBUG: "1"
+      DJANGO_SECRET_KEY: "${DJANGO_SECRET_KEY:-dev-secret-key-change-in-production}"
+
+      # MongoDB - Use MongoDB Atlas
+      MONGO_URI: "${MONGO_URI:-mongodb+srv://lethuongde290605_db_user:iv4cv7vNxdrZulWe@aiphotofunstudio.id2vdaa.mongodb.net/?appName=AIPhotofunStudio}"
+      MONGO_DB_NAME: "${MONGO_DB_NAME:-ai_photofun_studio}"
+
+      # Supabase PostgreSQL
+      SUPABASE_DB_HOST: "${SUPABASE_DB_HOST}"
+      SUPABASE_DB_PORT: "${SUPABASE_DB_PORT:-5432}"
+      SUPABASE_DB_NAME: "${SUPABASE_DB_NAME:-postgres}"
+      SUPABASE_DB_USER: "${SUPABASE_DB_USER:-postgres}"
+      SUPABASE_DB_PASSWORD: "${SUPABASE_DB_PASSWORD}"
+      SUPABASE_DB_SSLMODE: "${SUPABASE_DB_SSLMODE:-require}"
+
+      # Redis
+      REDIS_URL: "redis://redis:6379/0"
+      CELERY_BROKER_URL: "redis://redis:6379/0"
+      CELERY_RESULT_BACKEND: "redis://redis:6379/0"
+
+      # External APIs
+      FREEPIK_API_KEY: "${FREEPIK_API_KEY}"
+      GEMINI_API_KEY: "${GEMINI_API_KEY}"
+      GEMINI_API_KEYS: "${GEMINI_API_KEYS}"
+      MODELSTUDIO_API_KEY: "${MODELSTUDIO_API_KEY}"
+      MODELSTUDIO_API_BASE: "${MODELSTUDIO_API_BASE:-https://dashscope-intl.aliyuncs.com/api/v1}"
+      FILE_SERVICE_URL: "${FILE_SERVICE_URL:-https://file-service-cdal.onrender.com}"
+
+      # JWT Configuration
+      JWT_SECRET_KEY: "${JWT_SECRET_KEY}"
+      JWT_ALGORITHM: "${JWT_ALGORITHM:-HS512}"
+      JWT_ISSUER: "${JWT_ISSUER:-ThanhCong}"
+      JWT_AUDIENCE: "${JWT_AUDIENCE:-NMCNPM-CLIENT}"
+
+      # Token Service
+      TOKEN_SERVICE_URL: "http://api-gateway:8888"
+      TOKEN_API_KEY_1: "${TOKEN_API_KEY_1}"
+      TOKEN_API_KEY_2: "${TOKEN_API_KEY_2}"
+      TOKEN_SERVICE_TIMEOUT: "${TOKEN_SERVICE_TIMEOUT:-10}"
+
+    volumes:
+      - .:/app
+      - ./logs:/app/logs
+      - ./media:/app/media
+    depends_on:
+      - redis
+      - backendAI
+    networks:
+      - backendai_network
+      - shared-local-network
+
+  # Redis for Celery
+  redis:
+    image: redis:7-alpine
+    container_name: backendai_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - backendai_network
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  
+  flower:
+    image: backendai:latest
+    build:
+      context: .
+      target: development
+    container_name: backendai_flower
+    command: celery -A backendAI flower --port=5555
+    ports:
+      - "5555:5555"
+    environment:
+      CELERY_BROKER_URL: "redis://redis:6379/0"
+      CELERY_RESULT_BACKEND: "redis://redis:6379/0"
+    depends_on:
+      - redis
+      - celery_worker
+    networks:
+      - backendai_network
+    profiles:
+      - monitoring
+
+volumes:
+  redis_data:
+  mongo_data:
+
+networks:
+  backendai_network:
+    name: backendai_network
+  # Shared network for communication with backendSocial
+  shared-local-network:
+    external: true
+    name: shared-local-network

@@ -23524,3 +23524,581 @@ INFO 2026-01-13 00:44:34,576 basehttp "GET /health/ HTTP/1.1" 200 65
 INFO 2026-01-13 00:45:04,644 middleware Request: GET /health/
 INFO 2026-01-13 00:45:04,645 middleware Response: GET /health/ Status: 200 Duration: 0.00s
 INFO 2026-01-13 00:45:04,645 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:21:54,651 services [PromptService] Loaded 3 Gemini API keys
+INFO 2026-01-13 12:21:55,197 services [PromptService] Loaded 3 Gemini API keys
+INFO 2026-01-13 12:22:00,330 services [PromptService] Loaded 3 Gemini API keys
+INFO 2026-01-13 12:22:01,575 autoreload Watching for file changes with StatReloader
+INFO 2026-01-13 12:22:04,813 middleware Request: GET /health/
+INFO 2026-01-13 12:22:04,814 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:22:04,817 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:22:35,017 middleware Request: GET /health/
+INFO 2026-01-13 12:22:35,023 middleware Response: GET /health/ Status: 200 Duration: 0.01s
+INFO 2026-01-13 12:22:35,026 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:23:05,151 middleware Request: GET /health/
+INFO 2026-01-13 12:23:05,160 middleware Response: GET /health/ Status: 200 Duration: 0.01s
+INFO 2026-01-13 12:23:05,163 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:23:35,391 middleware Request: GET /health/
+INFO 2026-01-13 12:23:35,398 middleware Response: GET /health/ Status: 200 Duration: 0.01s
+INFO 2026-01-13 12:23:35,403 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:24:05,485 middleware Request: GET /health/
+INFO 2026-01-13 12:24:05,486 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:24:05,486 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:24:35,573 middleware Request: GET /health/
+INFO 2026-01-13 12:24:35,575 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:24:35,577 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:25:05,652 middleware Request: GET /health/
+INFO 2026-01-13 12:25:05,653 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:25:05,654 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:25:35,728 middleware Request: GET /health/
+INFO 2026-01-13 12:25:35,729 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:25:35,730 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:26:05,802 middleware Request: GET /health/
+INFO 2026-01-13 12:26:05,802 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:26:05,803 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:26:35,863 middleware Request: GET /health/
+INFO 2026-01-13 12:26:35,864 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:26:35,865 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:27:05,932 middleware Request: GET /health/
+INFO 2026-01-13 12:27:05,933 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:27:05,933 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:27:36,000 middleware Request: GET /health/
+INFO 2026-01-13 12:27:36,001 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:27:36,002 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:28:06,076 middleware Request: GET /health/
+INFO 2026-01-13 12:28:06,077 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:28:06,078 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:28:36,147 middleware Request: GET /health/
+INFO 2026-01-13 12:28:36,148 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:28:36,148 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:29:06,210 middleware Request: GET /health/
+INFO 2026-01-13 12:29:06,211 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:29:06,212 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:29:36,270 middleware Request: GET /health/
+INFO 2026-01-13 12:29:36,271 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:29:36,272 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:30:06,348 middleware Request: GET /health/
+INFO 2026-01-13 12:30:06,349 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:30:06,349 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:30:36,407 middleware Request: GET /health/
+INFO 2026-01-13 12:30:36,409 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:30:36,410 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:30:52,672 basehttp "OPTIONS /v1/rec-prompt/suggest/ HTTP/1.1" 200 0
+INFO 2026-01-13 12:30:52,674 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:30:52,922 services [rec_prompt] DB empty, no prompts loaded
+INFO 2026-01-13 12:30:52,931 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.26s
+INFO 2026-01-13 12:30:52,932 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 117
+INFO 2026-01-13 12:30:55,312 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:30:55,316 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:30:55,316 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 118
+INFO 2026-01-13 12:30:58,244 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:30:58,287 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.04s
+INFO 2026-01-13 12:30:58,288 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 119
+INFO 2026-01-13 12:30:59,804 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:30:59,847 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.04s
+INFO 2026-01-13 12:30:59,848 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 117
+INFO 2026-01-13 12:31:00,137 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:31:00,179 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.04s
+INFO 2026-01-13 12:31:00,180 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 118
+INFO 2026-01-13 12:31:06,523 middleware Request: GET /health/
+INFO 2026-01-13 12:31:06,524 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:31:06,525 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:31:13,832 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:31:13,876 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.04s
+INFO 2026-01-13 12:31:13,877 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 118
+INFO 2026-01-13 12:31:14,909 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:31:14,951 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.04s
+INFO 2026-01-13 12:31:14,952 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 119
+INFO 2026-01-13 12:31:21,951 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:31:21,996 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.04s
+INFO 2026-01-13 12:31:21,997 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 119
+INFO 2026-01-13 12:31:23,305 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:31:23,340 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.04s
+INFO 2026-01-13 12:31:23,341 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 119
+INFO 2026-01-13 12:31:30,301 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:31:30,346 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.04s
+INFO 2026-01-13 12:31:30,347 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 119
+INFO 2026-01-13 12:31:36,597 middleware Request: GET /health/
+INFO 2026-01-13 12:31:36,597 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:31:36,598 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:31:38,294 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:31:38,338 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.04s
+INFO 2026-01-13 12:31:38,339 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 119
+INFO 2026-01-13 12:31:39,464 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:31:39,509 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.05s
+INFO 2026-01-13 12:31:39,510 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 121
+INFO 2026-01-13 12:31:40,910 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:31:40,953 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.04s
+INFO 2026-01-13 12:31:40,955 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 122
+INFO 2026-01-13 12:31:41,892 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:31:41,937 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.05s
+INFO 2026-01-13 12:31:41,938 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 129
+INFO 2026-01-13 12:31:42,557 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:31:42,601 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.04s
+INFO 2026-01-13 12:31:42,602 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 134
+INFO 2026-01-13 12:31:43,763 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:31:43,806 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.04s
+INFO 2026-01-13 12:31:43,807 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 130
+INFO 2026-01-13 12:31:44,839 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:31:44,881 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.04s
+INFO 2026-01-13 12:31:44,882 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 134
+INFO 2026-01-13 12:31:45,817 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:31:45,861 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.04s
+INFO 2026-01-13 12:31:45,862 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 117
+INFO 2026-01-13 12:31:55,252 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:31:55,298 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.05s
+INFO 2026-01-13 12:31:55,299 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 117
+INFO 2026-01-13 12:31:56,187 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:31:56,230 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.04s
+INFO 2026-01-13 12:31:56,231 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 119
+INFO 2026-01-13 12:31:57,111 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:31:57,158 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.05s
+INFO 2026-01-13 12:31:57,159 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 117
+INFO 2026-01-13 12:31:58,165 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:31:58,208 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.04s
+INFO 2026-01-13 12:31:58,209 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 121
+INFO 2026-01-13 12:32:06,666 middleware Request: GET /health/
+INFO 2026-01-13 12:32:06,667 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:32:06,667 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:32:36,746 middleware Request: GET /health/
+INFO 2026-01-13 12:32:36,746 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:32:36,747 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:33:06,815 middleware Request: GET /health/
+INFO 2026-01-13 12:33:06,815 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:33:06,816 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:33:36,875 middleware Request: GET /health/
+INFO 2026-01-13 12:33:36,876 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:33:36,877 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:34:06,942 middleware Request: GET /health/
+INFO 2026-01-13 12:34:06,943 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:34:06,944 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:34:36,998 middleware Request: GET /health/
+INFO 2026-01-13 12:34:36,999 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:34:37,000 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:35:07,074 middleware Request: GET /health/
+INFO 2026-01-13 12:35:07,075 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:35:07,076 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:35:37,223 middleware Request: GET /health/
+INFO 2026-01-13 12:35:37,226 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:35:37,229 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:36:03,706 services [PromptService] Loaded 3 Gemini API keys
+INFO 2026-01-13 12:36:04,478 services [PromptService] Loaded 3 Gemini API keys
+INFO 2026-01-13 12:36:07,125 services [PromptService] Loaded 3 Gemini API keys
+INFO 2026-01-13 12:36:07,621 autoreload Watching for file changes with StatReloader
+INFO 2026-01-13 12:36:10,303 middleware Request: GET /health/
+INFO 2026-01-13 12:36:10,304 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:36:10,304 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:36:40,362 middleware Request: GET /health/
+INFO 2026-01-13 12:36:40,363 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:36:40,364 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:37:03,647 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:37:03,651 middleware Response: POST /v1/rec-prompt/suggest/ Status: 400 Duration: 0.00s
+WARNING 2026-01-13 12:37:03,654 log Bad Request: /v1/rec-prompt/suggest/
+WARNING 2026-01-13 12:37:03,654 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 400 163
+INFO 2026-01-13 12:37:10,423 middleware Request: GET /health/
+INFO 2026-01-13 12:37:10,424 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:37:10,424 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:37:20,831 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:37:20,833 middleware Response: POST /v1/rec-prompt/suggest/ Status: 400 Duration: 0.00s
+WARNING 2026-01-13 12:37:20,833 log Bad Request: /v1/rec-prompt/suggest/
+WARNING 2026-01-13 12:37:20,834 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 400 92
+INFO 2026-01-13 12:37:40,502 middleware Request: GET /health/
+INFO 2026-01-13 12:37:40,502 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:37:40,503 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:37:41,146 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:37:42,709 services [rec_prompt] Loaded 1790 prompts (last_id=1790)
+INFO 2026-01-13 12:37:42,909 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 1.76s
+INFO 2026-01-13 12:37:42,910 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 648
+INFO 2026-01-13 12:37:43,534 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:37:43,681 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.15s
+INFO 2026-01-13 12:37:43,682 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 619
+INFO 2026-01-13 12:37:44,499 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:37:44,643 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.14s
+INFO 2026-01-13 12:37:44,644 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 668
+INFO 2026-01-13 12:37:45,152 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:37:45,299 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.15s
+INFO 2026-01-13 12:37:45,300 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 648
+INFO 2026-01-13 12:37:46,553 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:37:46,694 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.14s
+INFO 2026-01-13 12:37:46,695 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 572
+INFO 2026-01-13 12:37:47,638 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:37:47,780 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.14s
+INFO 2026-01-13 12:37:47,781 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 619
+INFO 2026-01-13 12:38:10,561 middleware Request: GET /health/
+INFO 2026-01-13 12:38:10,562 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:38:10,563 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:38:40,651 middleware Request: GET /health/
+INFO 2026-01-13 12:38:40,652 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:38:40,652 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:38:54,404 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:38:54,605 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.20s
+INFO 2026-01-13 12:38:54,606 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 619
+INFO 2026-01-13 12:39:00,089 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:39:00,243 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.15s
+INFO 2026-01-13 12:39:00,244 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 610
+INFO 2026-01-13 12:39:02,268 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:39:02,412 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.14s
+INFO 2026-01-13 12:39:02,413 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 628
+INFO 2026-01-13 12:39:02,887 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:39:03,028 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.14s
+INFO 2026-01-13 12:39:03,029 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 577
+INFO 2026-01-13 12:39:03,512 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:39:03,659 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.15s
+INFO 2026-01-13 12:39:03,660 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 583
+INFO 2026-01-13 12:39:04,331 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:39:04,486 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.15s
+INFO 2026-01-13 12:39:04,487 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 604
+INFO 2026-01-13 12:39:08,879 basehttp "OPTIONS /v1/rec-prompt/choose/ HTTP/1.1" 200 0
+INFO 2026-01-13 12:39:08,881 middleware Request: POST /v1/rec-prompt/choose/
+INFO 2026-01-13 12:39:09,208 middleware Response: POST /v1/rec-prompt/choose/ Status: 200 Duration: 0.33s
+INFO 2026-01-13 12:39:09,209 basehttp "POST /v1/rec-prompt/choose/ HTTP/1.1" 200 201
+INFO 2026-01-13 12:39:09,257 basehttp "OPTIONS /v1/features/image-generation/ HTTP/1.1" 200 0
+INFO 2026-01-13 12:39:09,300 middleware Request: POST /v1/features/image-generation/
+INFO 2026-01-13 12:39:09,899 services [PromptService] Using API key #2/3
+INFO 2026-01-13 12:39:09,971 models AFC is enabled with max remote calls: 10.
+INFO 2026-01-13 12:39:10,726 middleware Request: GET /health/
+INFO 2026-01-13 12:39:10,726 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:39:10,727 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:39:12,068 _client HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+INFO 2026-01-13 12:39:12,073 views [DirectAPI] Refined prompt: A cute kitten playfully stalking a toy mouse, with bright, curious eyes and pois...
+INFO 2026-01-13 12:39:12,074 services Generating image with prompt: A cute kitten playfully stalking a toy mouse, with bright, curious eyes and pois...
+INFO 2026-01-13 12:39:12,074 services Calling Freepik Mystic API with model=realism, aspect_ratio=square_1_1
+ERROR 2026-01-13 12:39:13,226 freepik_client Freepik API client error 429: {"message":"Hello! You have reached the limit of the free trial usage. You can upgrade to a paid plan here: https://www.freepik.com/developers/dashboard/billing"}
+
+ERROR 2026-01-13 12:39:13,226 services Image generation failed: Freepik API error 429: Invalid request
+ERROR 2026-01-13 12:39:13,227 views Image generation error: Generation failed: Freepik API error 429: Invalid request
+INFO 2026-01-13 12:39:13,229 middleware Response: POST /v1/features/image-generation/ Status: 500 Duration: 3.93s
+ERROR 2026-01-13 12:39:13,229 log Internal Server Error: /v1/features/image-generation/
+ERROR 2026-01-13 12:39:13,230 basehttp "POST /v1/features/image-generation/ HTTP/1.1" 500 129
+INFO 2026-01-13 12:39:40,807 middleware Request: GET /health/
+INFO 2026-01-13 12:39:40,807 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:39:40,809 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:39:43,817 middleware Request: POST /v1/rec-prompt/choose/
+INFO 2026-01-13 12:39:44,107 middleware Response: POST /v1/rec-prompt/choose/ Status: 200 Duration: 0.29s
+INFO 2026-01-13 12:39:44,108 basehttp "POST /v1/rec-prompt/choose/ HTTP/1.1" 200 201
+INFO 2026-01-13 12:39:44,112 middleware Request: POST /v1/features/image-generation/
+INFO 2026-01-13 12:39:44,449 services [PromptService] Using API key #3/3
+INFO 2026-01-13 12:39:44,463 models AFC is enabled with max remote calls: 10.
+INFO 2026-01-13 12:39:47,993 _client HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+INFO 2026-01-13 12:39:47,996 views [DirectAPI] Refined prompt: A cute kitten, focused and playful, stalking a colorful toy mouse. The kitten is...
+INFO 2026-01-13 12:39:47,996 services Generating image with prompt: A cute kitten, focused and playful, stalking a colorful toy mouse. The kitten is...
+INFO 2026-01-13 12:39:47,996 services Calling Freepik Mystic API with model=realism, aspect_ratio=square_1_1
+ERROR 2026-01-13 12:39:50,980 freepik_client Freepik API client error 429: {"message":"Hello! You have reached the limit of the free trial usage. You can upgrade to a paid plan here: https://www.freepik.com/developers/dashboard/billing"}
+
+ERROR 2026-01-13 12:39:50,980 services Image generation failed: Freepik API error 429: Invalid request
+ERROR 2026-01-13 12:39:50,981 views Image generation error: Generation failed: Freepik API error 429: Invalid request
+INFO 2026-01-13 12:39:50,982 middleware Response: POST /v1/features/image-generation/ Status: 500 Duration: 6.87s
+ERROR 2026-01-13 12:39:50,983 log Internal Server Error: /v1/features/image-generation/
+ERROR 2026-01-13 12:39:50,983 basehttp "POST /v1/features/image-generation/ HTTP/1.1" 500 129
+INFO 2026-01-13 12:40:10,876 middleware Request: GET /health/
+INFO 2026-01-13 12:40:10,876 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:40:10,877 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:40:40,942 middleware Request: GET /health/
+INFO 2026-01-13 12:40:40,943 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:40:40,943 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:41:11,006 middleware Request: GET /health/
+INFO 2026-01-13 12:41:11,007 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:41:11,007 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:41:41,096 middleware Request: GET /health/
+INFO 2026-01-13 12:41:41,097 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:41:41,097 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:42:11,150 middleware Request: GET /health/
+INFO 2026-01-13 12:42:11,150 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:42:11,151 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:42:41,233 middleware Request: GET /health/
+INFO 2026-01-13 12:42:41,234 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:42:41,235 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:42:57,699 middleware Request: POST /v1/rec-prompt/choose/
+INFO 2026-01-13 12:42:57,990 middleware Response: POST /v1/rec-prompt/choose/ Status: 200 Duration: 0.29s
+INFO 2026-01-13 12:42:57,991 basehttp "POST /v1/rec-prompt/choose/ HTTP/1.1" 200 201
+INFO 2026-01-13 12:42:57,995 middleware Request: POST /v1/features/image-generation/
+ERROR 2026-01-13 12:42:58,245 token_client Token service HTTP error: 500 - {"timestamp":"2026-01-13T05:42:58.057+00:00","path":"/api/v1/identity/users/tokens/4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e","status":500,"error":"Internal Server Error","requestId":"bfe85fff-2"}
+ERROR 2026-01-13 12:42:58,246 token_client Failed to get tokens for user 4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e: Token service error: 500
+ERROR 2026-01-13 12:42:58,246 token_client Failed to check user: 4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e token balance: Token service error: 500
+ERROR 2026-01-13 12:42:58,271 token_client Token service HTTP error: 500 - {"timestamp":"2026-01-13T05:42:58.266+00:00","path":"/api/v1/identity/users/tokens/4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e","status":500,"error":"Internal Server Error","requestId":"9487f9fb-3"}
+ERROR 2026-01-13 12:42:58,272 token_client Failed to get tokens for user 4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e: Token service error: 500
+WARNING 2026-01-13 12:42:58,272 token_decorators [image_generation] Token service unavailable, allowing request
+INFO 2026-01-13 12:42:58,274 services [PromptService] Using API key #1/3
+INFO 2026-01-13 12:42:58,297 models AFC is enabled with max remote calls: 10.
+INFO 2026-01-13 12:43:00,666 _client HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+INFO 2026-01-13 12:43:00,671 views [DirectAPI] Refined prompt: A cute kitten actively stalking a toy mouse, captured in a playful and detailed ...
+INFO 2026-01-13 12:43:00,672 services Generating image with prompt: A cute kitten actively stalking a toy mouse, captured in a playful and detailed ...
+INFO 2026-01-13 12:43:00,673 services Calling Freepik Mystic API with model=realism, aspect_ratio=square_1_1
+ERROR 2026-01-13 12:43:01,437 freepik_client Freepik API client error 429: {"message":"Hello! You have reached the limit of the free trial usage. You can upgrade to a paid plan here: https://www.freepik.com/developers/dashboard/billing"}
+
+ERROR 2026-01-13 12:43:01,438 services Image generation failed: Freepik API error 429: Invalid request
+ERROR 2026-01-13 12:43:01,439 views Image generation error: Generation failed: Freepik API error 429: Invalid request
+INFO 2026-01-13 12:43:01,441 middleware Response: POST /v1/features/image-generation/ Status: 500 Duration: 3.45s
+ERROR 2026-01-13 12:43:01,443 log Internal Server Error: /v1/features/image-generation/
+ERROR 2026-01-13 12:43:01,444 basehttp "POST /v1/features/image-generation/ HTTP/1.1" 500 129
+INFO 2026-01-13 12:43:11,312 middleware Request: GET /health/
+INFO 2026-01-13 12:43:11,313 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:43:11,314 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:43:41,373 middleware Request: GET /health/
+INFO 2026-01-13 12:43:41,373 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:43:41,374 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:46:10,080 services [PromptService] Loaded 3 Gemini API keys
+INFO 2026-01-13 12:46:10,279 services [PromptService] Loaded 3 Gemini API keys
+INFO 2026-01-13 12:46:12,556 services [PromptService] Loaded 3 Gemini API keys
+INFO 2026-01-13 12:46:13,210 autoreload Watching for file changes with StatReloader
+INFO 2026-01-13 12:46:17,836 middleware Request: GET /health/
+INFO 2026-01-13 12:46:17,838 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:46:17,839 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:46:23,759 middleware Request: POST /v1/rec-prompt/choose/
+INFO 2026-01-13 12:46:25,272 services [rec_prompt] Loaded 1790 prompts (last_id=1790)
+INFO 2026-01-13 12:46:25,664 middleware Response: POST /v1/rec-prompt/choose/ Status: 200 Duration: 1.91s
+INFO 2026-01-13 12:46:25,666 basehttp "POST /v1/rec-prompt/choose/ HTTP/1.1" 200 201
+INFO 2026-01-13 12:46:25,670 middleware Request: POST /v1/features/image-generation/
+INFO 2026-01-13 12:46:26,867 services [PromptService] Using API key #2/3
+INFO 2026-01-13 12:46:26,904 models AFC is enabled with max remote calls: 10.
+INFO 2026-01-13 12:46:29,379 _client HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+INFO 2026-01-13 12:46:29,383 views [DirectAPI] Refined prompt: A cute kitten, focused and playful, stalking a toy mouse in a cozy indoor settin...
+INFO 2026-01-13 12:46:29,384 services Generating image with prompt: A cute kitten, focused and playful, stalking a toy mouse in a cozy indoor settin...
+INFO 2026-01-13 12:46:29,385 services Calling Freepik Mystic API with model=realism, aspect_ratio=square_1_1
+INFO 2026-01-13 12:46:30,806 freepik_client Freepik API response: {'data': {'task_id': '36844594-d935-44af-a2fe-340245e3d45f', 'status': 'CREATED', 'generated': []}}
+INFO 2026-01-13 12:46:30,807 services Image generation task created: 36844594-d935-44af-a2fe-340245e3d45f
+INFO 2026-01-13 12:46:30,808 token_client Deducting 20 tokens from user 4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e. Reason: image_generation
+WARNING 2026-01-13 12:46:31,542 token_client Token deduction returned non-success code: {'code': 200, 'message': 'User tokens modified successfully'}
+INFO 2026-01-13 12:46:31,543 token_decorators [image_generation] Deducted 20 tokens (3.94s)
+INFO 2026-01-13 12:46:31,543 middleware Response: POST /v1/features/image-generation/ Status: 200 Duration: 5.87s
+INFO 2026-01-13 12:46:31,544 basehttp "POST /v1/features/image-generation/ HTTP/1.1" 200 335
+INFO 2026-01-13 12:46:31,592 basehttp "OPTIONS /v1/features/image-generation/status/36844594-d935-44af-a2fe-340245e3d45f/?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 0
+INFO 2026-01-13 12:46:31,639 middleware Request: GET /v1/features/image-generation/status/36844594-d935-44af-a2fe-340245e3d45f/
+INFO 2026-01-13 12:46:32,012 freepik_client Freepik API response: {'data': {'task_id': '36844594-d935-44af-a2fe-340245e3d45f', 'status': 'IN_PROGRESS', 'generated': [], 'has_nsfw': [False]}}
+INFO 2026-01-13 12:46:32,014 middleware Response: GET /v1/features/image-generation/status/36844594-d935-44af-a2fe-340245e3d45f/ Status: 200 Duration: 0.38s
+INFO 2026-01-13 12:46:32,014 basehttp "GET /v1/features/image-generation/status/36844594-d935-44af-a2fe-340245e3d45f/?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 147
+INFO 2026-01-13 12:46:35,062 middleware Request: GET /v1/features/image-generation/status/36844594-d935-44af-a2fe-340245e3d45f/
+INFO 2026-01-13 12:46:35,711 freepik_client Freepik API response: {'data': {'task_id': '36844594-d935-44af-a2fe-340245e3d45f', 'status': 'IN_PROGRESS', 'generated': [], 'has_nsfw': [False]}}
+INFO 2026-01-13 12:46:35,713 middleware Response: GET /v1/features/image-generation/status/36844594-d935-44af-a2fe-340245e3d45f/ Status: 200 Duration: 0.65s
+INFO 2026-01-13 12:46:35,714 basehttp "GET /v1/features/image-generation/status/36844594-d935-44af-a2fe-340245e3d45f/?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 147
+INFO 2026-01-13 12:46:38,722 middleware Request: GET /v1/features/image-generation/status/36844594-d935-44af-a2fe-340245e3d45f/
+INFO 2026-01-13 12:46:39,034 freepik_client Freepik API response: {'data': {'task_id': '36844594-d935-44af-a2fe-340245e3d45f', 'status': 'IN_PROGRESS', 'generated': [], 'has_nsfw': [False]}}
+INFO 2026-01-13 12:46:39,036 middleware Response: GET /v1/features/image-generation/status/36844594-d935-44af-a2fe-340245e3d45f/ Status: 200 Duration: 0.31s
+INFO 2026-01-13 12:46:39,037 basehttp "GET /v1/features/image-generation/status/36844594-d935-44af-a2fe-340245e3d45f/?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 147
+INFO 2026-01-13 12:46:42,048 middleware Request: GET /v1/features/image-generation/status/36844594-d935-44af-a2fe-340245e3d45f/
+INFO 2026-01-13 12:46:42,348 freepik_client Freepik API response: {'data': {'task_id': '36844594-d935-44af-a2fe-340245e3d45f', 'status': 'IN_PROGRESS', 'generated': [], 'has_nsfw': [False]}}
+INFO 2026-01-13 12:46:42,350 middleware Response: GET /v1/features/image-generation/status/36844594-d935-44af-a2fe-340245e3d45f/ Status: 200 Duration: 0.30s
+INFO 2026-01-13 12:46:42,351 basehttp "GET /v1/features/image-generation/status/36844594-d935-44af-a2fe-340245e3d45f/?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 147
+INFO 2026-01-13 12:46:45,475 middleware Request: GET /v1/features/image-generation/status/36844594-d935-44af-a2fe-340245e3d45f/
+INFO 2026-01-13 12:46:45,759 freepik_client Freepik API response: {'data': {'task_id': '36844594-d935-44af-a2fe-340245e3d45f', 'status': 'IN_PROGRESS', 'generated': [], 'has_nsfw': [False]}}
+INFO 2026-01-13 12:46:45,761 middleware Response: GET /v1/features/image-generation/status/36844594-d935-44af-a2fe-340245e3d45f/ Status: 200 Duration: 0.29s
+INFO 2026-01-13 12:46:45,762 basehttp "GET /v1/features/image-generation/status/36844594-d935-44af-a2fe-340245e3d45f/?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 147
+INFO 2026-01-13 12:46:47,917 middleware Request: GET /health/
+INFO 2026-01-13 12:46:47,917 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:46:47,918 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:46:49,474 middleware Request: GET /v1/features/image-generation/status/36844594-d935-44af-a2fe-340245e3d45f/
+INFO 2026-01-13 12:46:49,852 freepik_client Freepik API response: {'data': {'task_id': '36844594-d935-44af-a2fe-340245e3d45f', 'status': 'COMPLETED', 'generated': ['https://ai-statics.freepik.com/content/mg-upscaler/v6xsfmv3kngt7mitlqulklww5i/ff3a6fda-bed7-49d7-aeb1-881ecc83836a_6bcbb720-2de9-467a-bc55-dc5cc1d38905.png?token=exp=1768369605~hmac=e06c075906a60f6defa0845a71fe24c2'], 'has_nsfw': [False]}}
+INFO 2026-01-13 12:46:49,853 services Uploading 1 generated images...
+INFO 2026-01-13 12:46:49,854 file_uploader Downloading image from: https://ai-statics.freepik.com/content/mg-upscaler/v6xsfmv3kngt7mitlqulklww5i/ff3a6fda-bed7-49d7-aeb1-881ecc83836a_6bcbb720-2de9-467a-bc55-dc5cc1d38905.png?token=exp=1768369605~hmac=e06c075906a60f6defa0845a71fe24c2
+INFO 2026-01-13 12:47:17,991 middleware Request: GET /health/
+INFO 2026-01-13 12:47:17,992 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:47:17,992 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:47:48,067 middleware Request: GET /health/
+INFO 2026-01-13 12:47:48,068 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:47:48,068 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:48:18,128 middleware Request: GET /health/
+INFO 2026-01-13 12:48:18,128 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:48:18,129 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:48:48,180 middleware Request: GET /health/
+INFO 2026-01-13 12:48:48,180 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:48:48,181 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:49:18,247 middleware Request: GET /health/
+INFO 2026-01-13 12:49:18,248 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:49:18,248 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:49:48,327 middleware Request: GET /health/
+INFO 2026-01-13 12:49:48,328 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:49:48,328 basehttp "GET /health/ HTTP/1.1" 200 65
+ERROR 2026-01-13 12:50:01,172 file_uploader File upload timeout for: /tmp/tmp8c9cnmrr.png
+ERROR 2026-01-13 12:50:01,173 services Failed to upload image https://ai-statics.freepik.com/content/mg-upscaler/v6xsfmv3kngt7mitlqulklww5i/ff3a6fda-bed7-49d7-aeb1-881ecc83836a_6bcbb720-2de9-467a-bc55-dc5cc1d38905.png?token=exp=1768369605~hmac=e06c075906a60f6defa0845a71fe24c2: File upload timeout
+INFO 2026-01-13 12:50:01,174 services ✓ Uploaded 0 images successfully
+INFO 2026-01-13 12:50:01,174 middleware Response: GET /v1/features/image-generation/status/36844594-d935-44af-a2fe-340245e3d45f/ Status: 200 Duration: 191.70s
+INFO 2026-01-13 12:50:01,175 basehttp "GET /v1/features/image-generation/status/36844594-d935-44af-a2fe-340245e3d45f/?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 145
+INFO 2026-01-13 12:50:05,224 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:50:05,407 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.18s
+INFO 2026-01-13 12:50:05,409 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 711
+INFO 2026-01-13 12:50:18,063 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:50:18,241 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.18s
+INFO 2026-01-13 12:50:18,242 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 614
+INFO 2026-01-13 12:50:18,418 middleware Request: GET /health/
+INFO 2026-01-13 12:50:18,419 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:50:18,420 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:50:19,346 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:50:19,523 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.18s
+INFO 2026-01-13 12:50:19,524 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 570
+INFO 2026-01-13 12:50:23,146 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:50:23,318 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.17s
+INFO 2026-01-13 12:50:23,319 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 594
+INFO 2026-01-13 12:50:24,394 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:50:24,571 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.18s
+INFO 2026-01-13 12:50:24,572 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 594
+INFO 2026-01-13 12:50:26,528 middleware Request: POST /v1/rec-prompt/choose/
+INFO 2026-01-13 12:50:27,046 middleware Response: POST /v1/rec-prompt/choose/ Status: 200 Duration: 0.52s
+INFO 2026-01-13 12:50:27,047 basehttp "POST /v1/rec-prompt/choose/ HTTP/1.1" 200 153
+INFO 2026-01-13 12:50:27,051 middleware Request: POST /v1/features/image-generation/
+INFO 2026-01-13 12:50:27,482 services [PromptService] Using API key #3/3
+INFO 2026-01-13 12:50:27,496 models AFC is enabled with max remote calls: 10.
+INFO 2026-01-13 12:50:29,934 _client HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+INFO 2026-01-13 12:50:29,937 views [DirectAPI] Refined prompt: An image of a dog...
+INFO 2026-01-13 12:50:29,938 services Generating image with prompt: An image of a dog...
+INFO 2026-01-13 12:50:29,938 services Calling Freepik Mystic API with model=realism, aspect_ratio=square_1_1
+INFO 2026-01-13 12:50:30,911 freepik_client Freepik API response: {'data': {'task_id': '8ea27345-5318-4b6a-b150-9faf63e8ed81', 'status': 'CREATED', 'generated': []}}
+INFO 2026-01-13 12:50:30,914 services Image generation task created: 8ea27345-5318-4b6a-b150-9faf63e8ed81
+INFO 2026-01-13 12:50:30,915 token_client Deducting 18 tokens from user 4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e. Reason: image_generation
+WARNING 2026-01-13 12:50:32,084 token_client Token deduction returned non-success code: {'code': 200, 'message': 'User tokens modified successfully'}
+INFO 2026-01-13 12:50:32,085 token_decorators [image_generation] Deducted 18 tokens (3.43s)
+INFO 2026-01-13 12:50:32,085 middleware Response: POST /v1/features/image-generation/ Status: 200 Duration: 5.03s
+INFO 2026-01-13 12:50:32,086 basehttp "POST /v1/features/image-generation/ HTTP/1.1" 200 233
+INFO 2026-01-13 12:50:32,137 basehttp "OPTIONS /v1/features/image-generation/status/8ea27345-5318-4b6a-b150-9faf63e8ed81/?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 0
+INFO 2026-01-13 12:50:32,181 middleware Request: GET /v1/features/image-generation/status/8ea27345-5318-4b6a-b150-9faf63e8ed81/
+INFO 2026-01-13 12:50:32,480 freepik_client Freepik API response: {'data': {'task_id': '8ea27345-5318-4b6a-b150-9faf63e8ed81', 'status': 'IN_PROGRESS', 'generated': [], 'has_nsfw': [False]}}
+INFO 2026-01-13 12:50:32,482 middleware Response: GET /v1/features/image-generation/status/8ea27345-5318-4b6a-b150-9faf63e8ed81/ Status: 200 Duration: 0.30s
+INFO 2026-01-13 12:50:32,483 basehttp "GET /v1/features/image-generation/status/8ea27345-5318-4b6a-b150-9faf63e8ed81/?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 147
+INFO 2026-01-13 12:50:36,480 middleware Request: GET /v1/features/image-generation/status/8ea27345-5318-4b6a-b150-9faf63e8ed81/
+INFO 2026-01-13 12:50:36,788 freepik_client Freepik API response: {'data': {'task_id': '8ea27345-5318-4b6a-b150-9faf63e8ed81', 'status': 'IN_PROGRESS', 'generated': [], 'has_nsfw': [False]}}
+INFO 2026-01-13 12:50:36,792 middleware Response: GET /v1/features/image-generation/status/8ea27345-5318-4b6a-b150-9faf63e8ed81/ Status: 200 Duration: 0.31s
+INFO 2026-01-13 12:50:36,793 basehttp "GET /v1/features/image-generation/status/8ea27345-5318-4b6a-b150-9faf63e8ed81/?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 147
+INFO 2026-01-13 12:50:39,804 middleware Request: GET /v1/features/image-generation/status/8ea27345-5318-4b6a-b150-9faf63e8ed81/
+INFO 2026-01-13 12:50:40,463 freepik_client Freepik API response: {'data': {'task_id': '8ea27345-5318-4b6a-b150-9faf63e8ed81', 'status': 'IN_PROGRESS', 'generated': [], 'has_nsfw': [False]}}
+INFO 2026-01-13 12:50:40,465 middleware Response: GET /v1/features/image-generation/status/8ea27345-5318-4b6a-b150-9faf63e8ed81/ Status: 200 Duration: 0.66s
+INFO 2026-01-13 12:50:40,466 basehttp "GET /v1/features/image-generation/status/8ea27345-5318-4b6a-b150-9faf63e8ed81/?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 147
+INFO 2026-01-13 12:50:43,472 middleware Request: GET /v1/features/image-generation/status/8ea27345-5318-4b6a-b150-9faf63e8ed81/
+INFO 2026-01-13 12:50:43,779 freepik_client Freepik API response: {'data': {'task_id': '8ea27345-5318-4b6a-b150-9faf63e8ed81', 'status': 'IN_PROGRESS', 'generated': [], 'has_nsfw': [False]}}
+INFO 2026-01-13 12:50:43,782 middleware Response: GET /v1/features/image-generation/status/8ea27345-5318-4b6a-b150-9faf63e8ed81/ Status: 200 Duration: 0.31s
+INFO 2026-01-13 12:50:43,783 basehttp "GET /v1/features/image-generation/status/8ea27345-5318-4b6a-b150-9faf63e8ed81/?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 147
+INFO 2026-01-13 12:50:46,790 middleware Request: GET /v1/features/image-generation/status/8ea27345-5318-4b6a-b150-9faf63e8ed81/
+INFO 2026-01-13 12:50:47,450 freepik_client Freepik API response: {'data': {'task_id': '8ea27345-5318-4b6a-b150-9faf63e8ed81', 'status': 'COMPLETED', 'generated': ['https://ai-statics.freepik.com/content/mg-upscaler/yhhuepyiubh3fpwncld7dupkji/ea66246d-640f-4260-b100-81ce470013f4_827ffdcc-ad1c-4b23-b6f5-89474c53222d.png?token=exp=1768369846~hmac=b793c1269b58027586ad229f1604a40b'], 'has_nsfw': [False]}}
+INFO 2026-01-13 12:50:47,451 services Uploading 1 generated images...
+INFO 2026-01-13 12:50:47,452 file_uploader Downloading image from: https://ai-statics.freepik.com/content/mg-upscaler/yhhuepyiubh3fpwncld7dupkji/ea66246d-640f-4260-b100-81ce470013f4_827ffdcc-ad1c-4b23-b6f5-89474c53222d.png?token=exp=1768369846~hmac=b793c1269b58027586ad229f1604a40b
+INFO 2026-01-13 12:50:48,511 middleware Request: GET /health/
+INFO 2026-01-13 12:50:48,512 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:50:48,513 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:51:18,583 middleware Request: GET /health/
+INFO 2026-01-13 12:51:18,583 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:51:18,584 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:51:48,648 middleware Request: GET /health/
+INFO 2026-01-13 12:51:48,649 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:51:48,649 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:52:18,750 middleware Request: GET /health/
+INFO 2026-01-13 12:52:18,751 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:52:18,752 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:52:48,841 middleware Request: GET /health/
+INFO 2026-01-13 12:52:48,842 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:52:48,842 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:53:18,918 middleware Request: GET /health/
+INFO 2026-01-13 12:53:18,919 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:53:18,919 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:53:20,980 basehttp "OPTIONS /api/v1/ai/gallery?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 0
+INFO 2026-01-13 12:53:20,984 middleware Request: GET /api/v1/ai/gallery
+INFO 2026-01-13 12:53:20,986 basehttp "OPTIONS /api/v1/ai/gallery?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 0
+INFO 2026-01-13 12:53:21,003 middleware Response: GET /api/v1/ai/gallery Status: 404 Duration: 0.02s
+INFO 2026-01-13 12:53:21,005 basehttp "GET /api/v1/ai/gallery?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 301 0
+INFO 2026-01-13 12:53:21,013 basehttp "OPTIONS /api/v1/ai/gallery/?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 0
+INFO 2026-01-13 12:53:21,016 basehttp "OPTIONS /api/v1/ai/gallery/?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 0
+INFO 2026-01-13 12:53:21,018 middleware Request: GET /api/v1/ai/gallery/
+INFO 2026-01-13 12:53:21,528 middleware Response: GET /api/v1/ai/gallery/ Status: 200 Duration: 0.51s
+INFO 2026-01-13 12:53:21,529 basehttp "GET /api/v1/ai/gallery/?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 45
+INFO 2026-01-13 12:53:21,572 middleware Request: GET /api/v1/ai/gallery/
+INFO 2026-01-13 12:53:21,998 middleware Response: GET /api/v1/ai/gallery/ Status: 200 Duration: 0.43s
+INFO 2026-01-13 12:53:21,999 basehttp "GET /api/v1/ai/gallery/?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 45
+INFO 2026-01-13 12:53:22,416 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:53:22,597 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.18s
+INFO 2026-01-13 12:53:22,598 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 555
+ERROR 2026-01-13 12:53:22,792 file_uploader File upload timeout for: /tmp/tmpkhzmvhvz.png
+ERROR 2026-01-13 12:53:22,794 services Failed to upload image https://ai-statics.freepik.com/content/mg-upscaler/yhhuepyiubh3fpwncld7dupkji/ea66246d-640f-4260-b100-81ce470013f4_827ffdcc-ad1c-4b23-b6f5-89474c53222d.png?token=exp=1768369846~hmac=b793c1269b58027586ad229f1604a40b: File upload timeout
+INFO 2026-01-13 12:53:22,795 services ✓ Uploaded 0 images successfully
+INFO 2026-01-13 12:53:22,796 middleware Response: GET /v1/features/image-generation/status/8ea27345-5318-4b6a-b150-9faf63e8ed81/ Status: 200 Duration: 156.01s
+INFO 2026-01-13 12:53:22,797 basehttp "GET /v1/features/image-generation/status/8ea27345-5318-4b6a-b150-9faf63e8ed81/?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 145
+INFO 2026-01-13 12:53:24,625 middleware Request: POST /v1/rec-prompt/suggest/
+INFO 2026-01-13 12:53:24,805 middleware Response: POST /v1/rec-prompt/suggest/ Status: 200 Duration: 0.18s
+INFO 2026-01-13 12:53:24,805 basehttp "POST /v1/rec-prompt/suggest/ HTTP/1.1" 200 596
+INFO 2026-01-13 12:53:27,081 middleware Request: POST /v1/rec-prompt/choose/
+INFO 2026-01-13 12:53:27,619 middleware Response: POST /v1/rec-prompt/choose/ Status: 200 Duration: 0.54s
+INFO 2026-01-13 12:53:27,620 basehttp "POST /v1/rec-prompt/choose/ HTTP/1.1" 200 145
+INFO 2026-01-13 12:53:27,624 middleware Request: POST /v1/features/image-generation/
+INFO 2026-01-13 12:53:28,102 services [PromptService] Using API key #1/3
+INFO 2026-01-13 12:53:28,115 models AFC is enabled with max remote calls: 10.
+INFO 2026-01-13 12:53:30,860 _client HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+INFO 2026-01-13 12:53:30,863 views [DirectAPI] Refined prompt: An image of a cat...
+INFO 2026-01-13 12:53:30,863 services Generating image with prompt: An image of a cat...
+INFO 2026-01-13 12:53:30,864 services Calling Freepik Mystic API with model=realism, aspect_ratio=square_1_1
+INFO 2026-01-13 12:53:31,446 freepik_client Freepik API response: {'data': {'task_id': '0a627ea5-ee82-4022-830d-accc5c4fab9d', 'status': 'CREATED', 'generated': []}}
+INFO 2026-01-13 12:53:31,449 services Image generation task created: 0a627ea5-ee82-4022-830d-accc5c4fab9d
+INFO 2026-01-13 12:53:31,449 token_client Deducting 17 tokens from user 4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e. Reason: image_generation
+WARNING 2026-01-13 12:53:32,798 token_client Token deduction returned non-success code: {'code': 200, 'message': 'User tokens modified successfully'}
+INFO 2026-01-13 12:53:32,798 token_decorators [image_generation] Deducted 17 tokens (3.35s)
+INFO 2026-01-13 12:53:32,799 middleware Response: POST /v1/features/image-generation/ Status: 200 Duration: 5.18s
+INFO 2026-01-13 12:53:32,800 basehttp "POST /v1/features/image-generation/ HTTP/1.1" 200 233
+INFO 2026-01-13 12:53:32,846 basehttp "OPTIONS /v1/features/image-generation/status/0a627ea5-ee82-4022-830d-accc5c4fab9d/?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 0
+INFO 2026-01-13 12:53:32,891 middleware Request: GET /v1/features/image-generation/status/0a627ea5-ee82-4022-830d-accc5c4fab9d/
+INFO 2026-01-13 12:53:33,157 freepik_client Freepik API response: {'data': {'task_id': '0a627ea5-ee82-4022-830d-accc5c4fab9d', 'status': 'IN_PROGRESS', 'generated': [], 'has_nsfw': [False]}}
+INFO 2026-01-13 12:53:33,159 middleware Response: GET /v1/features/image-generation/status/0a627ea5-ee82-4022-830d-accc5c4fab9d/ Status: 200 Duration: 0.27s
+INFO 2026-01-13 12:53:33,160 basehttp "GET /v1/features/image-generation/status/0a627ea5-ee82-4022-830d-accc5c4fab9d/?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 147
+INFO 2026-01-13 12:53:36,477 middleware Request: GET /v1/features/image-generation/status/0a627ea5-ee82-4022-830d-accc5c4fab9d/
+INFO 2026-01-13 12:53:37,152 freepik_client Freepik API response: {'data': {'task_id': '0a627ea5-ee82-4022-830d-accc5c4fab9d', 'status': 'IN_PROGRESS', 'generated': [], 'has_nsfw': [False]}}
+INFO 2026-01-13 12:53:37,154 middleware Response: GET /v1/features/image-generation/status/0a627ea5-ee82-4022-830d-accc5c4fab9d/ Status: 200 Duration: 0.68s
+INFO 2026-01-13 12:53:37,154 basehttp "GET /v1/features/image-generation/status/0a627ea5-ee82-4022-830d-accc5c4fab9d/?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 147
+INFO 2026-01-13 12:53:40,472 middleware Request: GET /v1/features/image-generation/status/0a627ea5-ee82-4022-830d-accc5c4fab9d/
+INFO 2026-01-13 12:53:40,763 freepik_client Freepik API response: {'data': {'task_id': '0a627ea5-ee82-4022-830d-accc5c4fab9d', 'status': 'IN_PROGRESS', 'generated': [], 'has_nsfw': [False]}}
+INFO 2026-01-13 12:53:40,765 middleware Response: GET /v1/features/image-generation/status/0a627ea5-ee82-4022-830d-accc5c4fab9d/ Status: 200 Duration: 0.29s
+INFO 2026-01-13 12:53:40,766 basehttp "GET /v1/features/image-generation/status/0a627ea5-ee82-4022-830d-accc5c4fab9d/?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 147
+INFO 2026-01-13 12:53:44,473 middleware Request: GET /v1/features/image-generation/status/0a627ea5-ee82-4022-830d-accc5c4fab9d/
+INFO 2026-01-13 12:53:44,740 freepik_client Freepik API response: {'data': {'task_id': '0a627ea5-ee82-4022-830d-accc5c4fab9d', 'status': 'IN_PROGRESS', 'generated': [], 'has_nsfw': [False]}}
+INFO 2026-01-13 12:53:44,742 middleware Response: GET /v1/features/image-generation/status/0a627ea5-ee82-4022-830d-accc5c4fab9d/ Status: 200 Duration: 0.27s
+INFO 2026-01-13 12:53:44,742 basehttp "GET /v1/features/image-generation/status/0a627ea5-ee82-4022-830d-accc5c4fab9d/?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 147
+INFO 2026-01-13 12:53:48,044 middleware Request: GET /v1/features/image-generation/status/0a627ea5-ee82-4022-830d-accc5c4fab9d/
+INFO 2026-01-13 12:53:48,318 freepik_client Freepik API response: {'data': {'task_id': '0a627ea5-ee82-4022-830d-accc5c4fab9d', 'status': 'COMPLETED', 'generated': ['https://ai-statics.freepik.com/content/mg-upscaler/zgar5nklrjhevm7ii4rl3wxa34/9d498fdb-eb84-46d9-94a1-b5c73699ae0a_fb8b7870-db4e-42c7-ae79-a29c266746bf.png?token=exp=1768370026~hmac=c60a59e5f3ba8eefeaac63e8cfb562f9'], 'has_nsfw': [False]}}
+INFO 2026-01-13 12:53:48,319 services Uploading 1 generated images...
+INFO 2026-01-13 12:53:48,320 file_uploader Downloading image from: https://ai-statics.freepik.com/content/mg-upscaler/zgar5nklrjhevm7ii4rl3wxa34/9d498fdb-eb84-46d9-94a1-b5c73699ae0a_fb8b7870-db4e-42c7-ae79-a29c266746bf.png?token=exp=1768370026~hmac=c60a59e5f3ba8eefeaac63e8cfb562f9
+INFO 2026-01-13 12:53:48,989 middleware Request: GET /health/
+INFO 2026-01-13 12:53:48,990 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:53:48,991 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:54:19,073 middleware Request: GET /health/
+INFO 2026-01-13 12:54:19,073 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:54:19,074 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:54:49,126 middleware Request: GET /health/
+INFO 2026-01-13 12:54:49,127 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:54:49,128 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:55:07,279 file_uploader File uploaded successfully: 57c908f3-0f63-41a1-a825-0ef815de882a
+INFO 2026-01-13 12:55:07,280 file_uploader Upload response: {'code': 1000, 'message': 'Upload successful', 'result': {'image': 'https://res.cloudinary.com/derwtva4p/image/upload/v1768283705/file-service/57c908f3-0f63-41a1-a825-0ef815de882a.png'}}
+INFO 2026-01-13 12:55:07,285 services Uploaded generated image: https://res.cloudinary.com/derwtva4p/image/upload/v1768283705/file-service/57c908f3-0f63-41a1-a825-0ef815de882a.png
+INFO 2026-01-13 12:55:07,286 services ✓ Uploaded 1 images successfully
+INFO 2026-01-13 12:55:07,838 services Saved image 57c908f3-0f63-41a1-a825-0ef815de882a for user 4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e
+INFO 2026-01-13 12:55:07,838 views [DirectAPI] Saved 1 images to gallery for user 4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e
+INFO 2026-01-13 12:55:07,839 middleware Response: GET /v1/features/image-generation/status/0a627ea5-ee82-4022-830d-accc5c4fab9d/ Status: 200 Duration: 79.79s
+INFO 2026-01-13 12:55:07,840 basehttp "GET /v1/features/image-generation/status/0a627ea5-ee82-4022-830d-accc5c4fab9d/?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 258
+INFO 2026-01-13 12:55:19,197 middleware Request: GET /health/
+INFO 2026-01-13 12:55:19,198 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:55:19,199 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:55:49,252 middleware Request: GET /health/
+INFO 2026-01-13 12:55:49,253 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:55:49,254 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:56:19,332 middleware Request: GET /health/
+INFO 2026-01-13 12:56:19,333 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:56:19,334 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:56:49,410 middleware Request: GET /health/
+INFO 2026-01-13 12:56:49,410 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:56:49,411 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:56:58,841 basehttp "OPTIONS /api/v1/ai/video-gallery/count?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 0
+INFO 2026-01-13 12:56:58,841 basehttp "OPTIONS /api/v1/ai/gallery/count?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 0
+INFO 2026-01-13 12:56:58,856 basehttp "OPTIONS /api/v1/ai/video-gallery/count?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 0
+INFO 2026-01-13 12:56:58,857 middleware Request: GET /api/v1/ai/video-gallery/count
+INFO 2026-01-13 12:56:58,859 middleware Request: GET /api/v1/ai/gallery/count
+INFO 2026-01-13 12:56:58,860 basehttp "OPTIONS /api/v1/ai/gallery/count?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 0
+INFO 2026-01-13 12:56:59,292 middleware Response: GET /api/v1/ai/video-gallery/count Status: 200 Duration: 0.43s
+INFO 2026-01-13 12:56:59,292 basehttp "GET /api/v1/ai/video-gallery/count?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 54
+INFO 2026-01-13 12:56:59,295 middleware Request: GET /api/v1/ai/video-gallery/count
+INFO 2026-01-13 12:56:59,361 middleware Response: GET /api/v1/ai/gallery/count Status: 200 Duration: 0.50s
+INFO 2026-01-13 12:56:59,362 basehttp "GET /api/v1/ai/gallery/count?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 54
+INFO 2026-01-13 12:56:59,365 middleware Request: GET /api/v1/ai/gallery/count
+INFO 2026-01-13 12:56:59,723 middleware Response: GET /api/v1/ai/video-gallery/count Status: 200 Duration: 0.43s
+INFO 2026-01-13 12:56:59,724 basehttp "GET /api/v1/ai/video-gallery/count?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 54
+INFO 2026-01-13 12:56:59,780 middleware Response: GET /api/v1/ai/gallery/count Status: 200 Duration: 0.41s
+INFO 2026-01-13 12:56:59,781 basehttp "GET /api/v1/ai/gallery/count?user_id=4ae18dff-9a28-49fc-a7a6-a8a2c0e9b11e HTTP/1.1" 200 54
+INFO 2026-01-13 12:57:19,475 middleware Request: GET /health/
+INFO 2026-01-13 12:57:19,476 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:57:19,476 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:57:49,629 middleware Request: GET /health/
+INFO 2026-01-13 12:57:49,645 middleware Response: GET /health/ Status: 200 Duration: 0.02s
+INFO 2026-01-13 12:57:49,675 basehttp "GET /health/ HTTP/1.1" 200 65
+INFO 2026-01-13 12:58:19,769 middleware Request: GET /health/
+INFO 2026-01-13 12:58:19,770 middleware Response: GET /health/ Status: 200 Duration: 0.00s
+INFO 2026-01-13 12:58:19,771 basehttp "GET /health/ HTTP/1.1" 200 65
